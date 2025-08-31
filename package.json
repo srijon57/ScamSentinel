@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./wwwroot/css/site.css -o ./wwwroot/css/output.css --watch"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "tailwindcss": "^4.1.12"
+  },
+  "devDependencies": {
+    "eslint": "^9.34.0"
+  }
+}

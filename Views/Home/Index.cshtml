@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="bg-cream-50">
+    
+
+    <div class="relative isolate px-4 pt-1 lg:px-2">
+        <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
+            <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="to-cream-300 relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-red-300 opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"></div>
+        </div>
+
+        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+            <div class="text-center">
+                <h1 class="text-5xl font-semibold tracking-tight text-balance text-red-900 sm:text-7xl">Your Anti-Scam Partner, Keeping You Safe!</h1>
+                <p class="mt-4 text-lg font-medium text-pretty text-red-700 sm:text-xl/8">Quick check for scams, and report scams with a single click to help protect others.</p>
+                <div class="mt-6 flex items-center justify-center gap-x-4">
+                    <input type="text" placeholder="Enter Scammer Name" class="placeholder-red-500 w-full max-w-xs rounded-l-md border border-red-300 p-2 text-red-900 sm:max-w-sm" />
+                    <button class="rounded-r-md bg-red-600 px-4 py-2 text-white hover:bg-red-500">Search</button>
+                </div>
+                <p class="mt-2 mb-10 text-sm text-red-700">Example: Name, Website, Phone, Facebook Group, Whats-app Number</p>
+            </div>
+
+
+            <div class="mb-8 rounded-lg bg-red-600 p-4 text-white">
+                <h2 class="mb-4 text-center text-xl font-bold">The Biggest Database of Scams</h2>
+                <div class="grid grid-cols-2 gap-4 md:grid-cols-6">
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">60,000</div>
+                        <div class="text-sm">Sites in Database</div>
+                    </div>
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">1,367</div>
+                        <div class="text-sm">Scam Websites</div>
+                    </div>
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">346359</div>
+                        <div class="text-sm">Visitors Last Day</div>
+                    </div>
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">200</div>
+                        <div class="text-sm">Sites Scanned Today</div>
+                    </div>
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">14</div>
+                        <div class="text-sm">Scams Reported Today</div>
+                    </div>
+                    <div class="rounded-lg bg-white p-2 text-center text-red-600">
+                        <div class="font-bold">700</div>
+                        <div class="text-sm">Users Last Month</div>
+                    </div>
+                </div>
+            </div>
+            <h2 class="mb-6 text-center text-2xl font-bold text-gray-800">Learn About Scams</h2>
+            <div class="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+                @for (int i = 1; i <= 8; i++)
+                {
+                    <div class="rounded-lg bg-white p-4 text-center shadow-md">
+                        <div class="mb-2 text-4xl">🚨</div>
+                        <h3 class="mb-2 font-bold">Scam Type @i</h3>
+                        <button class="rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
+                    </div>
+                }
+            </div>
+
+            <div class="mt-3 text-center">
+                <a href="tel:999" class="rounded-md bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-500">EMERGENCY CALL 999</a>
+            </div>
+        </div>
+
+        <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">
+            <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="to-cream-300 relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-red-300 opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"></div>
+        </div>
+    </div>
+
+    
+</div>

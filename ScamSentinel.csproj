@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <ContainerRuntimeIdentifier>win-x64</ContainerRuntimeIdentifier>
+    <EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809</ContainerBaseImage>
+    <UserSecretsId>b33ffc19-3904-493e-8feb-6570d78a15d0</UserSecretsId>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ContainerPort Include="8081" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Dapper" Version="2.1.66" />
+    <PackageReference Include="MailKit" Version="4.13.0" />
+    <PackageReference Include="MimeKit" Version="4.13.0" />
+    <PackageReference Include="Npgsql" Version="9.0.3" />
+    <PackageReference Include="NToastNotify" Version="8.0.0" />
+    <PackageReference Include="Supabase" Version="1.1.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
+	<PackageReference Include="toastr" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

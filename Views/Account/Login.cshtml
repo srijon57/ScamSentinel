@@ -1,0 +1,25 @@
+﻿@model LoginModel
+<div class="flex min-h-screen items-center justify-center px-4 sm:px-6 lg:px-8">
+    <form asp-action="Login" method="post" class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+        <div class="mb-6">
+            <label for="Email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
+            <input asp-for="Email" type="email"
+                   class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm transition duration-300 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                   required />
+            <span asp-validation-for="Email" class="mt-1 block text-xs text-red-500"></span>
+        </div>
+        <div class="mb-6">
+            <label for="Password" class="mb-2 block text-sm font-medium text-gray-700">Password</label>
+            <input asp-for="Password" type="password"
+                   class="w-full rounded-md border border-gray-300 px-4 py-2 text-sm transition duration-300 outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500"
+                   required />
+            <span asp-validation-for="Password" class="mt-1 block text-xs text-red-500"></span>
+        </div>
+        <div class="flex justify-end">
+            <button type="submit"
+                    class="inline-flex justify-center rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition duration-300 hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none">
+                Login
+            </button>
+        </div>
+    </form>
+</div>
