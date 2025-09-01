@@ -1,18 +1,23 @@
 ﻿<header class="fixed inset-x-0 bottom-0 z-50 mb-5 bg-red-200">
     <nav  class="flex items-center justify-between p-6 lg:px-8">
+        
         <div class="flex lg:flex-1">
-            <a href="/" class="-m-1.5 flex items-center gap-x-3 p-1.5">
-                <img src="/Assets/logo.png" alt="" class="h-8 w-auto" />
-                <span class="ml-2 text-lg font-semibold text-red-900">Scam Sentinel</span>
+            <a href="/" class="-m-1.5 flex items-center gap-x-4 p-1.5">
+                <img src="/Assets/logo.png" alt=" " class="h-8 w-auto" />
+                <span class="text-lg font-semibold text-red-900">Scam Sentinel</span>
             </a>
         </div>
+
         <div class="flex lg:hidden">
+            
             <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-red-800">
                 <span class="sr-only">Open main menu</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
                     <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+            
             </button>
+        
         </div>
         <div class="hidden lg:flex lg:gap-x-12">
             <a href="#" class="text-sm/6 font-semibold text-red-900 hover:bg-red-50">Post_Scam</a>
@@ -32,10 +37,10 @@
             else
             {
                 <a asp-controller="Account" asp-action="Login" class="text-sm font-semibold text-red-900 hover:bg-red-50">
-                    Log in 
+                    Log in
                 </a>
                 <a asp-controller="Account" asp-action="Register" class="ml-100 text-sm font-semibold text-red-900 hover:bg-red-50">
-                    Register 
+                    Register
                 </a>
 
             }
@@ -80,7 +85,7 @@
                                         Log in
                                     </a>
                                     <a asp-controller="Account" asp-action="Register" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-red-900 hover:bg-red-50" ">
-                                        Register 
+                                        Register
                                     </a>
                                 }
                             </div>
