@@ -1,12 +1,71 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "E:\\sd3.2\\ScamSentinel\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\components\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\account\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "_Header.cshtml",
+              "DocumentMoniker": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Header.cshtml",
+              "RelativeDocumentMoniker": "Views\\Components\\_Header.cshtml",
+              "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Header.cshtml",
+              "RelativeToolTip": "Views\\Components\\_Header.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-01T20:35:55.917Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Footer.cshtml",
+              "DocumentMoniker": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Footer.cshtml",
+              "RelativeDocumentMoniker": "Views\\Components\\_Footer.cshtml",
+              "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Footer.cshtml*",
+              "RelativeToolTip": "Views\\Components\\_Footer.cshtml*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-01T20:30:43.47Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "E:\\sd3.2\\ScamSentinel\\Views\\Account\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\Login.cshtml",
+              "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Account\\Login.cshtml",
+              "RelativeToolTip": "Views\\Account\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-01T19:48:24.448Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }
