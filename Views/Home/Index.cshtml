@@ -1,130 +1,589 @@
-﻿@{     
-    ViewData["Title"] = "Home Page"; 
-}  
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scam Sentinel - Your Anti-Scam Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Import a clean, modern font */
+        @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-<div class="bg-cream-50">           
-    <div class="relative isolate px-4 pt-1 lg:px-2">        
-        <div aria-hidden="true" class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">            
-            <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" 
-                 class="to-cream-300 relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr from-red-300 opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"></div>        
-        </div>         
+        * {
+            font-family: 'Inter', sans-serif;
+        }
 
-        <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">            
-            <div class="text-center">
-                <h1 class="mt-4 text-7xl sm:text-9xl font-extrabold tracking-tight text-balance text-red-800">
-                    Welcome to Scam Sentinel
+        /* --- Custom Keyframe Animations --- */
+        @@keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @@keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(239, 68, 68, 0.6);
+            }
+        }
+
+        @@keyframes gradient-shift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @@keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes bounce-in {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+
+            70% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* --- Reusable Animation Classes --- */
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(-45deg, #fee2e2, #fecaca, #ef4444, #dc2626);
+            background-size: 400% 400%;
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        .slide-up-animation {
+            animation: slide-up 0.8s ease-out forwards;
+        }
+
+        .bounce-in-animation {
+            animation: bounce-in 0.6s ease-out forwards;
+        }
+
+        .fadeIn-animation {
+            animation: fadeIn 0.8s ease-in-out forwards;
+        }
+
+        /* --- UI Component Styling --- */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .card-hover:hover {
+                transform: translateY(-8px) scale(1.02);
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
+
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                transform: scale(1.05);
+                background: linear-gradient(135deg, #ffffff, #fef2f2);
+            }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+        }
+
+        /* Typing indicator for hero text */
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @@keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+
+            51%, 100% {
+                opacity: 0;
+            }
+        }
+
+        .security-badge {
+            background: linear-gradient(45deg, #10b981, #059669);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+    <div class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-gradient-to-br from-red-50 via-orange-50 to-red-100">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-40 -right-40 w-80 h-80 bg-red-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 2s;"></div>
+            <div class="absolute top-40 left-1/2 w-80 h-80 bg-red-200 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 4s;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-6xl mx-auto px-4 text-center">
+            <div class="mb-8">
+                <h1 class="text-6xl sm:text-8xl lg:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-red-700 to-red-800 mb-4 slide-up-animation">
+                    Scam Sentinel
                 </h1>
-
-                <h2 class="mt-4 text-4xl font-semibold tracking-tight text-balance text-red-800 sm:text-6xl">
-                    Your Anti-Scam Partner, Keeping You Safe!
-                </h2>
-                <p class="mt-4 text-lg font-medium text-pretty text-red-700 sm:text-xl/8">
-                    Quick check for scams, and report scams with a single click to help protect others.
-                </p>                
-                <div class="mt-6 flex items-center justify-center gap-x-4">                    
-                    <input type="text" placeholder="Enter Scammer Name" class="placeholder-red-500 w-full max-w-xs rounded-l-md border border-red-300 p-2 text-red-900 sm:max-w-sm" />                    
-                    <button class="rounded-r-md bg-red-600 px-4 py-2 text-white hover:bg-red-500">Search</button>                
-                </div>                
-                <p class="mt-2 mb-10 text-sm text-red-700">Example: Name, Website, Phone, Facebook Group, Whats-app Number</p>            
-            </div>              
-
-            <div class="mb-8 rounded-lg bg-red-600 p-4 text-white">                
-                <h2 class="mb-4 text-center text-xl font-bold">The Biggest Database of Scams</h2>                
-                <div class="grid grid-cols-2 gap-4 md:grid-cols-6">                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">60,000</div>                        
-                        <div class="text-sm">Sites in Database</div>                    
-                    </div>                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">1,367</div>                        
-                        <div class="text-sm">Scam Websites</div>                    
-                    </div>                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">346359</div>                        
-                        <div class="text-sm">Visitors Last Day</div>                    
-                    </div>                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">200</div>                        
-                        <div class="text-sm">Sites Scanned Today</div>                    
-                    </div>                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">14</div>                        
-                        <div class="text-sm">Scams Reported Today</div>                    
-                    </div>                    
-                    <div class="rounded-lg bg-white p-2 text-center text-red-600">                        
-                        <div class="font-bold">700</div>                        
-                        <div class="text-sm">Users Last Month</div>                    
-                    </div>                
-                </div>            
+                <div class="h-16 flex items-center justify-center">
+                    <h2 id="typing-text" class="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-800 typing-indicator">
+                        Your Anti-Scam Partner
+                    </h2>
+                </div>
+                <p class="text-xl text-gray-600 mt-6 max-w-2xl mx-auto slide-up-animation" style="animation-delay: 0.5s;">
+                    Protecting you from online fraud with real-time detection and community-powered intelligence
+                </p>
             </div>
 
-            <h2 class="mb-6 text-center text-2xl font-bold text-gray-800">Learn About Scams</h2>
-
-            <div class="mb-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Fake Supplier</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Fake Courier/Delivery</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Real Estate/Rental Fraud</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Fake Product</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Fake Charity/Donation</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Fake Business Loan</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">False Maintenance</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Trademark/Patent</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
-                </div>
-
-                <div class="rounded-lg bg-white p-4 text-center shadow-md flex flex-col items-center">
-                    <div class="mb-2 text-4xl">🚨</div>
-                    <h3 class="mb-2 font-bold">Email Compromise</h3>
-                    <button class="mt-auto rounded-full bg-red-600 px-4 py-2 text-white hover:bg-red-700">LEARN MORE</button>
+            <div class="max-w-2xl mx-auto mb-12 slide-up-animation" style="animation-delay: 1s;">
+                <div class="search-container rounded-2xl p-8 shadow-2xl">
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="flex-1">
+                            <input type="text"
+                                   id="search-input"
+                                   placeholder="Enter name, website, phone, or social media..."
+                                   class="w-full px-6 py-4 text-lg rounded-xl border-2 border-gray-300 focus:border-red-500 focus:outline-none focus:ring-4 focus:ring-red-200 transition-all duration-300 text-gray-800 placeholder-gray-400" />
+                        </div>
+                        <button id="search-btn"
+                                class="px-8 py-4 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 transform hover:scale-105 transition-all duration-300 pulse-glow">
+                            🔍 Scan Now
+                        </button>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2 justify-center">
+                        <span class="text-sm text-gray-500">Try:</span>
+                        <button class="example-tag px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition-colors">fake-store.com</button>
+                        <button class="example-tag px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition-colors">+1-555-SCAM</button>
+                        <button class="example-tag px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm hover:bg-gray-300 transition-colors">John Scammer</button>
+                    </div>
                 </div>
             </div>
 
+            <div class="mb-16 slide-up-animation" style="animation-delay: 1.5s;">
+                <div class="gradient-bg rounded-3xl p-8 text-gray-900 shadow-2xl">
+                    <h3 class="text-3xl font-bold mb-8 text-center text-gray-800">🌐 Live Threat Intelligence</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-blue-700" id="stat-sites">60,000</div>
+                            <div class="text-sm text-gray-700">Sites Monitored</div>
+                        </div>
 
-            <div class="mt-3 text-center">                
-                <a href="tel:999" class="rounded-md bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-500">EMERGENCY CALL 999</a>            
-            </div>        
-        </div>         
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-yellow-600" id="stat-scams">1,367</div>
+                            <div class="text-sm text-gray-700">Active Scams</div>
+                        </div>
 
-        <div aria-hidden="true" class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]">            
-            <div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" 
-                 class="to-cream-300 relative left-[calc(50%+3rem)] aspect-1155/678 w-144.5 -translate-x-1/2 bg-linear-to-tr from-red-300 opacity-30 sm:left-[calc(50%+36rem)] sm:w-288.75"></div>        
-        </div>    
-    </div>       
-</div>
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-purple-700" id="stat-visitors">346,359</div>
+                            <div class="text-sm text-gray-700">Daily Visitors</div>
+                        </div>
+
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-green-600" id="stat-scanned">200</div>
+                            <div class="text-sm text-gray-700">Sites Scanned Today</div>
+                        </div>
+
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-orange-600" id="stat-reported">14</div>
+                            <div class="text-sm text-gray-700">Scams Blocked Today</div>
+                        </div>
+
+                        <div class="stat-card bg-gray-100/40 backdrop-blur-sm rounded-xl p-4 text-center border border-gray-300">
+                            <div class="text-3xl font-black text-pink-700" id="stat-users">700</div>
+                            <div class="text-sm text-gray-700">Protected Users</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-20 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">🎯 Know Your Enemy</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Stay informed about the latest scam tactics. Knowledge is your best defense against fraud.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="scam-cards">
+            </div>
+        </div>
+    </div>
+
+    <div class="py-16 bg-gradient-to-r from-red-600 via-red-700 to-red-800">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <div class="float-animation">
+                <h3 class="text-4xl font-bold text-white mb-6">🚨 Been Scammed? Act Fast!</h3>
+                <p class="text-xl text-red-100 mb-8">
+                    Time is critical. Get immediate help and report the incident to prevent others from falling victim.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="tel:999" class="emergency-btn inline-flex items-center gap-3 bg-white text-red-700 px-8 py-4 rounded-2xl font-bold text-lg hover:bg-red-50 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                        📞 Emergency: Call 999
+                    </a>
+                    <button class="report-btn inline-flex items-center gap-3 bg-red-800 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:bg-red-900 transform hover:scale-105 transition-all duration-300 shadow-2xl border-2 border-red-600">
+                        📝 Report Scam
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">🛡️ How We Protect You</h2>
+                <p class="text-xl text-gray-600">Advanced technology meets community intelligence</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8" id="features">
+                <div class="feature-card text-center p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 float-animation">
+                        <span class="text-2xl">🔍</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Real-Time Scanning</h3>
+                    <p class="text-gray-600">Instant analysis of websites, emails, and phone numbers using AI-powered detection algorithms.</p>
+                </div>
+
+                <div class="feature-card text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-green-100 border border-green-200">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6 float-animation" style="animation-delay: 0.5s;">
+                        <span class="text-2xl">👥</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Community Network</h3>
+                    <p class="text-gray-600">Crowdsourced reports from users worldwide create a powerful early warning system.</p>
+                </div>
+
+                <div class="feature-card text-center p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 float-animation" style="animation-delay: 1s;">
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Instant Alerts</h3>
+                    <p class="text-gray-600">Get immediate notifications about potential threats before you become a victim.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-16 bg-gray-900 text-white">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <h3 class="text-3xl font-bold mb-8">🏆 Trusted by Thousands</h3>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="trust-stat">
+                    <div class="text-4xl font-bold text-green-400 mb-2">99.8%</div>
+                    <div class="text-gray-300">Accuracy Rate</div>
+                </div>
+                <div class="trust-stat">
+                    <div class="text-4xl font-bold text-blue-400 mb-2">24/7</div>
+                    <div class="text-gray-300">Protection</div>
+                </div>
+                <div class="trust-stat">
+                    <div class="text-4xl font-bold text-purple-400 mb-2">50k+</div>
+                    <div class="text-gray-300">Users Protected</div>
+                </div>
+                <div class="trust-stat">
+                    <div class="text-4xl font-bold text-yellow-400 mb-2">$2M+</div>
+                    <div class="text-gray-300">Losses Prevented</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Typing Animation for Hero Text ---
+        const texts = [
+            "Your Anti-Scam Partner",
+            "Keeping You Safe Online",
+            "Detecting Fraud Instantly",
+            "Protecting Your Future"
+        ];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typing-text');
+
+        function typeText() {
+            const currentText = texts[textIndex];
+
+            if (!isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+
+                if (charIndex === currentText.length) {
+                    setTimeout(() => isDeleting = true, 2000);
+                }
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                }
+            }
+
+            setTimeout(typeText, isDeleting ? 50 : 100);
+        }
+
+        // --- Animated Statistics Counter ---
+        function animateStats() {
+            const stats = [
+                { id: 'stat-sites', target: 60000, suffix: '' },
+                { id: 'stat-scams', target: 1367, suffix: '' },
+                { id: 'stat-visitors', target: 346359, suffix: '' },
+                { id: 'stat-scanned', target: 200, suffix: '' },
+                { id: 'stat-reported', target: 14, suffix: '' },
+                { id: 'stat-users', target: 700, suffix: '' }
+            ];
+
+            stats.forEach((stat, index) => {
+                setTimeout(() => {
+                    let current = 0;
+                    const increment = stat.target / 100;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= stat.target) {
+                            current = stat.target;
+                            clearInterval(timer);
+                        }
+                        document.getElementById(stat.id).textContent =
+                            Math.floor(current).toLocaleString() + stat.suffix;
+                    }, 20);
+                }, index * 200);
+            });
+        }
+
+        // --- Dynamic Card Generation ---
+        function generateScamCards() {
+            const scamTypes = [
+                {
+                    title: "Fake Supplier",
+                    icon: "🏭",
+                    color: "from-red-500 to-red-600",
+                    risk: "High",
+                    description: "Scammers pose as legitimate business suppliers to intercept payments or deliver fake goods."
+                },
+                {
+                    title: "Fake Courier",
+                    icon: "📦",
+                    color: "from-orange-500 to-orange-600",
+                    risk: "Medium",
+                    description: "Fraudsters send fake delivery notifications to steal personal info or payment details."
+                },
+                {
+                    title: "Real Estate Fraud",
+                    icon: "🏠",
+                    color: "from-purple-500 to-purple-600",
+                    risk: "High",
+                    description: "Criminals list non-existent properties or hijack listings to steal rent or deposit money."
+                },
+                {
+                    title: "Fake Products",
+                    icon: "📱",
+                    color: "from-blue-500 to-blue-600",
+                    risk: "Medium",
+                    description: "Websites or social media ads sell counterfeit or non-existent products at low prices."
+                },
+                {
+                    title: "Charity Scams",
+                    icon: "❤️",
+                    color: "from-green-500 to-green-600",
+                    risk: "Medium",
+                    description: "Scammers exploit natural disasters or global events to solicit fake donations."
+                },
+                {
+                    title: "Loan Fraud",
+                    icon: "💰",
+                    color: "from-yellow-500 to-yellow-600",
+                    risk: "High",
+                    description: "Fraudulent loan companies demand upfront fees but never provide the loan you applied for."
+                },
+                {
+                    title: "Tech Support",
+                    icon: "💻",
+                    color: "from-indigo-500 to-indigo-600",
+                    risk: "High",
+                    description: "Criminals impersonate major tech companies to gain remote access to your devices or financial accounts."
+                },
+                {
+                    title: "Romance Scams",
+                    icon: "💕",
+                    color: "from-pink-500 to-pink-600",
+                    risk: "High",
+                    description: "Con artists create fake online identities to build emotional relationships and then ask for money."
+                }
+            ];
+
+            const container = document.getElementById('scam-cards');
+
+            scamTypes.forEach((scam, index) => {
+                const card = document.createElement('div');
+                // Apply a combined animation for a smooth entrance
+                card.className = `card-hover bg-white rounded-2xl p-6 shadow-lg border border-gray-100 bounce-in-animation flex flex-col h-full`;
+                card.style.animationDelay = `${index * 0.1}s`;
+
+                const riskColor = scam.risk === 'High' ? 'bg-red-500' : 'bg-yellow-500';
+
+                card.innerHTML = `
+                    <div class="text-center flex flex-col flex-grow">
+                        <div class="w-16 h-16 bg-gradient-to-r ${scam.color} rounded-full flex items-center justify-center mx-auto mb-4 text-2xl text-white">
+                            ${scam.icon}
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">${scam.title}</h3>
+                        <div class="mb-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${riskColor} text-white">
+                                ${scam.risk} Risk
+                            </span>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-4 flex-grow">
+                            ${scam.description}
+                        </p>
+                    </div>
+                    <button class="learn-btn w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition-all duration-300 mt-auto">
+                        Learn More
+                    </button>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // --- Search Functionality with simulated results ---
+        function initializeSearch() {
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const exampleTags = document.querySelectorAll('.example-tag');
+
+            // Example tag clicks
+            exampleTags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    searchInput.value = tag.textContent;
+                    searchInput.focus();
+                });
+            });
+
+            // Search button click
+            searchBtn.addEventListener('click', performSearch);
+
+            // Enter key search
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') performSearch();
+            });
+
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (!query) {
+                    searchInput.focus();
+                    return;
+                }
+
+                // Simulate search with visual feedback
+                searchBtn.innerHTML = '🔄 Scanning...';
+                searchBtn.disabled = true;
+
+                setTimeout(() => {
+                    // Simulate results
+                    const isScam = Math.random() > 0.7; // 30% chance of being flagged as scam
+
+                    if (isScam) {
+                        showResult('⚠️ POTENTIAL SCAM DETECTED', 'This entity has been flagged by our community. Exercise extreme caution.', 'bg-red-600');
+                    } else {
+                        showResult('✅ NO THREATS FOUND', 'This entity appears to be legitimate based on our database.', 'bg-green-600');
+                    }
+
+                    searchBtn.innerHTML = '🔍 Scan Now';
+                    searchBtn.disabled = false;
+                }, 2000);
+            }
+
+            // Function to display the search result pop-up
+            function showResult(title, message, bgClass) {
+                const result = document.createElement('div');
+                result.className = `fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${bgClass} text-white p-8 rounded-2xl shadow-2xl z-50 max-w-md w-full mx-4 animate-bounce-in`;
+                result.innerHTML = `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">${title}</h3>
+                        <p class="mb-6">${message}</p>
+                        <button onclick="this.parentElement.parentElement.remove()" class="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-lg transition-colors">
+                            Close
+                        </button>
+                    </div>
+                `;
+
+                document.body.appendChild(result);
+            }
+        }
+
+        // --- Page Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(typeText, 1000);
+            setTimeout(animateStats, 2000);
+            setTimeout(generateScamCards, 1500); // Trigger card generation after a slight delay
+            initializeSearch();
+        });
+    </script>
+</body>
+</html>
