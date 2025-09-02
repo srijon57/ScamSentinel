@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "E:\\sd3.2\\ScamSentinel\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|e:\\sd3.2\\scamsentinel\\views\\components\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -34,17 +34,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Index.cshtml",
               "DocumentMoniker": "E:\\sd3.2\\ScamSentinel\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
-              "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAAG8AAAAAAAAAAAAowHoAAAAXAAAAAAAAAA==",
+              "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Home\\Index.cshtml*",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml*",
+              "ViewState": "AgIAADYCAAAAAAAAAAAowEwCAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-02T13:02:37.627Z",
               "EditorCaption": ""
@@ -77,13 +77,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "_Header.cshtml",
               "DocumentMoniker": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Header.cshtml",
               "RelativeDocumentMoniker": "Views\\Components\\_Header.cshtml",
               "ToolTip": "E:\\sd3.2\\ScamSentinel\\Views\\Components\\_Header.cshtml",
               "RelativeToolTip": "Views\\Components\\_Header.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAewAsAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAADkAAAAAAAAAAAAewEIAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-01T20:35:55.917Z",
               "EditorCaption": ""
