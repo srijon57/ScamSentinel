@@ -388,6 +388,12 @@
   .mx-auto {
     margin-inline: auto;
   }
+  .my-6 {
+    margin-block: calc(var(--spacing) * 6);
+  }
+  .my-8 {
+    margin-block: calc(var(--spacing) * 8);
+  }
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
   }
@@ -587,6 +593,9 @@
   }
   .justify-center {
     justify-content: center;
+  }
+  .justify-end {
+    justify-content: flex-end;
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
@@ -1086,6 +1095,9 @@
   .text-blue-700 {
     color: var(--color-blue-700);
   }
+  .text-gray-100 {
+    color: var(--color-gray-100);
+  }
   .text-gray-200 {
     color: var(--color-gray-200);
   }
@@ -1113,6 +1125,9 @@
   .text-green-600 {
     color: var(--color-green-600);
   }
+  .text-green-700 {
+    color: var(--color-green-700);
+  }
   .text-green-800 {
     color: var(--color-green-800);
   }
@@ -1130,6 +1145,9 @@
   }
   .text-red-100 {
     color: var(--color-red-100);
+  }
+  .text-red-300 {
+    color: var(--color-red-300);
   }
   .text-red-500 {
     color: var(--color-red-500);

@@ -37,6 +37,15 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Cookies["access_token"];
+    if (!string.IsNullOrEmpty(token))
+    {
+        context.Request.Headers.Append("Authorization", $"Bearer {token}");
+    }
+    await next();
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
