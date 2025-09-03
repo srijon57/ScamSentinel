@@ -1,55 +1,55 @@
 ﻿@model RegisterModel
-<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 sm:py-16">
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 sm:py-16 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
     <div class="animate-fade-in-up w-full max-w-md">
-        <h2 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:mb-10 sm:text-3xl">
+        <h2 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:mb-10 sm:text-3xl dark:text-gray-100">
             Register a new account
         </h2>
 
-        <form asp-action="Register" method="post" class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10">
+        <form asp-action="Register" method="post" class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10 dark:border-gray-700 dark:bg-gray-800">
             <div class="space-y-6">
                 <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
-                    <label for="UserName" class="mb-2 block text-sm font-medium text-gray-700">Username</label>
+                    <label for="UserName" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Username</label>
                     <input asp-for="UserName"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
                            required />
-                    <span asp-validation-for="UserName" class="animate-shake mt-1 block text-xs text-red-500"></span>
+                    <span asp-validation-for="UserName" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
                 </div>
 
                 <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
-                    <label for="Email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
+                    <label for="Email" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
                     <input asp-for="Email" type="email"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
                            required />
-                    <span asp-validation-for="Email" class="animate-shake mt-1 block text-xs text-red-500"></span>
+                    <span asp-validation-for="Email" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
                 </div>
 
                 <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
-                    <label for="Password" class="mb-2 block text-sm font-medium text-gray-700">Password</label>
+                    <label for="Password" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
                     <input asp-for="Password" type="password"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
                            required />
-                    <span asp-validation-for="Password" class="animate-shake mt-1 block text-xs text-red-500"></span>
+                    <span asp-validation-for="Password" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
                 </div>
 
                 <div class="animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <label for="ConfirmPassword" class="mb-2 block text-sm font-medium text-gray-700">Confirm Password</label>
+                    <label for="ConfirmPassword" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password</label>
                     <input asp-for="ConfirmPassword" type="password"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
                            required />
-                    <span asp-validation-for="ConfirmPassword" class="animate-shake mt-1 block text-xs text-red-500"></span>
+                    <span asp-validation-for="ConfirmPassword" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
                 </div>
 
                 <div class="animate-fade-in-up" style="animation-delay: 0.5s;">
-                    <label for="ContactNumber" class="mb-2 block text-sm font-medium text-gray-700">Contact Number</label>
+                    <label for="ContactNumber" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Contact Number</label>
                     <input asp-for="ContactNumber"
-                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100" />
-                    <span asp-validation-for="ContactNumber" class="animate-shake mt-1 block text-xs text-red-500"></span>
+                           class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" />
+                    <span asp-validation-for="ContactNumber" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
                 </div>
             </div>
 
             <div class="animate-fade-in-up mt-8 flex justify-center" style="animation-delay: 0.6s;">
                 <button type="submit"
-                        class="animate-pulse-once inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none">
+                        class="animate-pulse-once inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
                     Register
                 </button>
             </div>

@@ -2,75 +2,75 @@
     ViewData["Title"] = "Scam Sentinel - Your Anti-Scam Partner";
 }
 
-<div class="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-red-100 pt-20">
+<div class="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-red-100 pt-20 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
     <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-red-300 opacity-70 mix-blend-multiply blur-xl filter"></div>
-        <div class="absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-orange-300 opacity-70 mix-blend-multiply blur-xl filter" style="animation-delay: 2s;"></div>
-        <div class="absolute top-40 left-1/2 h-80 w-80 animate-pulse rounded-full bg-red-200 opacity-70 mix-blend-multiply blur-xl filter" style="animation-delay: 4s;"></div>
+        <div class="absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full bg-red-300 opacity-70 mix-blend-multiply blur-xl filter dark:bg-red-700"></div>
+        <div class="absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full bg-orange-300 opacity-70 mix-blend-multiply blur-xl filter dark:bg-orange-700" style="animation-delay: 2s;"></div>
+        <div class="absolute top-40 left-1/2 h-80 w-80 animate-pulse rounded-full bg-red-200 opacity-70 mix-blend-multiply blur-xl filter dark:bg-red-800" style="animation-delay: 4s;"></div>
     </div>
     <div class="relative z-10 mx-auto max-w-6xl px-4 text-center">
         <div class="mb-8">
-            <h1 class="slide-up-animation mb-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-6xl font-black text-transparent sm:text-8xl lg:text-9xl">
+            <h1 class="slide-up-animation mb-4 bg-gradient-to-r from-red-600 via-red-700 to-red-800 bg-clip-text text-6xl font-black text-transparent sm:text-8xl lg:text-9xl dark:from-red-500 dark:via-red-600 dark:to-red-700">
                 Scam Sentinel
             </h1>
             <div class="flex h-16 items-center justify-center">
-                <h2 id="typing-text" class="typing-indicator text-2xl font-bold text-gray-800 sm:text-4xl lg:text-5xl">
+                <h2 id="typing-text" class="typing-indicator text-2xl font-bold text-gray-800 sm:text-4xl lg:text-5xl dark:text-gray-100">
                     Your Anti-Scam Partner
                 </h2>
             </div>
-            <p class="slide-up-animation mx-auto mt-6 max-w-2xl text-xl text-gray-600" style="animation-delay: 0.5s;">
+            <p class="slide-up-animation mx-auto mt-6 max-w-2xl text-xl text-gray-600 dark:text-gray-300" style="animation-delay: 0.5s;">
                 Protecting you from online fraud with real-time detection and community-powered intelligence
             </p>
         </div>
         <div class="slide-up-animation mx-auto mb-12 max-w-2xl" style="animation-delay: 1s;">
-            <div class="search-container rounded-2xl p-8 shadow-2xl">
+            <div class="search-container rounded-2xl p-8 shadow-2xl dark:bg-gray-700">
                 <div class="flex flex-col gap-4 sm:flex-row">
                     <div class="flex-1">
                         <input type="text"
                                id="search-input"
                                placeholder="Enter name, website, phone, or social media..."
-                               class="placeholder-gray-400 w-full rounded-xl border-2 border-gray-300 px-6 py-4 text-lg text-gray-800 transition-all duration-300 focus:border-red-500 focus:ring-4 focus:ring-red-200 focus:outline-none" />
+                               class="placeholder-gray-400 w-full rounded-xl border-2 border-gray-300 px-6 py-4 text-lg text-gray-800 transition-all duration-300 focus:border-red-500 focus:ring-4 focus:ring-red-200 focus:outline-none dark:placeholder-gray-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" />
                     </div>
                     <button id="search-btn"
-                            class="pulse-glow transform rounded-xl bg-red-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-red-700">
+                            class="pulse-glow transform rounded-xl bg-red-600 px-8 py-4 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600">
                         🔍 Scan Now
                     </button>
                 </div>
                 <div class="mt-4 flex flex-wrap justify-center gap-2">
-                    <span class="text-sm text-gray-500">Try:</span>
-                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300">fake-store.com</button>
-                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300">+1-555-SCAM</button>
-                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300">John Scammer</button>
+                    <span class="text-sm text-gray-500 dark:text-gray-400">Try:</span>
+                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500">fake-store.com</button>
+                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500">+1-555-SCAM</button>
+                    <button class="example-tag rounded-full bg-gray-200 px-3 py-1 text-sm text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500">John Scammer</button>
                 </div>
             </div>
         </div>
         <div class="slide-up-animation mb-16" style="animation-delay: 1.5s;">
-            <div class="gradient-bg rounded-3xl p-8 text-gray-900 shadow-2xl">
-                <h3 class="mb-8 text-center text-3xl font-bold text-gray-800">🌐 Live Threat Intelligence</h3>
+            <div class="gradient-bg rounded-3xl p-8 text-gray-900 shadow-2xl dark:bg-gray-700 dark:text-gray-100">
+                <h3 class="mb-8 text-center text-3xl font-bold text-gray-800 dark:text-gray-100">🌐 Live Threat Intelligence</h3>
                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-blue-700" id="stat-sites">60,000</div>
-                        <div class="text-sm text-gray-700">Sites Monitored</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-blue-700 dark:text-blue-300" id="stat-sites">60,000</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Sites Monitored</div>
                     </div>
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-yellow-600" id="stat-scams">1,367</div>
-                        <div class="text-sm text-gray-700">Active Scams</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-yellow-600 dark:text-yellow-300" id="stat-scams">1,367</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Active Scams</div>
                     </div>
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-purple-700" id="stat-visitors">346,359</div>
-                        <div class="text-sm text-gray-700">Daily Visitors</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-purple-700 dark:text-purple-300" id="stat-visitors">346,359</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Daily Visitors</div>
                     </div>
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-green-600" id="stat-scanned">200</div>
-                        <div class="text-sm text-gray-700">Sites Scanned Today</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-green-600 dark:text-green-300" id="stat-scanned">200</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Sites Scanned Today</div>
                     </div>
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-orange-600" id="stat-reported">14</div>
-                        <div class="text-sm text-gray-700">Scams Blocked Today</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-orange-600 dark:text-orange-300" id="stat-reported">14</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Scams Blocked Today</div>
                     </div>
-                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm">
-                        <div class="text-3xl font-black text-pink-700" id="stat-users">700</div>
-                        <div class="text-sm text-gray-700">Protected Users</div>
+                    <div class="stat-card rounded-xl border border-gray-300 bg-gray-100/40 p-4 text-center backdrop-blur-sm dark:border-gray-600 dark:bg-gray-600/40">
+                        <div class="text-3xl font-black text-pink-700 dark:text-pink-300" id="stat-users">700</div>
+                        <div class="text-sm text-gray-700 dark:text-gray-300">Protected Users</div>
                     </div>
                 </div>
             </div>
@@ -78,11 +78,11 @@
     </div>
 </div>
 
-<div class="bg-gray-100 py-20">
+<div class="bg-gray-100 py-20 dark:bg-gray-900">
     <div class="mx-auto max-w-7xl px-4">
         <div class="mb-16 text-center">
-            <h2 class="mb-4 text-4xl font-bold text-gray-900 sm:text-5xl">🎯 Know Your Enemy</h2>
-            <p class="mx-auto max-w-3xl text-xl text-gray-600">
+            <h2 class="mb-4 text-4xl font-bold text-gray-900 sm:text-5xl dark:text-gray-100">🎯 Know Your Enemy</h2>
+            <p class="mx-auto max-w-3xl text-xl text-gray-600 dark:text-gray-300">
                 Stay informed about the latest scam tactics. Knowledge is your best defense against fraud.
             </p>
         </div>
@@ -91,18 +91,18 @@
     </div>
 </div>
 
-<div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 py-16">
+<div class="bg-gradient-to-r from-red-600 via-red-700 to-red-800 py-16 dark:from-red-500 dark:via-red-600 dark:to-red-700">
     <div class="mx-auto max-w-4xl px-4 text-center">
         <div class="float-animation">
             <h3 class="mb-6 text-4xl font-bold text-white">🚨 Been Scammed? Act Fast!</h3>
-            <p class="mb-8 text-xl text-red-100">
+            <p class="mb-8 text-xl text-red-100 dark:text-red-200">
                 Time is critical. Get immediate help and report the incident to prevent others from falling victim.
             </p>
             <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                <a href="tel:999" class="emergency-btn inline-flex transform items-center gap-3 rounded-2xl bg-white px-8 py-4 text-lg font-bold text-red-700 shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-red-50">
+                <a href="tel:999" class="emergency-btn inline-flex transform items-center gap-3 rounded-2xl bg-white px-8 py-4 text-lg font-bold text-red-700 shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-red-50 dark:bg-gray-800 dark:text-red-300 dark:hover:bg-gray-700">
                     📞 Emergency: Call 999
                 </a>
-                <button class="report-btn inline-flex transform items-center gap-3 rounded-2xl border-2 border-red-600 bg-red-800 px-8 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-red-900">
+                <button class="report-btn inline-flex transform items-center gap-3 rounded-2xl border-2 border-red-600 bg-red-800 px-8 py-4 text-lg font-bold text-white shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-red-900 dark:border-red-400 dark:bg-red-700 dark:hover:bg-red-600">
                     📝 Report Scam
                 </button>
             </div>
@@ -110,57 +110,57 @@
     </div>
 </div>
 
-<div class="bg-white py-20">
+<div class="bg-white py-20 dark:bg-gray-800">
     <div class="mx-auto max-w-7xl px-4">
         <div class="mb-16 text-center">
-            <h2 class="mb-4 text-4xl font-bold text-gray-900">🛡️ How We Protect You</h2>
-            <p class="text-xl text-gray-600">Advanced technology meets community intelligence</p>
+            <h2 class="mb-4 text-4xl font-bold text-gray-900 dark:text-gray-100">🛡️ How We Protect You</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300">Advanced technology meets community intelligence</p>
         </div>
         <div class="grid gap-8 md:grid-cols-3" id="features">
-            <div class="feature-card rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-8 text-center">
-                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600">
-                    <span class="text-2xl">🔍</span>
+            <div class="feature-card rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 p-8 text-center dark:border-blue-700 dark:from-blue-900 dark:to-blue-800">
+                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 dark:bg-blue-500">
+                    <span class="text-2xl text-white">🔍</span>
                 </div>
-                <h3 class="mb-4 text-2xl font-bold text-gray-800">Real-Time Scanning</h3>
-                <p class="text-gray-600">Instant analysis of websites, emails, and phone numbers using AI-powered detection algorithms.</p>
+                <h3 class="mb-4 text-2xl font-bold text-gray-800 dark:text-gray-100">Real-Time Scanning</h3>
+                <p class="text-gray-600 dark:text-gray-300">Instant analysis of websites, emails, and phone numbers using AI-powered detection algorithms.</p>
             </div>
-            <div class="feature-card rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-8 text-center">
-                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-600" style="animation-delay: 0.5s;">
-                    <span class="text-2xl">👥</span>
+            <div class="feature-card rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-green-100 p-8 text-center dark:border-green-700 dark:from-green-900 dark:to-green-800">
+                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-600 dark:bg-green-500" style="animation-delay: 0.5s;">
+                    <span class="text-2xl text-white">👥</span>
                 </div>
-                <h3 class="mb-4 text-2xl font-bold text-gray-800">Community Network</h3>
-                <p class="text-gray-600">Crowdsourced reports from users worldwide create a powerful early warning system.</p>
+                <h3 class="mb-4 text-2xl font-bold text-gray-800 dark:text-gray-100">Community Network</h3>
+                <p class="text-gray-600 dark:text-gray-300">Crowdsourced reports from users worldwide create a powerful early warning system.</p>
             </div>
-            <div class="feature-card rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-8 text-center">
-                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-purple-600" style="animation-delay: 1s;">
-                    <span class="text-2xl">⚡</span>
+            <div class="feature-card rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-8 text-center dark:border-purple-700 dark:from-purple-900 dark:to-purple-800">
+                <div class="float-animation mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-purple-600 dark:bg-purple-500" style="animation-delay: 1s;">
+                    <span class="text-2xl text-white">⚡</span>
                 </div>
-                <h3 class="mb-4 text-2xl font-bold text-gray-800">Instant Alerts</h3>
-                <p class="text-gray-600">Get immediate notifications about potential threats before you become a victim.</p>
+                <h3 class="mb-4 text-2xl font-bold text-gray-800 dark:text-gray-100">Instant Alerts</h3>
+                <p class="text-gray-600 dark:text-gray-300">Get immediate notifications about potential threats before you become a victim.</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="bg-gray-900 py-16 text-white">
+<div class="bg-gray-900 py-16 text-white dark:bg-gray-950">
     <div class="mx-auto max-w-6xl px-4 text-center">
-        <h3 class="mb-8 text-3xl font-bold">🏆 Trusted by Thousands</h3>
+        <h3 class="mb-8 text-3xl font-bold text-white">🏆 Trusted by Thousands</h3>
         <div class="grid gap-8 md:grid-cols-4">
             <div class="trust-stat">
-                <div class="mb-2 text-4xl font-bold text-green-400">99.8%</div>
-                <div class="text-gray-300">Accuracy Rate</div>
+                <div class="mb-2 text-4xl font-bold text-green-400 dark:text-green-300">99.8%</div>
+                <div class="text-gray-300 dark:text-gray-400">Accuracy Rate</div>
             </div>
             <div class="trust-stat">
-                <div class="mb-2 text-4xl font-bold text-blue-400">24/7</div>
-                <div class="text-gray-300">Protection</div>
+                <div class="mb-2 text-4xl font-bold text-blue-400 dark:text-blue-300">24/7</div>
+                <div class="text-gray-300 dark:text-gray-400">Protection</div>
             </div>
             <div class="trust-stat">
-                <div class="mb-2 text-4xl font-bold text-purple-400">50k+</div>
-                <div class="text-gray-300">Users Protected</div>
+                <div class="mb-2 text-4xl font-bold text-purple-400 dark:text-purple-300">50k+</div>
+                <div class="text-gray-300 dark:text-gray-400">Users Protected</div>
             </div>
             <div class="trust-stat">
-                <div class="mb-2 text-4xl font-bold text-yellow-400">$2M+</div>
-                <div class="text-gray-300">Losses Prevented</div>
+                <div class="mb-2 text-4xl font-bold text-yellow-400 dark:text-yellow-300">$2M+</div>
+                <div class="text-gray-300 dark:text-gray-400">Losses Prevented</div>
             </div>
         </div>
     </div>

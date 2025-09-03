@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,21 +8,38 @@
     <link rel="stylesheet" href="~/ScamSentinel.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-
-<body>
-
-
+<body >
     <partial name="../Components/_Header" />
-   
-    <main>
-    @RenderBody()
+
+    <main class="flex-grow">
+        @RenderBody()
     </main>
 
     <partial name="../Components/_Footer" />
 
-
+    <!-- Dark mode toggle button (bottom-left) -->
+    <button id="theme-toggle"
+            class="fixed bottom-4 left-4 z-50 rounded-full bg-gray-800 p-2 text-gray-200 hover:bg-stone-400 focus:outline-none dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-stone-700">
+        <svg id="theme-toggle-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <!-- Default: Moon (dark mode) -->
+            <path id="moon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            <!-- Hidden: Sun (light mode) -->
+            <path id="sun" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  class="hidden" />
+        </svg>
+    </button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -30,13 +47,13 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
+        // Toast config
         toastr.options = {
             "closeButton": true,
             "progressBar": true,
             "positionClass": "toast-bottom-right",
             "timeOut": "2000"
         };
-
         @if (TempData["SuccessMessage"] != null)
         {
                 <text>toastr.success("@TempData["SuccessMessage"]");</text>
@@ -45,7 +62,34 @@
         {
                 <text>toastr.error("@TempData["ErrorMessage"]");</text>
         }
+
+        // Dark mode toggle logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const moonIcon = document.getElementById('moon');
+        const sunIcon = document.getElementById('sun');
+
+        // Set initial icon
+        if (localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            moonIcon.classList.add('hidden');
+            sunIcon.classList.remove('hidden');
+        }
+
+        // Toggle theme and icon
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        });
     </script>
 </body>
-
 </html>
