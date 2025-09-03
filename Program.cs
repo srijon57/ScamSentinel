@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<SupabaseService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddHttpClient();
 // Add JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
