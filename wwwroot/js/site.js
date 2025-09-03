@@ -19,3 +19,49 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 };
+// site.js
+
+(function () {
+    var root = document.documentElement;
+
+    function setIconForAllToggles(isDark) {
+        var buttons = Array.from(document.querySelectorAll('[data-theme-toggle], #theme-toggle'));
+        buttons.forEach(function (btn) {
+            btn.textContent = isDark ? '☀️' : '🌙';
+        });
+    }
+
+    function applyInitialIcon() {
+        var isDark = root.classList.contains('dark');
+        setIconForAllToggles(isDark);
+    }
+
+    function toggleTheme() {
+        var isDark = root.classList.toggle('dark');
+        try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch (e) { }
+        setIconForAllToggles(isDark);
+    }
+
+    // Early theme set (avoid white flash)
+    try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark') root.classList.add('dark');
+    } catch (e) { }
+
+    // Delegated click handler
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-theme-toggle], #theme-toggle');
+        if (btn) {
+            e.preventDefault();
+            toggleTheme();
+        }
+    });
+
+    // Ensure correct icon
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', applyInitialIcon);
+    } else {
+        applyInitialIcon();
+    }
+})();
+

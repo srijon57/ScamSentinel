@@ -1,1 +1,78 @@
 @import "tailwindcss";
+
+/* === Color variables === */
+:root {
+    --primary-color: #813232; /* blood red */
+    --secondary-color: #03dac6; /* teal */
+    /* Light mode */
+    --bg-color: #ffffff;
+    --text-color: #111827;
+    --card-bg: #ffffff;
+    --border-color: #e5e7eb;
+}
+
+html.dark {
+    --primary-color: #813232;
+    --secondary-color: #03dac6;
+    /* Dark mode */
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --border-color: #333333;
+}
+
+/* === Utility classes === */
+.bg-app {
+    background-color: var(--bg-color);
+}
+
+.text-app {
+    color: var(--text-color);
+}
+
+.bg-surface {
+    background-color: var(--card-bg);
+}
+
+.border-app {
+    border-color: var(--border-color);
+}
+
+.text-accent {
+    color: var(--primary-color);
+}
+
+.text-interactive {
+    color: var(--secondary-color);
+}
+
+/* Nav link buttons */
+.link-btn {
+    color: var(--primary-color);
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    transition: background-color .2s ease;
+}
+
+    .link-btn:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+html.dark .link-btn:hover {
+    background-color: rgba(255,255,255,0.06);
+}
+
+/* Ensure icon matches text color */
+.icon {
+    color: var(--text-color);
+}
+
+/* === Smooth dark mode transitions === */
+html, body,
+.bg-app,
+.text-app,
+.bg-surface,
+.border-app,
+.icon {
+    transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
