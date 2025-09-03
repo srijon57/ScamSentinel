@@ -1,19 +1,19 @@
 ﻿@model LoginModel
 <div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14">
-    <div class="w-full max-w-md animate-fade-in-up">
+    <div class="animate-fade-in-up w-full max-w-md">
 
-        <h2 class="mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl animate-bounce-slow">
+        <h2 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl">
             Please login to Scam Sentinel
         </h2>
 
-        <form asp-action="Login" method="post" class="rounded-xl bg-white p-8 shadow-2xl border border-gray-200 sm:p-10">
+        <form asp-action="Login" method="post" class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10">
             <div class="space-y-6">
                 <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
                     <label for="Email" class="mb-2 block text-sm font-medium text-gray-700">Email</label>
                     <input asp-for="Email" type="email"
                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
                            required />
-                    <span asp-validation-for="Email" class="mt-1 block text-xs text-red-500 animate-shake"></span>
+                    <span asp-validation-for="Email" class="animate-shake mt-1 block text-xs text-red-500"></span>
                 </div>
 
                 <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
@@ -21,69 +21,16 @@
                     <input asp-for="Password" type="password"
                            class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100"
                            required />
-                    <span asp-validation-for="Password" class="mt-1 block text-xs text-red-500 animate-shake"></span>
+                    <span asp-validation-for="Password" class="animate-shake mt-1 block text-xs text-red-500"></span>
                 </div>
             </div>
 
-            <div class="flex justify-center mt-8 animate-fade-in-up" style="animation-delay: 0.3s;">
+            <div class="animate-fade-in-up mt-8 flex justify-center" style="animation-delay: 0.3s;">
                 <button type="submit"
-                        class="inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-red-700 focus:ring-4 focus:ring-red-200 focus:outline-none shadow-md hover:shadow-lg">
+                        class="inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none">
                     Login
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-<style>
-    /* Fade-in and slide-up animation for the form container */
-    @@keyframes fade-in-up {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animate-fade-in-up {
-        animation: fade-in-up 0.8s ease-out forwards;
-    }
-
-    /* Subtle bounce for the header */
-    @@keyframes bounce-slow {
-        0%, 100% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-5px);
-        }
-    }
-
-    .animate-bounce-slow {
-        animation: bounce-slow 2s infinite ease-in-out;
-    }
-
-    /* Subtle shake for validation errors */
-    @@keyframes shake {
-        0%, 100% {
-            transform: translateX(0);
-        }
-
-        20%, 60% {
-            transform: translateX(-3px);
-        }
-
-        40%, 80% {
-            transform: translateX(3px);
-        }
-    }
-
-    .animate-shake {
-        animation: shake 0.5s ease-in-out 1;
-    }
-</style>

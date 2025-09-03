@@ -1,227 +1,23 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ScamSentinel - Animated Footer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @@keyframes fadeInUp {
-            from
-
-        {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        /* Updated float keyframes for an up-and-down motion */
-        @@keyframes float {
-            0%, 100%
-
-        {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-20px);
-        }
-
-        }
-
-        @@keyframes pulse-glow {
-            0%, 100%
-
-        {
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
-        }
-
-        50% {
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.5);
-        }
-
-        }
-
-        @@keyframes slideInLeft {
-            from
-
-        {
-            opacity: 0;
-            transform: translateX(-50px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        }
-
-        @@keyframes slideInRight {
-            from
-
-        {
-            opacity: 0;
-            transform: translateX(50px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        }
-
-        @@keyframes bounce-in {
-            0%
-
-        {
-            transform: scale(0.3);
-            opacity: 0;
-        }
-
-        50% {
-            transform: scale(1.05);
-        }
-
-        70% {
-            transform: scale(0.9);
-        }
-
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out forwards;
-            opacity: 0;
-        }
-
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .animate-pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-
-        .animate-slide-in-left {
-            animation: slideInLeft 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .animate-slide-in-right {
-            animation: slideInRight 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .animate-bounce-in {
-            animation: bounce-in 0.8s ease-out forwards;
-            opacity: 0;
-        }
-
-        .footer-section {
-            transition: all 0.3s ease;
-        }
-
-            .footer-section:hover {
-                transform: translateY(-5px);
-            }
-
-        .link-hover {
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-            .link-hover::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: -2px;
-                left: 0;
-                background: linear-gradient(90deg, #dc2626, #ef4444);
-                transition: width 0.3s ease;
-            }
-
-            .link-hover:hover::after {
-                width: 100%;
-            }
-
-            .link-hover:hover {
-                color: #dc2626;
-                transform: translateX(5px);
-            }
-
-        .social-icon {
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-            .social-icon::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-                transition: left 0.6s ease;
-            }
-
-            .social-icon:hover::before {
-                left: 100%;
-            }
-
-            .social-icon:hover {
-                transform: scale(1.1) rotate(5deg);
-                box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
-            }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%);
-        }
-
-        .glass-effect {
-            backdrop-filter: blur(10px);
-            background: rgba(254, 242, 242, 0.8);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-    </style>
-</head>
-<body class="bg-gray-50 min-h-screen flex flex-col justify-end">
-    <footer class="w-full gradient-bg relative overflow-hidden">
-        
-
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+﻿<footer class="relative w-full overflow-hidden bg-red-200">
+        <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 gap-8 py-12 sm:grid-cols-2 lg:grid-cols-6">
-                <div class="col-span-full lg:col-span-2 mb-10 lg:mb-0 animate-slide-in-left">
-                    <div class="glass-effect rounded-2xl p-6 footer-section">
-                        <div class="flex items-center mb-4">
+                <div class="animate-slide-in-left col-span-full mb-10 lg:col-span-2 lg:mb-0">
+                    <div class="glass-effect footer-section rounded-2xl p-6">
+                        <div class="mb-4 flex items-center">
                             <img src="/Assets/logo.png"
                                  alt="ScamSentinel Logo"
-                                 class="w-12 h-12 rounded-xl object-cover mr-3 ">
+                                 class="mr-3 h-12 w-12 rounded-xl object-cover">
                             <h3 class="text-2xl font-bold text-red-900">ScamSentinel</h3>
                         </div>
 
-                        <p class="mb-6 text-sm text-red-700 leading-relaxed">
+                        <p class="mb-6 text-sm leading-relaxed text-red-700">
                             Trusted in more than 30 districts & 5 million customers.
                             <span class="font-semibold">Have any query?</span>
                         </p>
 
-                        <button class="group relative overflow-hidden rounded-full bg-gradient-to-r from-white to-gray-300 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:from-gray-200 hover:to-gray-400 hover:shadow-xl hover:scale-105 animate-pulse-glow">
+                        <button class="group animate-pulse-glow relative overflow-hidden rounded-full bg-gradient-to-r from-white to-gray-300 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-gray-200 hover:to-gray-400 hover:shadow-xl">
                             <span class="relative z-10">Contact us</span>
-                            <div class="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            <div class="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
                         </button>
 
                         <div class="mt-6 flex items-center space-x-4">
@@ -231,7 +27,7 @@
                                 </div>
                                 <span class="ml-2 text-xs text-red-600">4.9/5</span>
                             </div>
-                            <div class="text-xs text-red-600 border-l border-red-300 pl-4">
+                            <div class="border-l border-red-300 pl-4 text-xs text-red-600">
                                 99.9% Uptime
                             </div>
                         </div>
@@ -239,102 +35,102 @@
                 </div>
 
                 <div class="animate-fade-in-up footer-section" style="animation-delay: 0.2s;">
-                    <h4 class="mb-6 text-lg font-bold text-red-900 flex items-center">
-                        <span class="w-1 h-6 bg-red-600 rounded mr-3"></span>
+                    <h4 class="mb-6 flex items-center text-lg font-bold text-red-900">
+                        <span class="mr-3 h-6 w-1 rounded bg-red-600"></span>
                         Navigation
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Home</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">About</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Pricing</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Features</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Home</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">About</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Pricing</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Features</a></li>
                     </ul>
                 </div>
 
                 <div class="animate-fade-in-up footer-section" style="animation-delay: 0.4s;">
-                    <h4 class="mb-6 text-lg font-bold text-red-900 flex items-center">
-                        <span class="w-1 h-6 bg-red-600 rounded mr-3"></span>
+                    <h4 class="mb-6 flex items-center text-lg font-bold text-red-900">
+                        <span class="mr-3 h-6 w-1 rounded bg-red-600"></span>
                         Products
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Scam Detection</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">AI Protection</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Mobile App</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">API Access</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Scam Detection</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">AI Protection</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Mobile App</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">API Access</a></li>
                     </ul>
                 </div>
 
                 <div class="animate-fade-in-up footer-section" style="animation-delay: 0.6s;">
-                    <h4 class="mb-6 text-lg font-bold text-red-900 flex items-center">
-                        <span class="w-1 h-6 bg-red-600 rounded mr-3"></span>
+                    <h4 class="mb-6 flex items-center text-lg font-bold text-red-900">
+                        <span class="mr-3 h-6 w-1 rounded bg-red-600"></span>
                         Resources
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">FAQs</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Quick Start</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Documentation</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">User Guide</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">FAQs</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Quick Start</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Documentation</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">User Guide</a></li>
                     </ul>
                 </div>
 
                 <div class="animate-fade-in-up footer-section" style="animation-delay: 0.8s;">
-                    <h4 class="mb-6 text-lg font-bold text-red-900 flex items-center">
-                        <span class="w-1 h-6 bg-red-600 rounded mr-3"></span>
+                    <h4 class="mb-6 flex items-center text-lg font-bold text-red-900">
+                        <span class="mr-3 h-6 w-1 rounded bg-red-600"></span>
                         Support
                     </h4>
                     <ul class="space-y-3">
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Help Center</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Report Scam</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Live Chat</a></li>
-                        <li><a href="javascript:;" class="link-hover text-red-700 font-medium">Contact</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Help Center</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Report Scam</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Live Chat</a></li>
+                        <li><a href="javascript:;" class="link-hover font-medium text-red-700">Contact</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="border-t border-red-200 py-8 animate-slide-in-right">
-                <div class="glass-effect rounded-2xl p-6 max-w-2xl mx-auto text-center">
-                    <h3 class="text-xl font-bold text-red-900 mb-2">Stay Protected</h3>
-                    <p class="text-red-700 mb-4">Get the latest scam alerts and protection tips delivered to your inbox.</p>
-                    <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <div class="animate-slide-in-right border-t border-red-200 py-8">
+                <div class="glass-effect mx-auto max-w-2xl rounded-2xl p-6 text-center">
+                    <h3 class="mb-2 text-xl font-bold text-red-900">Stay Protected</h3>
+                    <p class="mb-4 text-red-700">Get the latest scam alerts and protection tips delivered to your inbox.</p>
+                    <div class="mx-auto flex max-w-md flex-col gap-3 sm:flex-row">
                         <input type="email"
                                placeholder="Enter your email"
-                               class="flex-1 px-4 py-2 rounded-full border border-red-300 focus:border-red-700 focus:ring-2 focus:ring-red-200 transition-all duration-300 bg-white/80 text-red-700">
-                        <button class="group px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-red-700 rounded-full hover:from-red-500 hover:to-red-600 transition-all duration-300 hover:scale-105 shadow-lg">
-                            <span class="group-hover:scale-110 transition-transform duration-300">Subscribe</span>
+                               class="flex-1 rounded-full border border-red-300 bg-white/80 px-4 py-2 text-red-700 transition-all duration-300 focus:border-red-700 focus:ring-2 focus:ring-red-200">
+                        <button class="group rounded-full bg-gradient-to-r from-red-600 to-red-700 px-6 py-2 text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-red-500 hover:to-red-600">
+                            <span class="transition-transform duration-300 group-hover:scale-110">Subscribe</span>
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="border-t border-red-200 py-6 animate-fade-in-up" style="animation-delay: 1s;">
+            <div class="animate-fade-in-up border-t border-red-200 py-6" style="animation-delay: 1s;">
                 <div class="flex flex-col items-center justify-between space-y-6 sm:flex-row sm:space-y-0">
                     <div class="text-center sm:text-left">
                         <span class="text-sm text-red-700">
-                            © <a href="/" class="font-semibold hover:text-red-900 transition-colors duration-300 hover:underline">ScamSentinel</a> 2025
+                            © <a href="/" class="font-semibold transition-colors duration-300 hover:text-red-900 hover:underline">ScamSentinel</a> 2025
                         </span>
-                        <div class="text-xs text-red-600 mt-1">
+                        <div class="mt-1 text-xs text-red-600">
                             All rights reserved • Privacy Policy • Terms of Service
                         </div>
                     </div>
 
                     <div class="flex space-x-4">
-                        <a href="javascript:;" class="social-icon flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg animate-bounce-in" style="animation-delay: 1.2s;" title="Facebook">
-                            <svg class="w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600" style="animation-delay: 1.2s;" title="Facebook">
+                            <svg class="h-5 w-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                         </a>
-                        <a href="javascript:;" class="social-icon flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg animate-bounce-in" style="animation-delay: 1.4s;" title="Phone">
-                            <svg class="w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600" style="animation-delay: 1.4s;" title="Phone">
+                            <svg class="h-5 w-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
                             </svg>
                         </a>
-                        <a href="javascript:;" class="social-icon flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg animate-bounce-in" style="animation-delay: 1.6s;" title="Twitter/X">
-                            <svg class="w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600" style="animation-delay: 1.6s;" title="Twitter/X">
+                            <svg class="h-5 w-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
                             </svg>
                         </a>
-                        <a href="javascript:;" class="social-icon flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 shadow-lg animate-bounce-in" style="animation-delay: 1.8s;" title="LinkedIn">
-                            <svg class="w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
+                        <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600" style="animation-delay: 1.8s;" title="LinkedIn">
+                            <svg class="h-5 w-5 text-red-700" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                             </svg>
                         </a>
@@ -342,9 +138,9 @@
                 </div>
             </div>
 
-            <div class="text-center py-4 animate-fade-in-up" style="animation-delay: 2s;">
-                <div class="inline-flex items-center space-x-2 bg-green-100 text-green-800 px-4 py-2 rounded-full text-xs font-medium">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <div class="animate-fade-in-up py-4 text-center" style="animation-delay: 2s;">
+                <div class="inline-flex items-center space-x-2 rounded-full bg-green-100 px-4 py-2 text-xs font-medium text-green-800">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                     </svg>
                     <span>SSL Secured & Privacy Protected</span>
@@ -352,114 +148,3 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Intersection Observer for scroll-triggered animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all animated elements
-        document.addEventListener('DOMContentLoaded', () => {
-            const animatedElements = document.querySelectorAll('[class*="animate-"]');
-            animatedElements.forEach(el => {
-                if (!el.style.animationPlayState) {
-                    el.style.animationPlayState = 'paused';
-                    observer.observe(el);
-                }
-            });
-
-            // Add hover effects to footer sections
-            const footerSections = document.querySelectorAll('.footer-section');
-            footerSections.forEach(section => {
-                section.addEventListener('mouseenter', () => {
-                    section.style.transform = 'translateY(-8px)';
-                    section.style.boxShadow = '0 20px 25px -5px rgba(239, 68, 68, 0.1), 0 10px 10px -5px rgba(239, 68, 68, 0.04)';
-                });
-                section.addEventListener('mouseleave', () => {
-                    section.style.transform = 'translateY(0)';
-                    section.style.boxShadow = 'none';
-                });
-            });
-
-            // Add click animation to contact button
-            const contactBtn = document.querySelector('button');
-            contactBtn.addEventListener('click', () => {
-                contactBtn.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    contactBtn.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        contactBtn.style.transform = 'scale(1)';
-                    }, 150);
-                }, 100);
-            });
-
-            // Add floating animation trigger on scroll
-            let scrollTimeout;
-            window.addEventListener('scroll', () => {
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    const floatingElements = document.querySelectorAll('.animate-float');
-                    floatingElements.forEach((el, index) => {
-                        el.style.animationDelay = `${index * 0.5}s`;
-                        el.style.animationDuration = `${3 + Math.random() * 2}s`;
-                    });
-                }, 100);
-            });
-        });
-
-        // Smooth scroll behavior for internal links
-        document.querySelectorAll('a[href^="javascript:"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Add ripple effect
-                const ripple = document.createElement('span');
-                const rect = e.target.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const x = e.clientX - rect.left - size / 2;
-                const y = e.clientY - rect.top - size / 2;
-
-                ripple.style.cssText = `
-                    position: absolute;
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${x}px;
-                    top: ${y}px;
-                    background: rgba(255, 255, 255, 0.5);
-                    border-radius: 50%;
-                    transform: scale(0);
-                    animation: ripple 0.6s linear;
-                    pointer-events: none;
-                `;
-
-                e.target.style.position = 'relative';
-                e.target.style.overflow = 'hidden';
-                e.target.appendChild(ripple);
-
-                setTimeout(() => ripple.remove(), 600);
-            });
-        });
-
-        // Add CSS for ripple animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @@keyframes ripple {
-                to {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
-</body>
-</html>
