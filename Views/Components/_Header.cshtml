@@ -95,7 +95,7 @@
                     </nav>
 
                     <div class="mt-6 border-t border-red-100 pt-6 dark:border-gray-700">
-                        @if (User.Identity.IsAuthenticated)
+                        @if (Context.Request.Cookies["access_token"] != null)
                         {
                             <form asp-controller="Account" asp-action="Logout" method="post">
                                 <button type="submit" class="w-full rounded-lg px-3 py-2.5 text-left text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">

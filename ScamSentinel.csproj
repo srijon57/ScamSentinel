@@ -32,5 +32,5 @@
 	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
 	<PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
-	<Import Project="Tailwind.targets" />
+	<Import Project="Tailwind.targets"/>
 </Project>
