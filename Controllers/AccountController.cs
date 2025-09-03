@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-
+using ScamSentinel.Models;
 [AllowAnonymous]
 public class AccountController : Controller
 {
@@ -231,4 +231,132 @@ public class AccountController : Controller
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+    [Authorize]
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        if (!User.Identity.IsAuthenticated)
+        {
+            TempData["ErrorMessage"] = "You are not authenticated. Please log in.";
+            return RedirectToAction("Login");
+        }
+
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            var profileModel = new ProfileModel
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                ContactNumber = user.ContactNumber
+            };
+
+            return View(profileModel);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "An error occurred. Please try again.";
+            return RedirectToAction("Login");
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> UpdateProfile(ProfileModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View("Profile", model);
+        }
+
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            await connection.ExecuteAsync(
+                "UPDATE Users SET UserName = @UserName, ContactNumber = @ContactNumber WHERE Email = @Email",
+                new { model.UserName, model.ContactNumber, Email = userEmail }
+            );
+
+            TempData["SuccessMessage"] = "Profile updated successfully!";
+            return RedirectToAction("Profile");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, "Failed to update profile. Please try again.");
+            return View("Profile", model);
+        }
+    }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+    {
+        if (model.NewPassword != model.ConfirmNewPassword)
+        {
+            ModelState.AddModelError("ConfirmNewPassword", "New password and confirmation do not match.");
+            return View(model);
+        }
+
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.CurrentPassword, user.PasswordHash))
+            {
+                ModelState.AddModelError("CurrentPassword", "Current password is incorrect.");
+                return View(model);
+            }
+
+            string newPasswordHash = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
+
+            await connection.ExecuteAsync(
+                "UPDATE Users SET PasswordHash = @PasswordHash WHERE Email = @Email",
+                new { PasswordHash = newPasswordHash, Email = userEmail }
+            );
+
+            TempData["SuccessMessage"] = "Password changed successfully!";
+            return RedirectToAction("Profile");
+        }
+        catch (Exception ex)
+        {
+            ModelState.AddModelError(string.Empty, "Failed to change password. Please try again.");
+            return View(model);
+        }
+    }
+
+
+
 }
