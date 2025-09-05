@@ -1,85 +1,135 @@
-﻿<footer class="w-full bg-red-100">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <!-- Grid -->
-        <div class="grid grid-cols-2 gap-8 py-10 sm:grid-cols-4 lg:grid-cols-6">
-            <!-- Branding and Contact -->
-            <div class="col-span-full mb-10 lg:col-span-2 lg:mb-0">
-              
-                <p class="py-4 text-center text-sm text-red-700 lg:max-w-xs lg:text-left">
-                    Trusted in more than 30 districts & 5 million customers. Have any query?
-                </p>
-                <a href="javascript:/contact;"
-                   class="mx-auto block h-9 w-fit rounded-full bg-red-600 px-5 py-2.5 text-xs text-white shadow-sm transition-all duration-500 hover:bg-red-500 lg:mx-0">
-                    Contact us
-                </a>
+﻿<footer class="relative w-full overflow-hidden bg-red-200 dark:bg-gray-800">
+    <div class="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 gap-8 py-12 sm:grid-cols-2 lg:grid-cols-6">
+            <div class="animate-slide-in-left col-span-full mb-10 lg:col-span-2 lg:mb-0">
+                <div class="glass-effect footer-section rounded-2xl p-6 dark:bg-gray-700">
+                    <div class="mb-4 flex items-center">
+                        <img src="/Assets/logo.png"
+                             alt="ScamSentinel Logo"
+                             class="mr-3 h-12 w-12 rounded-xl object-cover">
+                        <h3 class="text-2xl font-bold text-red-900 dark:text-red-300">ScamSentinel</h3>
+                    </div>
+
+                    <p class="mb-6 text-sm leading-relaxed text-red-700 dark:text-red-300">
+                        Trusted in more than 30 districts & 5 million customers.
+                        <span class="font-semibold">Have any query?</span>
+                    </p>
+
+                    <button onclick="window.location.href='@Url.Action("Index", "Contact")'"
+                            class="group animate-pulse-glow relative overflow-hidden rounded-full bg-gradient-to-r from-white to-gray-300 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-gray-200 hover:to-gray-400 hover:shadow-xl dark:from-gray-700 dark:to-gray-600 dark:text-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500">
+                        <span class="relative z-10">Contact us</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500 dark:to-transparent"></div>
+                    </button>
+
+
+                    <div class="mt-6 flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <div class="flex text-yellow-400 dark:text-yellow-300">
+                                <span>★★★★★</span>
+                            </div>
+                            <span class="ml-2 text-xs text-red-600 dark:text-red-400">4.9/5</span>
+                        </div>
+                        <div class="border-l border-red-300 pl-4 text-xs text-red-600 dark:border-gray-600 dark:text-red-400">
+                            99.9% Uptime
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Footer Columns -->
-            <div class="text-left">
-                <h4 class="mb-4 text-lg font-medium text-red-900">ScamSentinel</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Home</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">About</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Pricing</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Features</a></li>
+            <div class="animate-fade-in-up footer-section" style="animation-delay: 0.2s;">
+                <h4 class="mb-6 flex items-center text-lg font-bold text-red-900 dark:text-red-300">
+                    <span class="mr-3 h-6 w-1 rounded bg-red-600 dark:bg-red-400"></span>
+                    Navigation
+                </h4>
+                <ul class="space-y-3">
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Home</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">About</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Pricing</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Features</a></li>
                 </ul>
             </div>
 
-            <div class="text-left">
-                <h4 class="mb-4 text-lg font-medium text-red-900">News</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Figma UI System</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Icons Assets</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Responsive Blocks</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Components Library</a></li>
+            <div class="animate-fade-in-up footer-section" style="animation-delay: 0.4s;">
+                <h4 class="mb-6 flex items-center text-lg font-bold text-red-900 dark:text-red-300">
+                    <span class="mr-3 h-6 w-1 rounded bg-red-600 dark:bg-red-400"></span>
+                    Products
+                </h4>
+                <ul class="space-y-3">
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Scam Detection</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">AI Protection</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Mobile App</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">API Access</a></li>
                 </ul>
             </div>
 
-            <div class="text-left">
-                <h4 class="mb-4 text-lg font-medium text-red-900">Resources</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">FAQs</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Quick Start</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Documentation</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">User Guide</a></li>
+            <div class="animate-fade-in-up footer-section" style="animation-delay: 0.6s;">
+                <h4 class="mb-6 flex items-center text-lg font-bold text-red-900 dark:text-red-300">
+                    <span class="mr-3 h-6 w-1 rounded bg-red-600 dark:bg-red-400"></span>
+                    Resources
+                </h4>
+                <ul class="space-y-3">
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">FAQs</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Quick Start</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Documentation</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">User Guide</a></li>
                 </ul>
             </div>
 
-            <div class="text-left">
-                <h4 class="mb-4 text-lg font-medium text-red-900">Blogs</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">News</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Tips & Tricks</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">New Updates</a></li>
-                    <li><a href="javascript:;" class="text-red-700 hover:text-red-900">Events</a></li>
+            <div class="animate-fade-in-up footer-section" style="animation-delay: 0.8s;">
+                <h4 class="mb-6 flex items-center text-lg font-bold text-red-900 dark:text-red-300">
+                    <span class="mr-3 h-6 w-1 rounded bg-red-600 dark:bg-red-400"></span>
+                    Support
+                </h4>
+                <ul class="space-y-3">
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Help Center</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Report Scam</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Live Chat</a></li>
+                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Contact</a></li>
                 </ul>
             </div>
         </div>
+        <div class="animate-fade-in-up border-t border-red-200 py-6 dark:border-gray-700" style="animation-delay: 1s;">
+            <div class="flex flex-col items-center justify-between space-y-6 sm:flex-row sm:space-y-0">
+                <div class="text-center sm:text-left">
+                    <span class="text-sm text-red-700 dark:text-red-300">
+                        © <a href="/" class="font-semibold transition-colors duration-300 hover:text-red-900 hover:underline dark:hover:text-red-100">ScamSentinel</a> 2025
+                    </span>
+                    <div class="mt-1 text-xs text-red-600 dark:text-red-400">
+                        All rights reserved • Privacy Policy • Terms of Service
+                    </div>
+                </div>
 
-        <!-- Footer Bottom -->
-        <div class="border-t border-red-200 py-6">
-            <div class="flex flex-col items-center justify-between space-y-4 sm:flex-row">
-                <span class="text-sm text-red-700">
-                    ©<a href="/" class="hover:underline">ScamSentinel</a> 2025, All rights reserved.
-                </span>
                 <div class="flex space-x-4">
-                    <a href="javascript:;" class="flex h-9 w-9 items-center justify-center rounded-full bg-red-700 hover:bg-red-600">
-                        <div class="mb-2 text-4xl text-white">
-                            ⓕ
-                        </div>
+                    <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600 dark:from-red-500 dark:to-red-600 dark:hover:from-red-400 dark:hover:to-red-500" style="animation-delay: 1.2s;" title="Facebook">
+                        <svg class="h-5 w-5 text-red-700 dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                        </svg>
                     </a>
-                    <a href="javascript:;" class="flex h-9 w-9 items-center justify-center rounded-full bg-red-700 hover:bg-red-600">
-                        <div class="mb-2 text-4xl text-white">
-                            ✆
-                        </div>
+                    <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600 dark:from-red-500 dark:to-red-600 dark:hover:from-red-400 dark:hover:to-red-500" style="animation-delay: 1.4s;" title="Phone">
+                        <svg class="h-5 w-5 text-red-700 dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                        </svg>
                     </a>
-                    <a href="javascript:;" class="flex h-9 w-9 items-center justify-center rounded-full bg-red-700 hover:bg-red-600">
-                        <div class="mb-2 text-4xl text-white">
-                            𝕏
-                        </div>
+                    <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600 dark:from-red-500 dark:to-red-600 dark:hover:from-red-400 dark:hover:to-red-500" style="animation-delay: 1.6s;" title="Twitter/X">
+                        <svg class="h-5 w-5 text-red-700 dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+                        </svg>
+                    </a>
+                    <a href="javascript:;" class="social-icon animate-bounce-in flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-red-600 to-red-700 shadow-lg hover:from-red-500 hover:to-red-600 dark:from-red-500 dark:to-red-600 dark:hover:from-red-400 dark:hover:to-red-500" style="animation-delay: 1.8s;" title="LinkedIn">
+                        <svg class="h-5 w-5 text-red-700 dark:text-gray-100" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
                     </a>
                 </div>
             </div>
+
+            <div class="animate-fade-in-up py-4 text-center" style="animation-delay: 2s;">
+                <div class="inline-flex items-center space-x-2 rounded-full bg-green-100 px-4 py-2 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-300">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                    <span>SSL Secured & Privacy Protected</span>
+                </div>
+            </div>
         </div>
-    </div>
 </footer>
