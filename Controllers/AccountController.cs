@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using ScamSentinel.Models.Account;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using ScamSentinel.Models;
+using System.Text.RegularExpressions;
 [AllowAnonymous]
 public class AccountController : Controller
 {
@@ -31,21 +32,45 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterModel model)
     {
-        if (model.Password != model.ConfirmPassword)
+        // Validate email format
+        if (!model.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
         {
-            TempData["ErrorMessage"] = "Password and Confirm Password do not match.";
+            TempData["ErrorMessage"] = "Please provide a valid Gmail address.";
             return View(model);
         }
 
+        // Validate username is not empty
+        if (string.IsNullOrWhiteSpace(model.UserName))
+        {
+            TempData["ErrorMessage"] = "Username cannot be empty.";
+            return View(model);
+        }
+
+        // Validate username doesn't start with spaces
+        if (model.UserName.StartsWith(" "))
+        {
+            TempData["ErrorMessage"] = "Username cannot start with spaces.";
+            return View(model);
+        }
+
+        // Validate username doesn't contain special characters
+        if (!Regex.IsMatch(model.UserName, @"^[a-zA-Z0-9_]+$"))
+        {
+            TempData["ErrorMessage"] = "Username can only contain letters, numbers, and underscores.";
+            return View(model);
+        }
+
+        // Validate password length
         if (model.Password.Length < 6)
         {
             TempData["ErrorMessage"] = "Password must be at least 6 characters long.";
             return View(model);
         }
 
-        if (!model.Email.EndsWith("@gmail.com"))
+        // Validate password confirmation
+        if (model.Password != model.ConfirmPassword)
         {
-            TempData["ErrorMessage"] = "Please provide a valid Gmail address.";
+            TempData["ErrorMessage"] = "Password and Confirm Password do not match.";
             return View(model);
         }
 
@@ -62,7 +87,14 @@ public class AccountController : Controller
 
             if (existingUser != null)
             {
-                TempData["ErrorMessage"] = "Username or email already exists.";
+                if (existingUser.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase))
+                {
+                    TempData["ErrorMessage"] = "Username already exists.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Email already exists.";
+                }
                 return View(model);
             }
 
@@ -89,7 +121,8 @@ public class AccountController : Controller
         }
         catch (Exception ex)
         {
-            TempData["ErrorMessage"] = "Registration failed. Please try again.";
+            // Log the exception (you should implement proper logging)
+            TempData["ErrorMessage"] = "Registration failed due to a server error. Please try again.";
             return View(model);
         }
     }
@@ -273,9 +306,6 @@ public class AccountController : Controller
             return RedirectToAction("Login");
         }
     }
-
-    [Authorize]
-    [HttpPost]
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> UpdateProfile(ProfileModel model)
@@ -356,7 +386,5 @@ public class AccountController : Controller
             return View(model);
         }
     }
-
-
 
 }

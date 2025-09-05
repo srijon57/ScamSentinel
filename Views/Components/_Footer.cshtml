@@ -15,12 +15,43 @@
                         <span class="font-semibold">Have any query?</span>
                     </p>
 
-                    <button onclick="window.location.href='@Url.Action("Index", "Contact")'"
-                            class="group animate-pulse-glow relative overflow-hidden rounded-full bg-gradient-to-r from-white to-gray-300 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-gray-200 hover:to-gray-400 hover:shadow-xl dark:from-gray-700 dark:to-gray-600 dark:text-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500">
-                        <span class="relative z-10">Contact us</span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500 dark:to-transparent"></div>
-                    </button>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <button onclick="window.location.href='@Url.Action("Index", "Contact")'"
+                                class="group animate-pulse-glow relative overflow-hidden rounded-full bg-gradient-to-r from-white to-gray-300 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-gray-200 hover:to-gray-400 hover:shadow-xl dark:from-gray-700 dark:to-gray-600 dark:text-gray-100 dark:hover:from-gray-600 dark:hover:to-gray-500">
+                            <span class="relative z-10">Contact us</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-gray-100 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-500 dark:to-transparent"></div>
+                        </button>
+                    }
+                    else
+                    {
+                        <button onclick="showAuthRequiredMessage()"
+                                class="group animate-pulse-glow relative overflow-hidden rounded-full bg-gradient-to-r from-gray-300 to-gray-400 px-8 py-3 text-sm font-medium text-red-700 shadow-lg transition-all duration-300 hover:scale-105 hover:from-gray-400 hover:to-gray-500 hover:shadow-xl dark:from-gray-600 dark:to-gray-700 dark:text-gray-100 dark:hover:from-gray-700 dark:hover:to-gray-800">
+                            <span class="relative z-10">Contact us</span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-gray-400 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:from-gray-700 dark:to-transparent"></div>
+                        </button>
 
+                        <!-- Error message container (initially hidden) -->
+                        <div id="authErrorMessage" class="mt-4 hidden rounded-lg bg-red-100 p-3 text-sm text-red-700 dark:bg-red-900 dark:text-red-300">
+                            <div class="flex items-center">
+                                <svg class="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                <span>You need to be logged in to access the contact page.</span>
+                            </div>
+                            <div class="mt-2 flex space-x-2">
+                                <a asp-controller="Account" asp-action="Login"
+                                   class="text-xs font-medium text-red-700 underline hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">
+                                    Log In
+                                </a>
+                                <span class="text-red-500 dark:text-red-400">|</span>
+                                <a asp-controller="Account" asp-action="Register"
+                                   class="text-xs font-medium text-red-700 underline hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">
+                                    Register
+                                </a>
+                            </div>
+                        </div>
+                    }
 
                     <div class="mt-6 flex items-center space-x-4">
                         <div class="flex items-center">
@@ -84,7 +115,16 @@
                     <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Help Center</a></li>
                     <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Report Scam</a></li>
                     <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Live Chat</a></li>
-                    <li><a href="javascript:;" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Contact</a></li>
+                    <li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a href="@Url.Action("Index", "Contact")" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Contact</a>
+                        }
+                        else
+                        {
+                            <a href="javascript:showAuthRequiredMessage()" class="link-hover font-medium text-red-700 hover:text-red-900 dark:text-red-300 dark:hover:text-red-100">Contact</a>
+                        }
+                    </li>
                 </ul>
             </div>
         </div>
@@ -132,4 +172,24 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <script>
+        function showAuthRequiredMessage() {
+            // Show the error message
+            const errorMessage = document.getElementById('authErrorMessage');
+            errorMessage.classList.remove('hidden');
+
+            // Add animation to the error message
+            errorMessage.classList.add('animate-shake');
+
+            // Scroll to the error message if it's not in view
+            errorMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Remove the animation class after the animation completes
+            setTimeout(() => {
+                errorMessage.classList.remove('animate-shake');
+            }, 1000);
+        }
+    </script>
 </footer>

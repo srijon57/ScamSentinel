@@ -1,4 +1,4 @@
-﻿namespace ScamSentinel.Models
+﻿namespace ScamSentinel.Models.Account
 {
     public class OTP
     {

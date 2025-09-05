@@ -1,58 +1,104 @@
 ﻿@model ContactModel
 
-<div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
-    <h1 class="animate-bounce-slow mt-12 mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
-        Contact Us
-    </h1>
-    <p class="mb-8 max-w-2xl text-center text-lg text-gray-600 dark:text-gray-300">
-        If you have any questions, feedback, or reports, feel free to reach out to us.
-    </p>
-    <div class="animate-fade-in-up w-full max-w-md">
-        <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10 dark:border-gray-700 dark:bg-gray-800">
-            <form asp-action="Index" method="post" class="space-y-6">
-                <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
-                    <label asp-for="Name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
-                    <input asp-for="Name"
-                           class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
-                           placeholder="Your name" />
-                    <span asp-validation-for="Name" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
+        <div class="animate-fade-in-up w-full max-w-md">
+            <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10 dark:border-gray-700 dark:bg-gray-800">
+                <div class="text-center">
+                    <svg class="mx-auto h-16 w-16 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    <h2 class="mt-6 text-2xl font-bold text-gray-900 dark:text-gray-100">Authentication Required</h2>
+                    <p class="mt-4 text-gray-600 dark:text-gray-300">You need to be logged in to access the contact page.</p>
+                    <div class="mt-8">
+                        <a asp-controller="Account" asp-action="Login"
+                           class="inline-flex justify-center rounded-full bg-red-600 px-6 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                            Log In
+                        </a>
+                        <a asp-controller="Account" asp-action="Register"
+                           class="ml-4 inline-flex justify-center rounded-full bg-gray-600 px-6 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-gray-700 hover:shadow-lg focus:ring-4 focus:ring-gray-200 focus:outline-none dark:bg-gray-500 dark:hover:bg-gray-600 dark:focus:ring-gray-800">
+                            Register
+                        </a>
+                    </div>
                 </div>
-                <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
-                    <label asp-for="Email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-                    <input asp-for="Email"
-                           class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
-                           placeholder="Your email" />
-                    <span asp-validation-for="Email" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
-                </div>
-                <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
-                    <label asp-for="Phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
-                    <input asp-for="Phone"
-                           class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
-                           placeholder="Your phone number" />
-                    <span asp-validation-for="Phone" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
-                </div>
-                <div class="animate-fade-in-up" style="animation-delay: 0.4s;">
-                    <label asp-for="Subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Subject</label>
-                    <input asp-for="Subject"
-                           class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
-                           placeholder="Subject of your message" />
-                    <span asp-validation-for="Subject" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
-                </div>
-                <div class="animate-fade-in-up" style="animation-delay: 0.5s;">
-                    <label asp-for="Message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
-                    <textarea asp-for="Message"
-                              rows="5"
-                              class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
-                              placeholder="Your message"></textarea>
-                    <span asp-validation-for="Message" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
-                </div>
-                <div class="animate-fade-in-up mt-8 flex justify-center" style="animation-delay: 0.6s;">
-                    <button type="submit"
-                            class="inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
-                        Send Message
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <div class="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
+        <h1 class="animate-bounce-slow mt-12 mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
+            Contact Us
+        </h1>
+        <p class="mb-8 max-w-2xl text-center text-lg text-gray-600 dark:text-gray-300">
+            If you have any questions, feedback, or reports, feel free to reach out to us.
+        </p>
+
+        <!-- Display error message if any -->
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="mb-4 w-full max-w-md rounded-lg bg-red-100 p-4 text-sm text-red-700 dark:bg-red-200 dark:text-red-800">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <!-- Display success message if any -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="mb-4 w-full max-w-md rounded-lg bg-green-100 p-4 text-sm text-green-700 dark:bg-green-200 dark:text-green-800">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="animate-fade-in-up w-full max-w-md">
+            <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl sm:p-10 dark:border-gray-700 dark:bg-gray-800">
+                <form asp-action="Index" method="post" class="space-y-6">
+                    <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
+                        <label asp-for="Name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                        <input asp-for="Name"
+                               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
+                               placeholder="Your name" />
+                        <span asp-validation-for="Name" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+                    </div>
+                    <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
+                        <label asp-for="Email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                        <input asp-for="Email"
+                               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
+                               placeholder="Your email" />
+                        <span asp-validation-for="Email" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+                    </div>
+                    <div class="animate-fade-in-up" style="animation-delay: 0.3s;">
+                        <label asp-for="Phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone</label>
+                        <input asp-for="Phone"
+                               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
+                               placeholder="Your phone number" />
+                        <span asp-validation-for="Phone" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+                    </div>
+                    <div class="animate-fade-in-up" style="animation-delay: 0.4s;">
+                        <label asp-for="Subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Subject</label>
+                        <input asp-for="Subject"
+                               class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
+                               placeholder="Subject of your message" />
+                        <span asp-validation-for="Subject" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+                    </div>
+                    <div class="animate-fade-in-up" style="animation-delay: 0.5s;">
+                        <label asp-for="Message" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Message</label>
+                        <textarea asp-for="Message"
+                                  rows="5"
+                                  class="mt-1 block w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900"
+                                  placeholder="Your message"></textarea>
+                        <span asp-validation-for="Message" class="animate-shake mt-1 block text-xs text-red-500 dark:text-red-400"></span>
+                    </div>
+                    <div class="animate-fade-in-up mt-8 flex justify-center" style="animation-delay: 0.6s;">
+                        <button type="submit"
+                                class="inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
