@@ -1,9 +1,12 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using ScamSentinel.Models.Account;
+using ScamSentinel.Models.Scam;
+using ScamSentinel.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -15,12 +18,14 @@ public class AccountController : Controller
     private readonly SupabaseService _supabaseService;
     private readonly EmailService _emailService;
     private readonly IConfiguration _configuration;
+    private readonly CloudinaryService _cloudinaryService;
 
-    public AccountController(SupabaseService supabaseService, EmailService emailService, IConfiguration configuration)
+    public AccountController(SupabaseService supabaseService, EmailService emailService, IConfiguration configuration, CloudinaryService cloudinaryService)
     {
         _supabaseService = supabaseService;
         _emailService = emailService;
         _configuration = configuration;
+        _cloudinaryService = cloudinaryService;
     }
 
     [HttpGet]
@@ -386,5 +391,188 @@ public class AccountController : Controller
             return View(model);
         }
     }
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> PostScam()
+    {
+        try
+        {
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
 
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+
+            var model = new ScamReportModel
+            {
+                AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+                {
+                    Value = st.ScamTypeID.ToString(),
+                    Text = st.TypeName
+                }).ToList()
+            };
+
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "An error occurred while loading the form. Please try again.";
+            return RedirectToAction("Index", "Home");
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> PostScam(ScamReportModel model)
+    {
+        try
+        {
+            // Reload scam types for the view in case of validation failure
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            model.AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+            {
+                Value = st.ScamTypeID.ToString(),
+                Text = st.TypeName
+            }).ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Create a proper class for scammer info
+            var scammerInfo = new ScammerInfo
+            {
+                Phone = model.ScammerPhone,
+                WhatsApp = model.ScammerWhatsApp,
+                Email = model.ScammerEmail,
+                Facebook = model.ScammerFacebook,
+                Name = model.ScammerName,
+                Organization = model.ScammerOrganization
+            };
+
+            // Initialize evidence picture links
+            string evidenceLink1 = null;
+            string evidenceLink2 = null;
+            string evidenceLink3 = null;
+            string evidenceLink4 = null;
+            string evidenceLink5 = null;
+
+            // Handle evidence uploads to Cloudinary
+            if (model.EvidenceFiles != null && model.EvidenceFiles.Count > 0)
+            {
+                var cloudinaryService = HttpContext.RequestServices.GetService<CloudinaryService>();
+                if (cloudinaryService == null)
+                {
+                    throw new Exception("Cloudinary service not available");
+                }
+
+                int fileCount = 0;
+                foreach (var file in model.EvidenceFiles.Take(5))
+                {
+                    if (file.Length > 0)
+                    {
+                        try
+                        {
+                            var uploadResult = await cloudinaryService.UploadImageAsync(file);
+                            if (uploadResult != null && uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                fileCount++;
+                                switch (fileCount)
+                                {
+                                    case 1:
+                                        evidenceLink1 = uploadResult.Url.ToString();
+                                        break;
+                                    case 2:
+                                        evidenceLink2 = uploadResult.Url.ToString();
+                                        break;
+                                    case 3:
+                                        evidenceLink3 = uploadResult.Url.ToString();
+                                        break;
+                                    case 4:
+                                        evidenceLink4 = uploadResult.Url.ToString();
+                                        break;
+                                    case 5:
+                                        evidenceLink5 = uploadResult.Url.ToString();
+                                        break;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log file upload error but continue with other files
+                            Console.WriteLine($"Error uploading file {file.FileName}: {ex.Message}");
+                        }
+                    }
+                }
+            }
+
+            // Insert scam report with evidence links
+            var reportId = await connection.ExecuteScalarAsync<int>(
+                @"INSERT INTO ScamReports 
+            (UserID, Title, ScamTypeID, Description, ScammerInfo, LossAmount, Currency, Location, OccurrenceDate,
+             Evidencepicturelink1, Evidencepicturelink2, Evidencepicturelink3, Evidencepicturelink4, Evidencepicturelink5) 
+            VALUES (@UserID, @Title, @ScamTypeID, @Description, @ScammerInfo::jsonb, @LossAmount, @Currency, @Location, @OccurrenceDate,
+                    @EvidenceLink1, @EvidenceLink2, @EvidenceLink3, @EvidenceLink4, @EvidenceLink5)
+            RETURNING ReportID",
+                new
+                {
+                    UserID = user.UserID,
+                    model.Title,
+                    model.ScamTypeID,
+                    model.Description,
+                    ScammerInfo = Newtonsoft.Json.JsonConvert.SerializeObject(scammerInfo),
+                    model.LossAmount,
+                    model.Currency,
+                    model.Location,
+                    model.OccurrenceDate,
+                    EvidenceLink1 = evidenceLink1,
+                    EvidenceLink2 = evidenceLink2,
+                    EvidenceLink3 = evidenceLink3,
+                    EvidenceLink4 = evidenceLink4,
+                    EvidenceLink5 = evidenceLink5
+                }
+            );
+
+            TempData["SuccessMessage"] = "Scam report submitted successfully! It will be reviewed by our team.";
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception ex)
+        {
+            // Log the actual error for debugging
+            Console.WriteLine($"Error in PostScam: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+            TempData["ErrorMessage"] = $"An error occurred while submitting your report: {ex.Message}";
+
+            // Reload scam types for the view
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            model.AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+            {
+                Value = st.ScamTypeID.ToString(),
+                Text = st.TypeName
+            }).ToList();
+
+            return View(model);
+        }
+    }
 }
