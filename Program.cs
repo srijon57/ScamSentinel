@@ -58,3 +58,5 @@ app.MapControllerRoute(
 app.Run();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);

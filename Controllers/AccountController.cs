@@ -12,6 +12,8 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Data;
+using Newtonsoft.Json;
 [AllowAnonymous]
 public class AccountController : Controller
 {
@@ -573,6 +575,245 @@ public class AccountController : Controller
             }).ToList();
 
             return View(model);
+        }
+    }
+
+    // Add this method to AccountController
+    [AllowAnonymous]
+    public IActionResult ScamList(int page = 1, string search = "", int? scamType = null)
+    {
+        try
+        {
+            using var connection = _supabaseService.CreateConnection();
+            connection.Open();
+
+            var viewModel = new ScamListViewModel
+            {
+                CurrentPage = page,
+                PageSize = 7,
+                SearchTerm = search,
+                ScamTypeFilter = scamType
+            };
+
+            // Build WHERE clause for filters
+            var whereClause = new List<string>();
+            var parameters = new DynamicParameters();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                whereClause.Add("(sr.Title ILIKE @Search OR sr.Description ILIKE @Search)");
+                parameters.Add("Search", $"%{search}%");
+            }
+
+            if (scamType.HasValue)
+            {
+                whereClause.Add("sr.ScamTypeID = @ScamTypeID");
+                parameters.Add("ScamTypeID", scamType.Value);
+            }
+
+            string whereSql = whereClause.Any() ? "WHERE " + string.Join(" AND ", whereClause) : "";
+
+            // Get total count for pagination
+            var totalCount = connection.ExecuteScalar<int>($@"
+            SELECT COUNT(*) FROM ScamReports sr
+            {whereSql}
+        ", parameters);
+
+            viewModel.TotalPages = (int)Math.Ceiling(totalCount / (double)viewModel.PageSize);
+
+            // Get scam reports with pagination
+            parameters.Add("Offset", (page - 1) * viewModel.PageSize);
+            parameters.Add("Limit", viewModel.PageSize);
+
+            var scamReports = connection.Query($@"
+            SELECT sr.ReportID, sr.Title, sr.Description, sr.ScammerInfo, 
+                   sr.Upvotes, sr.Downvotes, sr.CreatedAt,
+                   st.ScamTypeID, st.TypeName as ScamTypeName
+            FROM ScamReports sr
+            LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
+            {whereSql}
+            ORDER BY sr.CreatedAt DESC
+            LIMIT @Limit OFFSET @Offset
+        ", parameters);
+
+            // Convert to strongly typed list
+            foreach (var report in scamReports)
+            {
+                ScammerInfo scammerInfo;
+                try
+                {
+                    // Handle null or empty ScammerInfo
+                    var scammerInfoJson = report.scammerinfo?.ToString();
+                    scammerInfo = !string.IsNullOrEmpty(scammerInfoJson)
+                        ? JsonConvert.DeserializeObject<ScammerInfo>(scammerInfoJson)
+                        : new ScammerInfo();
+                }
+                catch
+                {
+                    scammerInfo = new ScammerInfo();
+                }
+
+                var scamReport = new ScamReport
+                {
+                    ReportID = report.reportid,
+                    Title = report.title,
+                    Description = report.description,
+                    ScammerInfo = scammerInfo,
+                    Upvotes = report.upvotes,
+                    Downvotes = report.downvotes,
+                    CreatedAt = report.createdat,
+                    ScamTypeID = report.scamtypeid,
+                    ScamTypeName = report.typename
+                };
+
+                // Check if user has voted on this report
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                    var user = connection.QueryFirstOrDefault<User>(
+                        "SELECT UserID FROM Users WHERE Email = @Email",
+                        new { Email = userEmail }
+                    );
+
+                    if (user != null)
+                    {
+                        var vote = connection.QueryFirstOrDefault<Vote>(
+                            "SELECT * FROM Votes WHERE UserID = @UserID AND ReportID = @ReportID",
+                            new { UserID = user.UserID, ReportID = report.reportid }
+                        );
+
+                        scamReport.UserVote = vote != null ? (vote.IsUpvote ? 1 : -1) : (int?)null;
+                    }
+                }
+
+                viewModel.ScamReports.Add(scamReport);
+            }
+
+            // Get available scam types for filter dropdown
+            var scamTypes = connection.Query<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            viewModel.AvailableScamTypes = scamTypes.ToList();
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            // Log the actual error for debugging
+            Console.WriteLine($"Error in ScamList: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+            TempData["ErrorMessage"] = "An error occurred while loading scam reports.";
+            return View(new ScamListViewModel());
+        }
+    }
+
+    // Add vote actions
+    [Authorize]
+    [HttpPost]
+    public IActionResult Vote(int reportId, bool isUpvote)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            connection.Open();
+
+            // Get user ID
+            var user = connection.QueryFirstOrDefault<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                return Json(new { success = false, message = "User not found" });
+            }
+
+            // Check if user already voted
+            var existingVote = connection.QueryFirstOrDefault<Vote>(
+                "SELECT * FROM Votes WHERE UserID = @UserID AND ReportID = @ReportID",
+                new { UserID = user.UserID, ReportID = reportId }
+            );
+
+            using var transaction = connection.BeginTransaction();
+
+            try
+            {
+                if (existingVote != null)
+                {
+                    // Remove previous vote
+                    if (existingVote.IsUpvote)
+                    {
+                        connection.Execute(
+                            "UPDATE ScamReports SET Upvotes = Upvotes - 1 WHERE ReportID = @ReportID",
+                            new { ReportID = reportId }, transaction
+                        );
+                    }
+                    else
+                    {
+                        connection.Execute(
+                            "UPDATE ScamReports SET Downvotes = Downvotes - 1 WHERE ReportID = @ReportID",
+                            new { ReportID = reportId }, transaction
+                        );
+                    }
+
+                    // Delete old vote
+                    connection.Execute(
+                        "DELETE FROM Votes WHERE VoteID = @VoteID",
+                        new { existingVote.VoteID }, transaction
+                    );
+                }
+
+                // Add new vote
+                if (isUpvote)
+                {
+                    connection.Execute(
+                        "UPDATE ScamReports SET Upvotes = Upvotes + 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId }, transaction
+                    );
+                }
+                else
+                {
+                    connection.Execute(
+                        "UPDATE ScamReports SET Downvotes = Downvotes + 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId }, transaction
+                    );
+                }
+
+                // Insert new vote record
+                connection.Execute(
+                    "INSERT INTO Votes (UserID, ReportID, IsUpvote) VALUES (@UserID, @ReportID, @IsUpvote)",
+                    new { UserID = user.UserID, ReportID = reportId, IsUpvote = isUpvote }, transaction
+                );
+
+                transaction.Commit();
+
+                // Get updated vote counts
+                var report = connection.QueryFirstOrDefault(
+                    "SELECT Upvotes, Downvotes FROM ScamReports WHERE ReportID = @ReportID",
+                    new { ReportID = reportId }
+                );
+
+                return Json(new
+                {
+                    success = true,
+                    upvotes = report.upvotes,
+                    downvotes = report.downvotes,
+                    userVote = isUpvote ? 1 : -1
+                });
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the error
+            Console.WriteLine($"Error in Vote: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+            return Json(new { success = false, message = "Error processing vote" });
         }
     }
 }

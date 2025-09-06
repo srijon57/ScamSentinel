@@ -1,0 +1,176 @@
+﻿@model ScamSentinel.Models.Scam.ScamListViewModel
+
+@{
+    ViewData["Title"] = "Scam Reports";
+}
+
+<div class="flex min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
+    <div class="animate-fade-in-up container mx-auto w-full max-w-5xl">
+        <h1 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
+            Scam Reports
+        </h1>
+
+        <!-- Search and Filter Section -->
+        <div class="animate-fade-in-up mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800" style="animation-delay: 0.1s;">
+            <form method="get" asp-action="ScamList" class="flex flex-wrap gap-4">
+                <div class="min-w-[200px] flex-1">
+                    <input type="text" name="search" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="Search scams..." value="@Model.SearchTerm">
+                </div>
+                <div class="min-w-[150px]">
+                    <select name="scamType" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" asp-items="@(new SelectList(Model.AvailableScamTypes, "ScamTypeID", "TypeName", Model.ScamTypeFilter))">
+                        <option value="">All Scam Types</option>
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="inline-flex justify-center rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                        Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Scam Reports List -->
+        @if (Model.ScamReports.Any())
+        {
+            foreach (var report in Model.ScamReports)
+            {
+                <div class="animate-fade-in-up mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800" style="animation-delay: 0.2s;">
+                    <!-- Title and Description -->
+                    <h2 class="mb-3 text-xl font-semibold text-gray-800 dark:text-gray-100">@report.Title</h2>
+                    <p class="mb-4 text-gray-600 dark:text-gray-300">@report.Description</p>
+
+                    <!-- Scammer Info -->
+                    <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.Phone))
+                        {
+                            <div><strong>Phone:</strong> @report.ScammerInfo.Phone</div>
+                        }
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.WhatsApp))
+                        {
+                            <div><strong>WhatsApp:</strong> @report.ScammerInfo.WhatsApp</div>
+                        }
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.Email))
+                        {
+                            <div><strong>Email:</strong> @report.ScammerInfo.Email</div>
+                        }
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.Facebook))
+                        {
+                            <div><strong>Facebook:</strong> @report.ScammerInfo.Facebook</div>
+                        }
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.Name))
+                        {
+                            <div><strong>Name:</strong> @report.ScammerInfo.Name</div>
+                        }
+                        @if (!string.IsNullOrEmpty(report.ScammerInfo?.Organization))
+                        {
+                            <div><strong>Organization:</strong> @report.ScammerInfo.Organization</div>
+                        }
+                    </div>
+
+                    <!-- Voting Section -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <span class="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100">@report.ScamTypeName</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-400">@report.CreatedAt.ToString("MMM dd, yyyy")</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <button class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:border-red-500 hover:bg-red-50 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-red-900 dark:focus:ring-red-800 @(report.UserVote == 1 ? "bg-red-100 border-red-500 dark:bg-red-900" : "")"
+                                        onclick="vote(@report.ReportID, true)">
+                                    <i class="fas fa-thumbs-up mr-1"></i>
+                                    <span id="upvotes-@report.ReportID">@report.Upvotes</span>
+                                </button>
+                                <button class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:border-red-500 hover:bg-red-50 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-red-900 dark:focus:ring-red-800 @(report.UserVote == -1 ? "bg-red-100 border-red-500 dark:bg-red-900" : "")"
+                                        onclick="vote(@report.ReportID, false)">
+                                    <i class="fas fa-thumbs-down mr-1"></i>
+                                    <span id="downvotes-@report.ReportID">@report.Downvotes</span>
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
+                                    <i class="fas fa-thumbs-up mr-1"></i> @report.Upvotes
+                                </span>
+                                <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
+                                    <i class="fas fa-thumbs-down mr-1"></i> @report.Downvotes
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Pagination -->
+            <nav aria-label="Scam reports pagination" class="mt-8">
+                <ul class="flex justify-center space-x-2">
+                    <li class="@(Model.CurrentPage == 1 ? "opacity-50" : "")">
+                        <a class="inline-flex justify-center rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"
+                           href="@Url.Action("ScamList", new { page = Model.CurrentPage - 1, search = Model.SearchTerm, scamType = Model.ScamTypeFilter })">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li>
+                            <a class="inline-flex justify-center rounded-full px-4 py-2 text-sm font-semibold transition-all duration-300 focus:ring-4 focus:ring-red-200 focus:outline-none @(i == Model.CurrentPage ? "bg-red-600 text-white shadow-md hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600" : "bg-white text-gray-700 border border-gray-300 hover:bg-red-50 hover:border-red-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-red-900")"
+                               href="@Url.Action("ScamList", new { page = i, search = Model.SearchTerm, scamType = Model.ScamTypeFilter })">@i</a>
+                        </li>
+                    }
+                    <li class="@(Model.CurrentPage == Model.TotalPages ? "opacity-50" : "")">
+                        <a class="inline-flex justify-center rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800"
+                           href="@Url.Action("ScamList", new { page = Model.CurrentPage + 1, search = Model.SearchTerm, scamType = Model.ScamTypeFilter })">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <div class="animate-fade-in-up rounded-xl border border-gray-200 bg-white p-6 text-center text-gray-600 shadow-2xl dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300" style="animation-delay: 0.3s;">
+                No scam reports found. @(string.IsNullOrEmpty(Model.SearchTerm) ? "" : "Try a different search term.")
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function vote(reportId, isUpvote) {
+            try {
+                const response = await fetch('@Url.Action("Vote", "Account")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    body: JSON.stringify({ reportId, isUpvote })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Update vote counts
+                    document.getElementById(`upvotes-${reportId}`).textContent = result.upvotes;
+                    document.getElementById(`downvotes-${reportId}`).textContent = result.downvotes;
+
+                    // Update button styles
+                    const upvoteBtn = document.querySelector(`button[onclick="vote(${reportId}, true)"]`);
+                    const downvoteBtn = document.querySelector(`button[onclick="vote(${reportId}, false)"]`);
+
+                    if (result.userVote === 1) {
+                        upvoteBtn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                        downvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                    } else if (result.userVote === -1) {
+                        downvoteBtn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                        upvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                    } else {
+                        upvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                        downvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
+                    }
+                } else {
+                    alert(result.message || 'Error voting');
+                }
+            } catch (error) {
+                alert('Error voting: ' + error.message);
+            }
+        }
+    </script>
+}
