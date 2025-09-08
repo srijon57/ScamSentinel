@@ -85,15 +85,34 @@
             </div>
             <!-- Votes -->
             <div class="my-6 flex items-center space-x-4">
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-thumbs-up text-gray-500 dark:text-gray-400"></i>
-                    <span class="text-gray-600 dark:text-gray-300">@Model.Upvotes</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <i class="fas fa-thumbs-down text-gray-500 dark:text-gray-400"></i>
-                    <span class="text-gray-600 dark:text-gray-300">@Model.Downvotes</span>
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-action="Upvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
+                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "up" ? "text-blue-500" : "text-gray-500 dark:text-gray-400")">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>@Model.Upvotes</span>
+                        </button>
+                    </form>
+                    <form asp-action="Downvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
+                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "down" ? "text-red-500" : "text-gray-500 dark:text-gray-400")">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span>@Model.Downvotes</span>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-thumbs-up text-gray-500 dark:text-gray-400"></i>
+                        <span class="text-gray-600 dark:text-gray-300">@Model.Upvotes</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-thumbs-down text-gray-500 dark:text-gray-400"></i>
+                        <span class="text-gray-600 dark:text-gray-300">@Model.Downvotes</span>
+                    </div>
+                }
             </div>
+
             <!-- Evidence -->
             @if (Model.EvidenceLinks.Any())
             {

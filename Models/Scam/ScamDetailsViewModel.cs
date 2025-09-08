@@ -15,6 +15,7 @@
         public DateTime CreatedAt { get; set; }
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
+        public string UserVote { get; set; }
         public List<string> EvidenceLinks { get; set; } = new List<string>();
         public string ReporterName { get; set; }
     }

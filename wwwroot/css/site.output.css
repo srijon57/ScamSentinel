@@ -1151,6 +1151,9 @@
   .text-blue-400 {
     color: var(--color-blue-400);
   }
+  .text-blue-500 {
+    color: var(--color-blue-500);
+  }
   .text-blue-700 {
     color: var(--color-blue-700);
   }

@@ -578,7 +578,6 @@ public class AccountController : Controller
         }
     }
 
-    // Add this method to AccountController
     [AllowAnonymous]
     public IActionResult ScamList(int page = 1, string search = "", int? scamType = null)
     {
@@ -675,7 +674,6 @@ public class AccountController : Controller
     public async Task<IActionResult> ScamDetails(int id)
     {
         Console.WriteLine($"Loading scam details for ReportID: {id}");
-
         try
         {
             using var connection = _supabaseService.CreateConnection();
@@ -683,10 +681,10 @@ public class AccountController : Controller
 
             var report = await connection.QueryFirstOrDefaultAsync<dynamic>(
                 @"SELECT sr.*, st.TypeName as ScamTypeName, u.UserName as ReporterName
-          FROM ScamReports sr
-          LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
-          LEFT JOIN Users u ON sr.UserID = u.UserID
-          WHERE sr.ReportID = @ReportID",
+              FROM ScamReports sr
+              LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
+              LEFT JOIN Users u ON sr.UserID = u.UserID
+              WHERE sr.ReportID = @ReportID",
                 new { ReportID = id }
             );
 
@@ -736,6 +734,24 @@ public class AccountController : Controller
                 ReporterName = report.reportername
             };
 
+            // Check if the user is authenticated and has voted
+            if (User.Identity.IsAuthenticated)
+            {
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var user = await connection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT UserID FROM Users WHERE Email = @Email",
+                    new { Email = userEmail }
+                );
+                if (user != null)
+                {
+                    var userVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                        "SELECT VoteType FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                        new { UserID = user.UserID, ReportID = id }
+                    );
+                    viewModel.UserVote = userVote?.VoteType;
+                }
+            }
+
             return View(viewModel);
         }
         catch (Exception ex)
@@ -744,6 +760,180 @@ public class AccountController : Controller
             Console.WriteLine($"Stack Trace: {ex.StackTrace}");
             TempData["ErrorMessage"] = "An error occurred while loading scam details.";
             return RedirectToAction("ScamList");
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Upvote(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Check if user already voted
+            var existingVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                "SELECT * FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                new { UserID = user.UserID, ReportID = reportId }
+            );
+
+            using var transaction = ((NpgsqlConnection)connection).BeginTransaction();
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == "up")
+                {
+                    // User is toggling off their upvote
+                    await connection.ExecuteAsync(
+                        "DELETE FROM UserVotes WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Upvotes = Upvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Upvote removed!";
+                }
+                else
+                {
+                    // User is changing from downvote to upvote
+                    await connection.ExecuteAsync(
+                        "UPDATE UserVotes SET VoteType = 'up' WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Upvotes = Upvotes + 1, Downvotes = Downvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Changed to upvote!";
+                }
+            }
+            else
+            {
+                // User is upvoting for the first time
+                await connection.ExecuteAsync(
+                    "INSERT INTO UserVotes (UserID, ReportID, VoteType) VALUES (@UserID, @ReportID, 'up')",
+                    new { UserID = user.UserID, ReportID = reportId },
+                    transaction
+                );
+                await connection.ExecuteAsync(
+                    "UPDATE ScamReports SET Upvotes = Upvotes + 1 WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+                TempData["SuccessMessage"] = "Upvoted successfully!";
+            }
+
+            transaction.Commit();
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to upvote. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Downvote(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Check if user already voted
+            var existingVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                "SELECT * FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                new { UserID = user.UserID, ReportID = reportId }
+            );
+
+            using var transaction = ((NpgsqlConnection)connection).BeginTransaction();
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == "down")
+                {
+                    // User is toggling off their downvote
+                    await connection.ExecuteAsync(
+                        "DELETE FROM UserVotes WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Downvotes = Downvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Downvote removed!";
+                }
+                else
+                {
+                    // User is changing from upvote to downvote
+                    await connection.ExecuteAsync(
+                        "UPDATE UserVotes SET VoteType = 'down' WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Downvotes = Downvotes + 1, Upvotes = Upvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Changed to downvote!";
+                }
+            }
+            else
+            {
+                // User is downvoting for the first time
+                await connection.ExecuteAsync(
+                    "INSERT INTO UserVotes (UserID, ReportID, VoteType) VALUES (@UserID, @ReportID, 'down')",
+                    new { UserID = user.UserID, ReportID = reportId },
+                    transaction
+                );
+                await connection.ExecuteAsync(
+                    "UPDATE ScamReports SET Downvotes = Downvotes + 1 WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+                TempData["SuccessMessage"] = "Downvoted successfully!";
+            }
+
+            transaction.Commit();
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to downvote. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
         }
     }
 
