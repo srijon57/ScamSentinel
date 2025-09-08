@@ -1,15 +1,12 @@
 ﻿@model ScamSentinel.Models.Scam.ScamListViewModel
-
 @{
     ViewData["Title"] = "Scam Reports";
 }
-
 <div class="flex min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
     <div class="animate-fade-in-up container mx-auto w-full max-w-5xl">
         <h1 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
             Scam Reports
         </h1>
-
         <!-- Search and Filter Section -->
         <div class="animate-fade-in-up mb-8 rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800" style="animation-delay: 0.1s;">
             <form method="get" asp-action="ScamList" class="flex flex-wrap gap-4">
@@ -28,17 +25,21 @@
                 </div>
             </form>
         </div>
-
         <!-- Scam Reports List -->
         @if (Model.ScamReports.Any())
         {
-            foreach (var report in Model.ScamReports)
+            @foreach (var report in Model.ScamReports)
             {
                 <div class="animate-fade-in-up mb-6 rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800" style="animation-delay: 0.2s;">
                     <!-- Title and Description -->
-                    <h2 class="mb-3 text-xl font-semibold text-gray-800 dark:text-gray-100">@report.Title</h2>
-                    <p class="mb-4 text-gray-600 dark:text-gray-300">@report.Description</p>
+                    <h2 class="mb-3 text-xl font-semibold text-gray-800 dark:text-gray-100">
+                        <a href="@Url.Action("ScamDetails", "Account", new { id = report.ReportID })"
+                           class="transition-colors duration-300 hover:text-red-600 hover:underline">
+                            @report.Title
+                        </a>
 
+                    </h2>
+                    <p class="mb-4 text-gray-600 dark:text-gray-300">@report.Description</p>
                     <!-- Scammer Info -->
                     <div class="mb-4 text-sm text-gray-500 dark:text-gray-400">
                         @if (!string.IsNullOrEmpty(report.ScammerInfo?.Phone))
@@ -66,41 +67,23 @@
                             <div><strong>Organization:</strong> @report.ScammerInfo.Organization</div>
                         }
                     </div>
-
-                    <!-- Voting Section -->
+                    <!-- Vote Display Section -->
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <span class="rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100">@report.ScamTypeName</span>
                             <span class="text-xs text-gray-500 dark:text-gray-400">@report.CreatedAt.ToString("MMM dd, yyyy")</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <button class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:border-red-500 hover:bg-red-50 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-red-900 dark:focus:ring-red-800 @(report.UserVote == 1 ? "bg-red-100 border-red-500 dark:bg-red-900" : "")"
-                                        onclick="vote(@report.ReportID, true)">
-                                    <i class="fas fa-thumbs-up mr-1"></i>
-                                    <span id="upvotes-@report.ReportID">@report.Upvotes</span>
-                                </button>
-                                <button class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 transition-all duration-300 hover:border-red-500 hover:bg-red-50 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-red-900 dark:focus:ring-red-800 @(report.UserVote == -1 ? "bg-red-100 border-red-500 dark:bg-red-900" : "")"
-                                        onclick="vote(@report.ReportID, false)">
-                                    <i class="fas fa-thumbs-down mr-1"></i>
-                                    <span id="downvotes-@report.ReportID">@report.Downvotes</span>
-                                </button>
-                            }
-                            else
-                            {
-                                <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
-                                    <i class="fas fa-thumbs-up mr-1"></i> @report.Upvotes
-                                </span>
-                                <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
-                                    <i class="fas fa-thumbs-down mr-1"></i> @report.Downvotes
-                                </span>
-                            }
+                            <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
+                                <i class="fas fa-thumbs-up mr-1"></i> @report.Upvotes
+                            </span>
+                            <span class="inline-flex items-center rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium text-gray-700 opacity-50 dark:border-gray-600 dark:text-gray-100">
+                                <i class="fas fa-thumbs-down mr-1"></i> @report.Downvotes
+                            </span>
                         </div>
                     </div>
                 </div>
             }
-
             <!-- Pagination -->
             <nav aria-label="Scam reports pagination" class="mt-8">
                 <ul class="flex justify-center space-x-2">
@@ -130,47 +113,3 @@
         }
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        async function vote(reportId, isUpvote) {
-            try {
-                const response = await fetch('@Url.Action("Vote", "Account")', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    body: JSON.stringify({ reportId, isUpvote })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    // Update vote counts
-                    document.getElementById(`upvotes-${reportId}`).textContent = result.upvotes;
-                    document.getElementById(`downvotes-${reportId}`).textContent = result.downvotes;
-
-                    // Update button styles
-                    const upvoteBtn = document.querySelector(`button[onclick="vote(${reportId}, true)"]`);
-                    const downvoteBtn = document.querySelector(`button[onclick="vote(${reportId}, false)"]`);
-
-                    if (result.userVote === 1) {
-                        upvoteBtn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                        downvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                    } else if (result.userVote === -1) {
-                        downvoteBtn.classList.add('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                        upvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                    } else {
-                        upvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                        downvoteBtn.classList.remove('bg-red-100', 'border-red-500', 'dark:bg-red-900');
-                    }
-                } else {
-                    alert(result.message || 'Error voting');
-                }
-            } catch (error) {
-                alert('Error voting: ' + error.message);
-            }
-        }
-    </script>
-}
