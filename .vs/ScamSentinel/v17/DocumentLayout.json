@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "D:\\Projects\\ScamSentinel\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\views\\news\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\news\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\views\\account\\scamlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\account\\scamlist.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -42,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,7 +58,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Views\\Home\\Index.cshtml",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAowJgAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-20T09:20:32.236Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ScamList.cshtml",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Views\\Account\\ScamList.cshtml",
+              "RelativeDocumentMoniker": "Views\\Account\\ScamList.cshtml",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Views\\Account\\ScamList.cshtml",
+              "RelativeToolTip": "Views\\Account\\ScamList.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-20T09:02:05.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "_Header.cshtml",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Views\\Components\\_Header.cshtml",
               "RelativeDocumentMoniker": "Views\\Components\\_Header.cshtml",
@@ -63,7 +97,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -76,7 +110,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "NewsResponse.cs",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Models\\NewsResponse.cs",
               "RelativeDocumentMoniker": "Models\\NewsResponse.cs",
@@ -89,7 +123,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "NewsArticle.cs",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Models\\NewsArticle.cs",
               "RelativeDocumentMoniker": "Models\\NewsArticle.cs",
@@ -102,20 +136,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "index.cshtml",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Views\\News\\index.cshtml",
               "RelativeDocumentMoniker": "Views\\News\\index.cshtml",
               "ToolTip": "D:\\Projects\\ScamSentinel\\Views\\News\\index.cshtml",
               "RelativeToolTip": "Views\\News\\index.cshtml",
-              "ViewState": "AgIAABMAAAAAAAAAAAAowC8AAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAgAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-09-20T08:26:39.764Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "NewsController.cs",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Controllers\\NewsController.cs",
               "RelativeDocumentMoniker": "Controllers\\NewsController.cs",
@@ -128,7 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -141,7 +175,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "NewsService.cs",
               "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Services\\NewsService.cs",
               "RelativeDocumentMoniker": "Services\\NewsService.cs",
