@@ -1,0 +1,161 @@
+﻿@using Newtonsoft.Json
+@{
+    // You'll need to create a similar faqs.json file in your wwwroot folder
+    var faqsJson = JsonConvert.SerializeObject(new
+    {
+        // This is just a placeholder - you'll need to create your actual FAQs
+        items = new[] 
+        {
+            new { question = "Sample question", keywords = "sample", answer = "Sample answer" }
+        }
+    });
+}
+
+<div id="chatbot-container" class="fixed right-6 bottom-6 z-50 hidden">
+    <div id="chatbot-window" class="flex hidden h-96 w-80 flex-col rounded-2xl border bg-white shadow-lg dark:bg-gray-800">
+        <div class="flex items-center justify-between border-b p-3">
+            <h3 class="font-semibold">ScamSentinel Assistant</h3>
+            <button id="chatbot-close" class="text-gray-500 hover:text-gray-700">
+                ✕
+            </button>
+        </div>
+        <div id="chatbot-messages" class="flex-1 space-y-2 overflow-y-auto p-4">
+            <div class="text-left">
+                <span class="inline-block rounded-xl bg-gray-200 px-3 py-2 text-gray-900 dark:bg-gray-700 dark:text-gray-200">
+                    Hi! Ask me a question about ScamSentinel.
+                </span>
+            </div>
+        </div>
+        <form id="chatbot-form" class="flex gap-2 border-t p-3">
+            <input
+                id="chatbot-input"
+                class="flex-1 rounded-xl border border-gray-300 bg-white px-3 py-2 text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                placeholder="Ask a question..."
+            />
+            <button type="submit" class="rounded-xl bg-gray-900 px-4 py-2 text-white dark:bg-blue-800">
+                Send
+            </button>
+        </form>
+    </div>
+    
+    <button id="chatbot-toggle" class="flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+    </button>
+</div>
+
+<script>
+    // FAQ data - you should move this to a separate file and load it dynamically
+    const faqs = @Html.Raw(faqsJson);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatbotContainer = document.getElementById('chatbot-container');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotClose = document.getElementById('chatbot-close');
+        const chatbotForm = document.getElementById('chatbot-form');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        
+        // Show the chatbot container
+        chatbotContainer.classList.remove('hidden');
+        
+        // Toggle chatbot window
+        chatbotToggle.addEventListener('click', function() {
+            chatbotWindow.classList.toggle('hidden');
+        });
+        
+        // Close chatbot window
+        chatbotClose.addEventListener('click', function() {
+            chatbotWindow.classList.add('hidden');
+        });
+        
+        // Handle form submission
+        chatbotForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const question = chatbotInput.value.trim();
+            if (!question) return;
+            
+            // Add user message
+            addMessage(question, 'user');
+            chatbotInput.value = '';
+            
+            // Show loading indicator
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.className = 'text-left text-gray-500 dark:text-gray-400';
+            loadingIndicator.textContent = 'Bot is typing...';
+            chatbotMessages.appendChild(loadingIndicator);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            
+            try {
+                // First try to find answer in FAQs
+                let answer = getFaqAnswer(question);
+                
+                // If not found in FAQs, call your backend API which will call Gemini
+                if (!answer) {
+                    answer = await getGeminiAnswer(question);
+                }
+                
+                // Remove loading indicator
+                chatbotMessages.removeChild(loadingIndicator);
+                
+                // Add bot message
+                addMessage(answer, 'bot');
+            } catch (error) {
+                console.error('Error getting answer:', error);
+                chatbotMessages.removeChild(loadingIndicator);
+                addMessage('Sorry, I encountered an error. Please try again later.', 'bot');
+            }
+        });
+        
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'text-right' : 'text-left';
+            
+            const messageSpan = document.createElement('span');
+            messageSpan.className = sender === 'user' 
+                ? 'inline-block px-3 py-2 rounded-xl bg-gray-600 dark:bg-gray-500 text-white'
+                : 'inline-block px-3 py-2 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200';
+            messageSpan.textContent = text;
+            
+            messageDiv.appendChild(messageSpan);
+            chatbotMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+        
+        function getFaqAnswer(question) {
+            // Simple keyword matching - you can implement Fuse.js later
+            const lowercaseQuestion = question.toLowerCase();
+            
+            for (const faq of faqs.items) {
+                if (faq.keywords.toLowerCase().includes(lowercaseQuestion) || 
+                    lowercaseQuestion.includes(faq.keywords.toLowerCase())) {
+                    return faq.answer;
+                }
+            }
+            
+            return null;
+        }
+        
+        async function getGeminiAnswer(question) {
+            // Call your backend API which will call Gemini
+            const response = await fetch('/Chatbot/GetAnswer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: question })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            
+            const data = await response.json();
+            return data.answer;
+        }
+    });
+</script>
