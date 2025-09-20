@@ -45,7 +45,7 @@
                 <a asp-controller="Account" asp-action="PostScam" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Post Scam</a>
             }
             <a asp-controller="Account" asp-action="ScamList" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">All Scams</a>
-            <a href="#" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Help & Info</a>
+            <a asp-controller="News" asp-action="Index" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Scam News</a>
         </div>
 
         <div class="hidden lg:flex lg:gap-x-6">
@@ -95,8 +95,8 @@
                         {
                             <a asp-controller="Account" asp-action="PostScam" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Post Scam</a>
                         }
-                        <a href="#" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">All Scams</a>
-                        <a href="#" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Help & Info</a>
+                        <a href="/Account/ScamList" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">All Scams</a>
+                        <a href="/scam-news" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Scam News</a>
                     </nav>
 
                     <div class="mt-6 border-t border-red-100 pt-6 dark:border-gray-700">

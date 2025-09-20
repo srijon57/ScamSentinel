@@ -11,7 +11,10 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<CloudinaryService>();
-// Add JWT Authentication
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<NewsService>();
+builder.Services.AddScoped<NewsService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
