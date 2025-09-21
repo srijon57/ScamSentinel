@@ -1,0 +1,290 @@
+﻿@using ScamSentinel.Models.Scam
+@model ScamReportModel
+
+@{
+    ViewData["Title"] = "Post Scam Report";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-8 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
+    <div class="mx-auto max-w-4xl">
+        <div class="animate-fade-in-up mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100">Report a Scam</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-300">Help our community by reporting fraudulent activities</p>
+        </div>
+
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="mb-6 border-l-4 border-red-500 bg-red-100 p-4 text-red-700 dark:border-red-600 dark:bg-red-900 dark:text-red-300">
+                <p>You need to <a asp-controller="Account" asp-action="Login" class="font-semibold underline">log in</a> to report a scam.</p>
+            </div>
+        }
+        else
+        {
+            <form asp-action="PostScam" method="post" enctype="multipart/form-data" class="rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800">
+                <div asp-validation-summary="ModelOnly" class="mb-4 text-red-500"></div>
+
+                <!-- Scam Type -->
+                <div class="mb-6">
+                    <label asp-for="ScamTypeID" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Scam Type</label>
+                    <select asp-for="ScamTypeID" asp-items="Model.AvailableScamTypes" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900">
+                        <option value="">Select Scam Type</option>
+                    </select>
+                    <span asp-validation-for="ScamTypeID" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Title -->
+                <div class="mb-6">
+                    <label asp-for="Title" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input asp-for="Title" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="Brief title of the scam" />
+                    <span asp-validation-for="Title" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Scammer Information -->
+                <div class="mb-6">
+                    <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Scammer Information</label>
+
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div>
+                            <label asp-for="ScammerPhone" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Phone Number</label>
+                            <input asp-for="ScammerPhone" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="+880123456789" />
+                        </div>
+
+                        <div>
+                            <label asp-for="ScammerWhatsApp" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">WhatsApp Number</label>
+                            <input asp-for="ScammerWhatsApp" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="+880123456789" />
+                        </div>
+
+                        <div>
+                            <label asp-for="ScammerEmail" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Email</label>
+                            <input asp-for="ScammerEmail" type="email" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="scammer@example.com" />
+                        </div>
+
+                        <div>
+                            <label asp-for="ScammerFacebook" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Facebook Profile</label>
+                            <input asp-for="ScammerFacebook" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="https://facebook.com/username" />
+                        </div>
+
+                        <div>
+                            <label asp-for="ScammerName" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Name/Username</label>
+                            <input asp-for="ScammerName" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="John Doe or Scammer123" />
+                        </div>
+
+                        <div>
+                            <label asp-for="ScammerOrganization" class="mb-1 block text-xs text-gray-500 dark:text-gray-400">Organization/Group</label>
+                            <input asp-for="ScammerOrganization" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="Fraudulent Investors Group" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Loss -->
+                <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label asp-for="LossAmount" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Financial Loss (if any)</label>
+                        <input asp-for="LossAmount" type="number" step="0.01" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="0.00" />
+                    </div>
+
+                    <div>
+                        <label asp-for="Currency" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Currency</label>
+                        <select asp-for="Currency" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900">
+                            <option value="USD">USD ($)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="BDT">BDT (৳)</option>
+                            <option value="INR">INR (₹)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Location and Date -->
+                <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label asp-for="Location" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Where did it happen?</label>
+                        <input asp-for="Location" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="WhatsApp, Email, Facebook, etc." />
+                    </div>
+
+                    <div>
+                        <label asp-for="OccurrenceDate" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">When did it happen?</label>
+                        <input asp-for="OccurrenceDate" type="date" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" />
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-6">
+                    <label asp-for="Description" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea asp-for="Description" rows="6" class="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" placeholder="Describe the scam in detail. Include what happened, how it started, and any financial loss."></textarea>
+                    <span asp-validation-for="Description" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Evidence Upload -->
+                <div class="form-group">
+                    <label asp-for="EvidenceFiles" class="control-label">Evidence Files (Max 5 files)</label>
+
+                    <!-- Drag and drop area -->
+                    <div class="dropzone" id="evidenceDropzone" style="border: 2px dashed #007bff; padding: 20px; text-align: center; margin-bottom: 15px; border-radius: 5px;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: #007bff;"></i>
+                        <p>Drag & drop files here or click to browse</p>
+                        <input type="file" asp-for="EvidenceFiles" multiple accept="image/*" class="form-control-file" id="fileInput" style="display: none;" />
+                        <button type="button" class="btn btn-primary mt-2" onclick="document.getElementById('fileInput').click()">
+                            Browse Files
+                        </button>
+                    </div>
+
+                    <!-- Image preview container -->
+                    <div id="imagePreviews" class="row mt-3"></div>
+
+                    <span asp-validation-for="EvidenceFiles" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-8 flex justify-center">
+                    <button type="submit" class="inline-flex justify-center rounded-full bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                        Submit Report
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropzone = document.getElementById('evidenceDropzone');
+            const fileInput = document.getElementById('fileInput');
+            const previewContainer = document.getElementById('imagePreviews');
+            const maxFiles = 5;
+            let currentFiles = [];
+
+            // Handle drag and drop events
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropzone.style.backgroundColor = '#f8f9fa';
+                dropzone.style.borderColor = '#28a745';
+            }
+
+            function unhighlight() {
+                dropzone.style.backgroundColor = '';
+                dropzone.style.borderColor = '#007bff';
+            }
+
+            // Handle dropped files
+            dropzone.addEventListener('drop', handleDrop, false);
+            fileInput.addEventListener('change', handleFiles, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles({ target: { files: files } });
+            }
+
+            function handleFiles(e) {
+                const files = Array.from(e.target.files);
+
+                // Check file count
+                if (currentFiles.length + files.length > maxFiles) {
+                    alert(`You can only upload maximum ${maxFiles} files.`);
+                    return;
+                }
+
+                files.forEach(file => {
+                    if (!file.type.match('image.*')) {
+                        alert('Please upload only image files.');
+                        return;
+                    }
+
+                    if (currentFiles.length >= maxFiles) {
+                        alert(`Maximum ${maxFiles} files allowed.`);
+                        return;
+                    }
+
+                    currentFiles.push(file);
+                    createPreview(file);
+                });
+
+                // Update the file input
+                updateFileInput();
+            }
+
+            function createPreview(file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const previewDiv = document.createElement('div');
+                    previewDiv.className = 'col-md-3 mb-3';
+                    previewDiv.innerHTML = `
+                        <div class="card">
+                            <img src="${e.target.result}" class="card-img-top" style="height: 150px; object-fit: cover;">
+                            <div class="card-body p-2">
+                                <p class="card-text small text-truncate">${file.name}</p>
+                                <button type="button" class="btn btn-danger btn-sm w-100" onclick="removePreview(this, '${file.name}')">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    previewContainer.appendChild(previewDiv);
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            // Global function for remove button
+            window.removePreview = function(button, fileName) {
+                const previewDiv = button.closest('.col-md-3');
+                previewDiv.remove();
+
+                // Remove from currentFiles array
+                currentFiles = currentFiles.filter(file => file.name !== fileName);
+
+                // Update the file input
+                updateFileInput();
+            };
+
+            function updateFileInput() {
+                // Create a new DataTransfer object
+                const dataTransfer = new DataTransfer();
+
+                // Add all current files to the DataTransfer object
+                currentFiles.forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+
+                // Update the file input files
+                fileInput.files = dataTransfer.files;
+
+                // Update dropzone text based on file count
+                if (currentFiles.length > 0) {
+                    dropzone.querySelector('p').textContent = `${currentFiles.length} file(s) selected`;
+                } else {
+                    dropzone.querySelector('p').textContent = 'Drag & drop files here or click to browse';
+                }
+            }
+
+            // Prevent form submission if too many files
+            document.querySelector('form').addEventListener('submit', function(e) {
+                if (currentFiles.length > maxFiles) {
+                    e.preventDefault();
+                    alert(`Maximum ${maxFiles} files allowed.`);
+                }
+            });
+        });
+    </script>
+}
+}

@@ -1,0 +1,140 @@
+﻿@model ScamSentinel.Models.Scam.ScamDetailsViewModel
+@{
+    ViewData["Title"] = "Scam Details";
+}
+<div class="flex min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
+    <div class="animate-fade-in-up container mx-auto w-full max-w-4xl">
+        <h1 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
+            Scam Details
+        </h1>
+        <!-- Scam Details Card -->
+        <div class="animate-fade-in-up rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800">
+            <!-- Title and Scam Type -->
+            <h2 class="mb-3 text-xl font-semibold text-gray-800 dark:text-gray-100">@Model.Title</h2>
+            <span class="mb-4 inline-block rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100">@Model.ScamTypeName</span>
+            <!-- Description -->
+            <div class="my-6">
+                <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Description</h3>
+                <p class="text-gray-600 dark:text-gray-300">@Model.Description</p>
+            </div>
+            <!-- Scammer Info -->
+            <div class="my-6">
+                <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Scammer Info</h3>
+                <div class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Phone))
+                    {
+                        <div><strong>Phone:</strong> @Model.ScammerInfo.Phone</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.WhatsApp))
+                    {
+                        <div><strong>WhatsApp:</strong> @Model.ScammerInfo.WhatsApp</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Email))
+                    {
+                        <div><strong>Email:</strong> @Model.ScammerInfo.Email</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Facebook))
+                    {
+                        <div><strong>Facebook:</strong> @Model.ScammerInfo.Facebook</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Name))
+                    {
+                        <div><strong>Name:</strong> @Model.ScammerInfo.Name</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Organization))
+                    {
+                        <div><strong>Organization:</strong> @Model.ScammerInfo.Organization</div>
+                    }
+                </div>
+            </div>
+            <!-- Additional Info -->
+            <div class="my-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                @if (Model.LossAmount.HasValue)
+                {
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Loss Amount</h4>
+                        <p class="text-gray-800 dark:text-gray-100">@Model.LossAmount @Model.Currency</p>
+                    </div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Location))
+                {
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Location</h4>
+                        <p class="text-gray-800 dark:text-gray-100">@Model.Location</p>
+                    </div>
+                }
+                @if (Model.OccurrenceDate.HasValue)
+                {
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Occurrence Date</h4>
+                        <p class="text-gray-800 dark:text-gray-100">@Model.OccurrenceDate.Value.ToString("MMM dd, yyyy")</p>
+                    </div>
+                }
+                <div>
+                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Reported By</h4>
+                    <p class="text-gray-800 dark:text-gray-100">@Model.ReporterName</p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Reported On</h4>
+                    <p class="text-gray-800 dark:text-gray-100">@Model.CreatedAt.ToString("MMM dd, yyyy")</p>
+                </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Status</h4>
+                    <p class="text-gray-800 dark:text-gray-100">@(Model.IsVerified ? "Verified" : "Not Verified")</p>
+                </div>
+            </div>
+            <!-- Votes -->
+            <div class="my-6 flex items-center space-x-4">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-action="Upvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
+                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "up" ? "text-blue-500" : "text-gray-500 dark:text-gray-400")">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>@Model.Upvotes</span>
+                        </button>
+                    </form>
+                    <form asp-action="Downvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
+                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "down" ? "text-red-500" : "text-gray-500 dark:text-gray-400")">
+                            <i class="fas fa-thumbs-down"></i>
+                            <span>@Model.Downvotes</span>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-thumbs-up text-gray-500 dark:text-gray-400"></i>
+                        <span class="text-gray-600 dark:text-gray-300">@Model.Upvotes</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-thumbs-down text-gray-500 dark:text-gray-400"></i>
+                        <span class="text-gray-600 dark:text-gray-300">@Model.Downvotes</span>
+                    </div>
+                }
+            </div>
+
+            <!-- Evidence -->
+            @if (Model.EvidenceLinks.Any())
+            {
+                <div class="my-6">
+                    <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Evidence</h3>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+                        @foreach (var link in Model.EvidenceLinks)
+                        {
+                            <div class="rounded-lg border border-gray-200 p-2 dark:border-gray-700">
+                                <img src="@link" alt="Evidence" class="h-40 w-full rounded object-cover">
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <!-- Back Button -->
+            <div class="mt-8 text-center">
+                <a href="@Url.Action("ScamList")"
+                   class="inline-flex justify-center rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                    Back to Scam List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

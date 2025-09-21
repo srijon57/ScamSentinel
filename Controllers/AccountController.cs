@@ -1,26 +1,33 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using ScamSentinel.Models.Account;
+using ScamSentinel.Models.Scam;
+using ScamSentinel.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Data;
+using Newtonsoft.Json;
 [AllowAnonymous]
 public class AccountController : Controller
 {
     private readonly SupabaseService _supabaseService;
     private readonly EmailService _emailService;
     private readonly IConfiguration _configuration;
+    private readonly CloudinaryService _cloudinaryService;
 
-    public AccountController(SupabaseService supabaseService, EmailService emailService, IConfiguration configuration)
+    public AccountController(SupabaseService supabaseService, EmailService emailService, IConfiguration configuration, CloudinaryService cloudinaryService)
     {
         _supabaseService = supabaseService;
         _emailService = emailService;
         _configuration = configuration;
+        _cloudinaryService = cloudinaryService;
     }
 
     [HttpGet]
@@ -384,6 +391,549 @@ public class AccountController : Controller
         {
             ModelState.AddModelError(string.Empty, "Failed to change password. Please try again.");
             return View(model);
+        }
+    }
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> PostScam()
+    {
+        try
+        {
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+
+            var model = new ScamReportModel
+            {
+                AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+                {
+                    Value = st.ScamTypeID.ToString(),
+                    Text = st.TypeName
+                }).ToList()
+            };
+
+            return View(model);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "An error occurred while loading the form. Please try again.";
+            return RedirectToAction("Index", "Home");
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> PostScam(ScamReportModel model)
+    {
+        try
+        {
+            // Reload scam types for the view in case of validation failure
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            model.AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+            {
+                Value = st.ScamTypeID.ToString(),
+                Text = st.TypeName
+            }).ToList();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Create a proper class for scammer info
+            var scammerInfo = new ScammerInfo
+            {
+                Phone = model.ScammerPhone,
+                WhatsApp = model.ScammerWhatsApp,
+                Email = model.ScammerEmail,
+                Facebook = model.ScammerFacebook,
+                Name = model.ScammerName,
+                Organization = model.ScammerOrganization
+            };
+
+            // Initialize evidence picture links
+            string evidenceLink1 = null;
+            string evidenceLink2 = null;
+            string evidenceLink3 = null;
+            string evidenceLink4 = null;
+            string evidenceLink5 = null;
+
+            // Handle evidence uploads to Cloudinary
+            if (model.EvidenceFiles != null && model.EvidenceFiles.Count > 0)
+            {
+                var cloudinaryService = HttpContext.RequestServices.GetService<CloudinaryService>();
+                if (cloudinaryService == null)
+                {
+                    throw new Exception("Cloudinary service not available");
+                }
+
+                int fileCount = 0;
+                foreach (var file in model.EvidenceFiles.Take(5))
+                {
+                    if (file.Length > 0)
+                    {
+                        try
+                        {
+                            var uploadResult = await cloudinaryService.UploadImageAsync(file);
+                            if (uploadResult != null && uploadResult.StatusCode == System.Net.HttpStatusCode.OK)
+                            {
+                                fileCount++;
+                                switch (fileCount)
+                                {
+                                    case 1:
+                                        evidenceLink1 = uploadResult.Url.ToString();
+                                        break;
+                                    case 2:
+                                        evidenceLink2 = uploadResult.Url.ToString();
+                                        break;
+                                    case 3:
+                                        evidenceLink3 = uploadResult.Url.ToString();
+                                        break;
+                                    case 4:
+                                        evidenceLink4 = uploadResult.Url.ToString();
+                                        break;
+                                    case 5:
+                                        evidenceLink5 = uploadResult.Url.ToString();
+                                        break;
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log file upload error but continue with other files
+                            Console.WriteLine($"Error uploading file {file.FileName}: {ex.Message}");
+                        }
+                    }
+                }
+            }
+
+            // Insert scam report with evidence links
+            var reportId = await connection.ExecuteScalarAsync<int>(
+                @"INSERT INTO ScamReports 
+            (UserID, Title, ScamTypeID, Description, ScammerInfo, LossAmount, Currency, Location, OccurrenceDate,
+             Evidencepicturelink1, Evidencepicturelink2, Evidencepicturelink3, Evidencepicturelink4, Evidencepicturelink5) 
+            VALUES (@UserID, @Title, @ScamTypeID, @Description, @ScammerInfo::jsonb, @LossAmount, @Currency, @Location, @OccurrenceDate,
+                    @EvidenceLink1, @EvidenceLink2, @EvidenceLink3, @EvidenceLink4, @EvidenceLink5)
+            RETURNING ReportID",
+                new
+                {
+                    UserID = user.UserID,
+                    model.Title,
+                    model.ScamTypeID,
+                    model.Description,
+                    ScammerInfo = Newtonsoft.Json.JsonConvert.SerializeObject(scammerInfo),
+                    model.LossAmount,
+                    model.Currency,
+                    model.Location,
+                    model.OccurrenceDate,
+                    EvidenceLink1 = evidenceLink1,
+                    EvidenceLink2 = evidenceLink2,
+                    EvidenceLink3 = evidenceLink3,
+                    EvidenceLink4 = evidenceLink4,
+                    EvidenceLink5 = evidenceLink5
+                }
+            );
+
+            TempData["SuccessMessage"] = "Scam report submitted successfully! It will be reviewed by our team.";
+            return RedirectToAction("Index", "Home");
+        }
+        catch (Exception ex)
+        {
+            // Log the actual error for debugging
+            Console.WriteLine($"Error in PostScam: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+            TempData["ErrorMessage"] = $"An error occurred while submitting your report: {ex.Message}";
+
+            // Reload scam types for the view
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var scamTypes = await connection.QueryAsync<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            model.AvailableScamTypes = scamTypes.Select(st => new SelectListItem
+            {
+                Value = st.ScamTypeID.ToString(),
+                Text = st.TypeName
+            }).ToList();
+
+            return View(model);
+        }
+    }
+
+    [AllowAnonymous]
+    public IActionResult ScamList(int page = 1, string search = "", int? scamType = null)
+    {
+        try
+        {
+            using var connection = _supabaseService.CreateConnection();
+            connection.Open();
+            var viewModel = new ScamListViewModel
+            {
+                CurrentPage = page,
+                PageSize = 7,
+                SearchTerm = search,
+                ScamTypeFilter = scamType
+            };
+            // Build WHERE clause for filters
+            var whereClause = new List<string>();
+            var parameters = new DynamicParameters();
+            if (!string.IsNullOrEmpty(search))
+            {
+                whereClause.Add("(sr.Title ILIKE @Search OR sr.Description ILIKE @Search)");
+                parameters.Add("Search", $"%{search}%");
+            }
+            if (scamType.HasValue)
+            {
+                whereClause.Add("sr.ScamTypeID = @ScamTypeID");
+                parameters.Add("ScamTypeID", scamType.Value);
+            }
+            string whereSql = whereClause.Any() ? "WHERE " + string.Join(" AND ", whereClause) : "";
+            // Get total count for pagination
+            var totalCount = connection.ExecuteScalar<int>($@"
+            SELECT COUNT(*) FROM ScamReports sr
+            {whereSql}
+        ", parameters);
+            viewModel.TotalPages = (int)Math.Ceiling(totalCount / (double)viewModel.PageSize);
+            // Get scam reports with pagination
+            parameters.Add("Offset", (page - 1) * viewModel.PageSize);
+            parameters.Add("Limit", viewModel.PageSize);
+            var scamReports = connection.Query($@"
+            SELECT sr.ReportID, sr.Title, sr.Description, sr.ScammerInfo,
+                   sr.Upvotes, sr.Downvotes, sr.CreatedAt,
+                   st.ScamTypeID, st.TypeName as ScamTypeName
+            FROM ScamReports sr
+            LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
+            {whereSql}
+            ORDER BY sr.CreatedAt DESC
+            LIMIT @Limit OFFSET @Offset
+        ", parameters);
+            // Convert to strongly typed list
+            foreach (var report in scamReports)
+            {
+                ScammerInfo scammerInfo;
+                try
+                {
+                    // Handle null or empty ScammerInfo
+                    var scammerInfoJson = report.scammerinfo?.ToString();
+                    scammerInfo = !string.IsNullOrEmpty(scammerInfoJson)
+                        ? JsonConvert.DeserializeObject<ScammerInfo>(scammerInfoJson)
+                        : new ScammerInfo();
+                }
+                catch
+                {
+                    scammerInfo = new ScammerInfo();
+                }
+                var scamReport = new ScamReport
+                {
+                    ReportID = report.reportid,
+                    Title = report.title,
+                    Description = report.description,
+                    ScammerInfo = scammerInfo,
+                    Upvotes = report.upvotes,
+                    Downvotes = report.downvotes,
+                    CreatedAt = report.createdat,
+                    ScamTypeID = report.scamtypeid,
+                    ScamTypeName = report.typename
+                };
+                viewModel.ScamReports.Add(scamReport);
+            }
+            // Get available scam types for filter dropdown
+            var scamTypes = connection.Query<ScamType>("SELECT * FROM ScamTypes ORDER BY TypeName");
+            viewModel.AvailableScamTypes = scamTypes.ToList();
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            // Log the actual error for debugging
+            Console.WriteLine($"Error in ScamList: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            TempData["ErrorMessage"] = "An error occurred while loading scam reports.";
+            return View(new ScamListViewModel());
+        }
+    }
+
+    [AllowAnonymous]
+    public async Task<IActionResult> ScamDetails(int id)
+    {
+        Console.WriteLine($"Loading scam details for ReportID: {id}");
+        try
+        {
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            var report = await connection.QueryFirstOrDefaultAsync<dynamic>(
+                @"SELECT sr.*, st.TypeName as ScamTypeName, u.UserName as ReporterName
+              FROM ScamReports sr
+              LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
+              LEFT JOIN Users u ON sr.UserID = u.UserID
+              WHERE sr.ReportID = @ReportID",
+                new { ReportID = id }
+            );
+
+            if (report == null)
+            {
+                TempData["ErrorMessage"] = "Scam report not found.";
+                return RedirectToAction("ScamList");
+            }
+
+            ScammerInfo scammerInfo = new ScammerInfo();
+            if (report.scammerinfo != null && !string.IsNullOrEmpty(report.scammerinfo.ToString()))
+            {
+                try
+                {
+                    scammerInfo = JsonConvert.DeserializeObject<ScammerInfo>(report.scammerinfo.ToString());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deserializing ScammerInfo: {ex.Message}");
+                    scammerInfo = new ScammerInfo();
+                }
+            }
+
+            var evidenceLinks = new List<string>();
+            if (!string.IsNullOrEmpty(report.evidencepicturelink1?.ToString())) evidenceLinks.Add(report.evidencepicturelink1.ToString());
+            if (!string.IsNullOrEmpty(report.evidencepicturelink2?.ToString())) evidenceLinks.Add(report.evidencepicturelink2.ToString());
+            if (!string.IsNullOrEmpty(report.evidencepicturelink3?.ToString())) evidenceLinks.Add(report.evidencepicturelink3.ToString());
+            if (!string.IsNullOrEmpty(report.evidencepicturelink4?.ToString())) evidenceLinks.Add(report.evidencepicturelink4.ToString());
+            if (!string.IsNullOrEmpty(report.evidencepicturelink5?.ToString())) evidenceLinks.Add(report.evidencepicturelink5.ToString());
+
+            var viewModel = new ScamDetailsViewModel
+            {
+                ReportID = report.reportid,
+                Title = report.title,
+                ScamTypeName = report.typename,
+                Description = report.description,
+                ScammerInfo = scammerInfo,
+                LossAmount = report.lossamount,
+                Currency = report.currency,
+                Location = report.location,
+                OccurrenceDate = report.occurrencedate,
+                IsVerified = report.isverified,
+                CreatedAt = report.createdat,
+                Upvotes = report.upvotes,
+                Downvotes = report.downvotes,
+                EvidenceLinks = evidenceLinks,
+                ReporterName = report.reportername
+            };
+
+            // Check if the user is authenticated and has voted
+            if (User.Identity.IsAuthenticated)
+            {
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var user = await connection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT UserID FROM Users WHERE Email = @Email",
+                    new { Email = userEmail }
+                );
+                if (user != null)
+                {
+                    var userVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                        "SELECT VoteType FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                        new { UserID = user.UserID, ReportID = id }
+                    );
+                    viewModel.UserVote = userVote?.VoteType;
+                }
+            }
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in ScamDetails: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            TempData["ErrorMessage"] = "An error occurred while loading scam details.";
+            return RedirectToAction("ScamList");
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Upvote(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Check if user already voted
+            var existingVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                "SELECT * FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                new { UserID = user.UserID, ReportID = reportId }
+            );
+
+            using var transaction = ((NpgsqlConnection)connection).BeginTransaction();
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == "up")
+                {
+                    // User is toggling off their upvote
+                    await connection.ExecuteAsync(
+                        "DELETE FROM UserVotes WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Upvotes = Upvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Upvote removed!";
+                }
+                else
+                {
+                    // User is changing from downvote to upvote
+                    await connection.ExecuteAsync(
+                        "UPDATE UserVotes SET VoteType = 'up' WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Upvotes = Upvotes + 1, Downvotes = Downvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Changed to upvote!";
+                }
+            }
+            else
+            {
+                // User is upvoting for the first time
+                await connection.ExecuteAsync(
+                    "INSERT INTO UserVotes (UserID, ReportID, VoteType) VALUES (@UserID, @ReportID, 'up')",
+                    new { UserID = user.UserID, ReportID = reportId },
+                    transaction
+                );
+                await connection.ExecuteAsync(
+                    "UPDATE ScamReports SET Upvotes = Upvotes + 1 WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+                TempData["SuccessMessage"] = "Upvoted successfully!";
+            }
+
+            transaction.Commit();
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to upvote. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Downvote(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            // Check if user already voted
+            var existingVote = await connection.QueryFirstOrDefaultAsync<UserVotes>(
+                "SELECT * FROM UserVotes WHERE UserID = @UserID AND ReportID = @ReportID",
+                new { UserID = user.UserID, ReportID = reportId }
+            );
+
+            using var transaction = ((NpgsqlConnection)connection).BeginTransaction();
+
+            if (existingVote != null)
+            {
+                if (existingVote.VoteType == "down")
+                {
+                    // User is toggling off their downvote
+                    await connection.ExecuteAsync(
+                        "DELETE FROM UserVotes WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Downvotes = Downvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Downvote removed!";
+                }
+                else
+                {
+                    // User is changing from upvote to downvote
+                    await connection.ExecuteAsync(
+                        "UPDATE UserVotes SET VoteType = 'down' WHERE VoteID = @VoteID",
+                        new { VoteID = existingVote.VoteID },
+                        transaction
+                    );
+                    await connection.ExecuteAsync(
+                        "UPDATE ScamReports SET Downvotes = Downvotes + 1, Upvotes = Upvotes - 1 WHERE ReportID = @ReportID",
+                        new { ReportID = reportId },
+                        transaction
+                    );
+                    TempData["SuccessMessage"] = "Changed to downvote!";
+                }
+            }
+            else
+            {
+                // User is downvoting for the first time
+                await connection.ExecuteAsync(
+                    "INSERT INTO UserVotes (UserID, ReportID, VoteType) VALUES (@UserID, @ReportID, 'down')",
+                    new { UserID = user.UserID, ReportID = reportId },
+                    transaction
+                );
+                await connection.ExecuteAsync(
+                    "UPDATE ScamReports SET Downvotes = Downvotes + 1 WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+                TempData["SuccessMessage"] = "Downvoted successfully!";
+            }
+
+            transaction.Commit();
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to downvote. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
         }
     }
 

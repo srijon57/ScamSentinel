@@ -22,9 +22,11 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.7" />
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="MimeKit" Version="4.13.0" />
+    <PackageReference Include="NewsAPI" Version="0.7.0" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="NToastNotify" Version="8.0.0" />
     <PackageReference Include="Supabase" Version="1.1.1" />
