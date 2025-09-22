@@ -9,20 +9,17 @@
 
         <style>
             @@keyframes rotate-and-pause {
-                0%
+                0% {
+                    transform: rotate(0deg);
+                }
 
-            {
-                transform: rotate(0deg);
-            }
+                50% {
+                    transform: rotate(360deg);
+                }
 
-            50% {
-                transform: rotate(360deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-
+                100% {
+                    transform: rotate(360deg);
+                }
             }
 
             .animate-rotate-pause {
@@ -44,6 +41,8 @@
             {
                 <a asp-controller="Account" asp-action="PostScam" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Post Scam</a>
             }
+            <!-- Added Legality Checker link -->
+            <a asp-controller="Home" asp-action="Legality" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Legality Checker</a>
             <a asp-controller="Account" asp-action="ScamList" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">All Scams</a>
             <a asp-controller="News" asp-action="Index" class="text-sm font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Scam News</a>
         </div>
@@ -70,7 +69,6 @@
                 </a>
             }
         </div>
-
     </nav>
 
     <dialog id="mobile-menu" class="backdrop:bg-black/30 lg:hidden">
@@ -95,6 +93,8 @@
                         {
                             <a asp-controller="Account" asp-action="PostScam" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Post Scam</a>
                         }
+                        <!-- Added Legality Checker link for mobile -->
+                        <a asp-controller="Home" asp-action="Legality" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Legality Checker</a>
                         <a href="/Account/ScamList" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">All Scams</a>
                         <a href="/scam-news" class="block rounded-lg px-3 py-2 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">Scam News</a>
                     </nav>
@@ -126,6 +126,7 @@
         </div>
     </dialog>
 </header>
+
 <script>
     // Simple mobile menu toggle using the native <dialog> element
     const dlg = document.getElementById('mobile-menu');
