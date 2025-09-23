@@ -1,26 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "F:\\SD\\project\\ScamSentinel\\",
+  "WorkspaceRootPath": "D:\\Projects\\ScamSentinel\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|f:\\sd\\project\\scamsentinel\\views\\home\\legality.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\home\\legality.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\controllers\\virustotalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:controllers\\virustotalcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|f:\\sd\\project\\scamsentinel\\views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_header.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|f:\\sd\\project\\scamsentinel\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|f:\\sd\\project\\scamsentinel\\views\\components\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:views\\components\\_footer.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|f:\\sd\\project\\scamsentinel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\services\\virustotalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:services\\virustotalservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\models\\scamcheckresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:models\\scamcheckresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\models\\scamcheckrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:models\\scamcheckrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|d:\\projects\\scamsentinel\\services\\newsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3E7581DB-113C-4EE1-87B4-3581E0F3B382}|ScamSentinel.csproj|solutionrelative:services\\newsservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,75 +38,100 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ScamCheckResponse.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Models\\ScamCheckResponse.cs",
+              "RelativeDocumentMoniker": "Models\\ScamCheckResponse.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Models\\ScamCheckResponse.cs",
+              "RelativeToolTip": "Models\\ScamCheckResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-22T22:25:57.684Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "_Header.cshtml",
-              "DocumentMoniker": "F:\\SD\\project\\ScamSentinel\\Views\\Components\\_Header.cshtml",
-              "RelativeDocumentMoniker": "Views\\Components\\_Header.cshtml",
-              "ToolTip": "F:\\SD\\project\\ScamSentinel\\Views\\Components\\_Header.cshtml",
-              "RelativeToolTip": "Views\\Components\\_Header.cshtml",
-              "ViewState": "AgIAAJYAAAAAAAAAAAAAwKQAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-22T19:30:31.577Z",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-22T22:21:10.377Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Legality.cshtml",
-              "DocumentMoniker": "F:\\SD\\project\\ScamSentinel\\Views\\Home\\Legality.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Legality.cshtml",
-              "ToolTip": "F:\\SD\\project\\ScamSentinel\\Views\\Home\\Legality.cshtml",
-              "RelativeToolTip": "Views\\Home\\Legality.cshtml",
-              "ViewState": "AgIAAHsAAAAAAAAAAADwvzoAAABuAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-22T20:00:40.585Z",
+              "Title": "VirusTotalController.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Controllers\\VirusTotalController.cs",
+              "RelativeDocumentMoniker": "Controllers\\VirusTotalController.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Controllers\\VirusTotalController.cs",
+              "RelativeToolTip": "Controllers\\VirusTotalController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAkwCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-22T22:20:23.84Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "NewsService.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Services\\NewsService.cs",
+              "RelativeDocumentMoniker": "Services\\NewsService.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Services\\NewsService.cs",
+              "RelativeToolTip": "Services\\NewsService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-22T22:20:06.267Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "F:\\SD\\project\\ScamSentinel\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "F:\\SD\\project\\ScamSentinel\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAB0AAAAAAAAAAAAAACQAAAAaAAAAAAAAAA==",
+              "Title": "VirusTotalService.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Services\\VirusTotalService.cs",
+              "RelativeDocumentMoniker": "Services\\VirusTotalService.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Services\\VirusTotalService.cs",
+              "RelativeToolTip": "Services\\VirusTotalService.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAkwJgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-22T16:54:25.5Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "_Footer.cshtml",
-              "DocumentMoniker": "F:\\SD\\project\\ScamSentinel\\Views\\Components\\_Footer.cshtml",
-              "RelativeDocumentMoniker": "Views\\Components\\_Footer.cshtml",
-              "ToolTip": "F:\\SD\\project\\ScamSentinel\\Views\\Components\\_Footer.cshtml",
-              "RelativeToolTip": "Views\\Components\\_Footer.cshtml",
-              "ViewState": "AgIAAEQAAAAAAAAAAAAjwE0AAAC7AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-09-22T16:51:26.696Z",
+              "WhenOpened": "2025-09-22T22:19:42.565Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "Program.cs",
-              "DocumentMoniker": "F:\\SD\\project\\ScamSentinel\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "F:\\SD\\project\\ScamSentinel\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Title": "ScamCheckRequest.cs",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\Models\\ScamCheckRequest.cs",
+              "RelativeDocumentMoniker": "Models\\ScamCheckRequest.cs",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\Models\\ScamCheckRequest.cs",
+              "RelativeToolTip": "Models\\ScamCheckRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-22T15:16:39.879Z",
+              "WhenOpened": "2025-09-22T22:19:16.947Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\Projects\\ScamSentinel\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\Projects\\ScamSentinel\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAgwCYAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-22T22:18:25.477Z",
               "EditorCaption": ""
             }
           ]
