@@ -2,139 +2,373 @@
 @{
     ViewData["Title"] = "Scam Details";
 }
-<div class="flex min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-red-200 px-4 py-14 dark:from-gray-900 dark:via-gray-800 dark:to-red-900">
-    <div class="animate-fade-in-up container mx-auto w-full max-w-4xl">
-        <h1 class="animate-bounce-slow mb-8 text-center text-2xl font-bold text-gray-800 sm:text-3xl dark:text-gray-100">
-            Scam Details
-        </h1>
-        <!-- Scam Details Card -->
-        <div class="animate-fade-in-up rounded-xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-800">
-            <!-- Title and Scam Type -->
-            <h2 class="mb-3 text-xl font-semibold text-gray-800 dark:text-gray-100">@Model.Title</h2>
-            <span class="mb-4 inline-block rounded-full bg-gray-200 px-3 py-1 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-100">@Model.ScamTypeName</span>
-            <!-- Description -->
-            <div class="my-6">
-                <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Description</h3>
-                <p class="text-gray-600 dark:text-gray-300">@Model.Description</p>
-            </div>
-            <!-- Scammer Info -->
-            <div class="my-6">
-                <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Scammer Info</h3>
-                <div class="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Phone))
-                    {
-                        <div><strong>Phone:</strong> @Model.ScammerInfo.Phone</div>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.WhatsApp))
-                    {
-                        <div><strong>WhatsApp:</strong> @Model.ScammerInfo.WhatsApp</div>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Email))
-                    {
-                        <div><strong>Email:</strong> @Model.ScammerInfo.Email</div>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Facebook))
-                    {
-                        <div><strong>Facebook:</strong> @Model.ScammerInfo.Facebook</div>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Name))
-                    {
-                        <div><strong>Name:</strong> @Model.ScammerInfo.Name</div>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ScammerInfo?.Organization))
-                    {
-                        <div><strong>Organization:</strong> @Model.ScammerInfo.Organization</div>
-                    }
+
+<link rel="stylesheet" href="/css/ScamDetails.css" asp-append-version="true" />
+
+<div class="min-h-screen bg-gradient-bg">
+    <!-- Header Section -->
+    <div class="scam-header">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <div class="header-inner">
+                <div class="alert-badge">
+                    <i class="fas fa-shield-alt mr-2"></i>
+                    Scam Alert Details
+                </div>
+                <h1 class="scam-title">
+                    @Model.Title
+                </h1>
+                <div class="scam-meta">
+                    <span class="scam-type">
+                        @Model.ScamTypeName
+                    </span>
+                    <span class="scam-date">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        @Model.CreatedAt.ToString("MMM dd, yyyy")
+                    </span>
                 </div>
             </div>
-            <!-- Additional Info -->
-            <div class="my-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-container">
+            <!-- Quick Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-icon bg-green">
+                            <i class="fas fa-thumbs-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-number">@Model.Upvotes</p>
+                            <p class="stat-label">Helpful</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-icon bg-red">
+                            <i class="fas fa-thumbs-down"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-number">@Model.Downvotes</p>
+                            <p class="stat-label">Not Helpful</p>
+                        </div>
+                    </div>
+                </div>
+
                 @if (Model.LossAmount.HasValue)
                 {
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Loss Amount</h4>
-                        <p class="text-gray-800 dark:text-gray-100">@Model.LossAmount @Model.Currency</p>
+                    <div class="stat-card">
+                        <div class="stat-content">
+                            <div class="stat-icon bg-yellow">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="stat-info">
+                                <p class="stat-number">@Model.LossAmount.Value.ToString("C")</p>
+                                <p class="stat-label">@Model.Currency Lost</p>
+                            </div>
+                        </div>
                     </div>
                 }
-                @if (!string.IsNullOrEmpty(Model.Location))
-                {
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Location</h4>
-                        <p class="text-gray-800 dark:text-gray-100">@Model.Location</p>
+
+                <div class="stat-card">
+                    <div class="stat-content">
+                        <div class="stat-icon @(Model.IsVerified ? "bg-blue" : "bg-gray")">
+                            <i class="fas @(Model.IsVerified ? "fa-check-circle" : "fa-clock")"></i>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-text">@(Model.IsVerified ? "Verified" : "Pending")</p>
+                            <p class="stat-label">Status</p>
+                        </div>
                     </div>
-                }
-                @if (Model.OccurrenceDate.HasValue)
-                {
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Occurrence Date</h4>
-                        <p class="text-gray-800 dark:text-gray-100">@Model.OccurrenceDate.Value.ToString("MMM dd, yyyy")</p>
-                    </div>
-                }
-                <div>
-                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Reported By</h4>
-                    <p class="text-gray-800 dark:text-gray-100">@Model.ReporterName</p>
                 </div>
-                <div>
-                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Reported On</h4>
-                    <p class="text-gray-800 dark:text-gray-100">@Model.CreatedAt.ToString("MMM dd, yyyy")</p>
-                </div>
-                <div>
-                    <h4 class="text-sm font-medium text-gray-600 dark:text-gray-300">Status</h4>
-                    <p class="text-gray-800 dark:text-gray-100">@(Model.IsVerified ? "Verified" : "Not Verified")</p>
-                </div>
-            </div>
-            <!-- Votes -->
-            <div class="my-6 flex items-center space-x-4">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <form asp-action="Upvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
-                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "up" ? "text-blue-500" : "text-gray-500 dark:text-gray-400")">
-                            <i class="fas fa-thumbs-up"></i>
-                            <span>@Model.Upvotes</span>
-                        </button>
-                    </form>
-                    <form asp-action="Downvote" asp-route-reportId="@Model.ReportID" method="post" class="inline">
-                        <button type="submit" class="flex items-center space-x-2 @(Model.UserVote == "down" ? "text-red-500" : "text-gray-500 dark:text-gray-400")">
-                            <i class="fas fa-thumbs-down"></i>
-                            <span>@Model.Downvotes</span>
-                        </button>
-                    </form>
-                }
-                else
-                {
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-thumbs-up text-gray-500 dark:text-gray-400"></i>
-                        <span class="text-gray-600 dark:text-gray-300">@Model.Upvotes</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <i class="fas fa-thumbs-down text-gray-500 dark:text-gray-400"></i>
-                        <span class="text-gray-600 dark:text-gray-300">@Model.Downvotes</span>
-                    </div>
-                }
             </div>
 
-            <!-- Evidence -->
-            @if (Model.EvidenceLinks.Any())
-            {
-                <div class="my-6">
-                    <h3 class="mb-2 text-lg font-medium text-gray-800 dark:text-gray-100">Evidence</h3>
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        @foreach (var link in Model.EvidenceLinks)
+            <div class="content-grid">
+                <!-- Main Content Column -->
+                <div class="main-column">
+                    <!-- Description Card -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="header-icon bg-blue">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h2 class="card-title">Description</h2>
+                        </div>
+                        <div class="card-body">
+                            <p class="description-text">@Model.Description</p>
+                        </div>
+                    </div>
+
+                    <!-- Scammer Information Card -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <div class="header-icon bg-red">
+                                <i class="fas fa-user-secret"></i>
+                            </div>
+                            <h2 class="card-title">Scammer Information</h2>
+                        </div>
+
+                        @if (Model.ScammerInfo != null)
                         {
-                            <div class="rounded-lg border border-gray-200 p-2 dark:border-gray-700">
-                                <img src="@link" alt="Evidence" class="h-40 w-full rounded object-cover">
+                            <div class="scammer-grid">
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.Name))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fas fa-user scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">Name</p>
+                                                <p class="scammer-value">@Model.ScammerInfo.Name</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.Phone))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fas fa-phone scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">Phone</p>
+                                                <p class="scammer-value font-mono">@Model.ScammerInfo.Phone</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.Email))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fas fa-envelope scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">Email</p>
+                                                <p class="scammer-value font-mono text-sm break-all">@Model.ScammerInfo.Email</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.WhatsApp))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fab fa-whatsapp scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">WhatsApp</p>
+                                                <p class="scammer-value font-mono">@Model.ScammerInfo.WhatsApp</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.Facebook))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fab fa-facebook scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">Facebook</p>
+                                                <p class="scammer-value">@Model.ScammerInfo.Facebook</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.ScammerInfo.Organization))
+                                {
+                                    <div class="scammer-item">
+                                        <div class="scammer-item-content">
+                                            <i class="fas fa-building scammer-icon"></i>
+                                            <div class="scammer-details">
+                                                <p class="scammer-label">Organization</p>
+                                                <p class="scammer-value">@Model.ScammerInfo.Organization</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="empty-state">
+                                <i class="fas fa-info-circle empty-icon"></i>
+                                <p class="empty-text">No scammer information available</p>
                             </div>
                         }
                     </div>
+
+                    <!-- Evidence Section -->
+                    @if (Model.EvidenceLinks != null && Model.EvidenceLinks.Any())
+                    {
+                        <div class="content-card">
+                            <div class="card-header">
+                                <div class="header-icon bg-purple">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <h2 class="card-title">Evidence (@Model.EvidenceLinks.Count)</h2>
+                            </div>
+                            <div class="evidence-grid">
+                                @foreach (var link in Model.EvidenceLinks)
+                                {
+                                    <div class="evidence-item" data-image="@link">
+                                        <img src="@link" alt="Evidence" class="evidence-image"
+                                             onerror="this.src='/images/placeholder-image.jpg'">
+                                        <div class="evidence-overlay">
+                                            <button class="evidence-zoom" type="button">
+                                                <i class="fas fa-expand-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="content-card">
+                            <div class="card-header">
+                                <div class="header-icon bg-gray">
+                                    <i class="fas fa-images"></i>
+                                </div>
+                                <h2 class="card-title">Evidence</h2>
+                            </div>
+                            <div class="empty-state">
+                                <i class="fas fa-camera empty-icon"></i>
+                                <p class="empty-text">No evidence available</p>
+                            </div>
+                        </div>
+                    }
                 </div>
-            }
-            <!-- Back Button -->
-            <div class="mt-8 text-center">
-                <a href="@Url.Action("ScamList")"
-                   class="inline-flex justify-center rounded-full bg-red-600 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 hover:shadow-lg focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
-                    Back to Scam List
-                </a>
+
+                <!-- Sidebar -->
+                <div class="sidebar-column">
+                    <!-- Report Details Card -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">
+                            <i class="fas fa-clipboard-list sidebar-icon"></i>
+                            Report Details
+                        </h3>
+                        <div class="sidebar-content">
+                            @if (!string.IsNullOrEmpty(Model.Location))
+                            {
+                                <div class="detail-item">
+                                    <p class="detail-label">Location</p>
+                                    <p class="detail-value">@Model.Location</p>
+                                </div>
+                            }
+
+                            @if (Model.OccurrenceDate.HasValue)
+                            {
+                                <div class="detail-item">
+                                    <p class="detail-label">Occurrence Date</p>
+                                    <p class="detail-value">@Model.OccurrenceDate.Value.ToString("MMM dd, yyyy")</p>
+                                </div>
+                            }
+
+                            <div class="detail-item">
+                                <p class="detail-label">Reported By</p>
+                                <p class="detail-value">@Model.ReporterName</p>
+                            </div>
+
+                            <div class="detail-item">
+                                <p class="detail-label">Report ID</p>
+                                <p class="detail-value font-mono">#@Model.ReportID</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vote Section -->
+                    <div class="sidebar-card">
+                        <h3 class="sidebar-title">
+                            <i class="fas fa-vote-yea sidebar-icon"></i>
+                            Community Feedback
+                        </h3>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="vote-section">
+                                <form asp-action="Upvote" asp-route-reportId="@Model.ReportID" method="post" class="vote-form">
+                                    <button type="submit" class="vote-btn @(Model.UserVote == "up" ? "vote-btn-active" : "vote-btn-inactive")">
+                                        <i class="fas fa-thumbs-up mr-2"></i>
+                                        Helpful (@Model.Upvotes)
+                                    </button>
+                                </form>
+
+                                <form asp-action="Downvote" asp-route-reportId="@Model.ReportID" method="post" class="vote-form">
+                                    <button type="submit" class="vote-btn @(Model.UserVote == "down" ? "vote-btn-active vote-btn-down" : "vote-btn-inactive")">
+                                        <i class="fas fa-thumbs-down mr-2"></i>
+                                        Not Helpful (@Model.Downvotes)
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="vote-section">
+                                <div class="vote-disabled">
+                                    <span class="vote-disabled-text">
+                                        <i class="fas fa-thumbs-up mr-2"></i>
+                                        Helpful
+                                    </span>
+                                    <span class="vote-count">@Model.Upvotes</span>
+                                </div>
+                                <div class="vote-disabled">
+                                    <span class="vote-disabled-text">
+                                        <i class="fas fa-thumbs-down mr-2"></i>
+                                        Not Helpful
+                                    </span>
+                                    <span class="vote-count">@Model.Downvotes</span>
+                                </div>
+                                <p class="vote-login-text">
+                                    <a asp-controller="Account" asp-action="Login" class="login-link">Sign in</a> to vote
+                                </p>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="@Url.Action("ScamList", "Account")" class="action-btn action-btn-primary">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Scam List
+                        </a>
+
+                        <button class="action-btn action-btn-danger" id="reportIssueBtn">
+                            <i class="fas fa-flag mr-2"></i>
+                            Report Issue
+                        </button>
+
+                        <button class="action-btn action-btn-secondary" id="shareAlertBtn">
+                            <i class="fas fa-share-alt mr-2"></i>
+                            Share Alert
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="image-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose">&times;</button>
+        <img id="modalImage" src="" alt="Evidence" class="modal-image">
+        <div class="modal-nav">
+            <button class="nav-btn" id="prevImage">❮</button>
+            <span id="imageCounter" class="image-counter"></span>
+            <button class="nav-btn" id="nextImage">❯</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/js/ScamDetails.js" asp-append-version="true"></script>
+}
