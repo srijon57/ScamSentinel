@@ -14,6 +14,11 @@ builder.Services.AddScoped<CloudinaryService>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient<NewsService>();
 builder.Services.AddScoped<NewsService>();
+builder.Services.AddHttpClient<VirusTotalService>();
+builder.Services.AddSingleton<VirusTotalService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<VirusTotalService>();
+builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

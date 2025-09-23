@@ -1,0 +1,227 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 300px;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%);
+    color: #1f2937;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #7f1d1d 100%);
+    color: #e5e7eb;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.dark-mode h1 {
+    color: #f3f4f6;
+}
+
+.logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    animation: bounce-slow 2s infinite;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 16px;
+}
+
+body.dark-mode .subtitle {
+    color: #9ca3af;
+}
+
+.primary-btn, .secondary-btn, .search-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    animation: fade-in-up 0.5s ease-out;
+}
+
+.primary-btn {
+    background-color: #dc2626;
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primary-btn:hover {
+    background-color: #b91c1c;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .primary-btn {
+    background-color: #ef4444;
+}
+
+body.dark-mode .primary-btn:hover {
+    background-color: #dc2626;
+}
+
+.secondary-btn {
+    background-color: #b91c1c;
+    color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.secondary-btn:hover {
+    background-color: #991b1b;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .secondary-btn {
+    background-color: #dc2626;
+}
+
+body.dark-mode .secondary-btn:hover {
+    background-color: #b91c1c;
+}
+
+.search-btn {
+    background-color: #16a34a;
+    color: #ffffff;
+    margin-top: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-btn:hover {
+    background-color: #15803d;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode .search-btn {
+    background-color: #22c55e;
+}
+
+body.dark-mode .search-btn:hover {
+    background-color: #16a34a;
+}
+
+.result-box {
+    margin-top: 16px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    min-height: 48px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fade-in-up 0.5s ease-out 0.1s;
+}
+
+body.dark-mode .result-box {
+    background: #374151;
+    border-color: #4b5563;
+    color: #e5e7eb;
+}
+
+.search-box {
+    margin-top: 16px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    color: #1f2937;
+    background: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    animation: fade-in-up 0.5s ease-out 0.2s;
+}
+
+.search-input:focus {
+    border-color: #dc2626;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+    outline: none;
+}
+
+body.dark-mode .search-input {
+    background: #4b5563;
+    border-color: #6b7280;
+    color: #e5e7eb;
+}
+
+body.dark-mode .search-input:focus {
+    border-color: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #d1d5db;
+    margin: 16px 0;
+}
+
+body.dark-mode hr {
+    border-color: #4b5563;
+}
+
+.theme-toggle {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.theme-label {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+body.dark-mode .theme-label {
+    color: #9ca3af;
+}
+
+#themeSwitch {
+    cursor: pointer;
+}
+
+/* Animations */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce-slow {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}

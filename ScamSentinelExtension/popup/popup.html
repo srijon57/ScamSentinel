@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Scam Sentinel</title>
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <div class="container">
+            <h1>
+                <img
+                    src="../icons/icon16.png"
+                    alt="Scam Sentinel"
+                    class="logo"
+                />
+                Scam Sentinel
+            </h1>
+            <p class="subtitle">Protect yourself from scams & frauds</p>
+
+            <!-- 🔍 Website Checker -->
+            <button id="checkBtn" class="primary-btn">🔍 Check Website</button>
+            <div id="result" class="result-box">
+                Click "Check Website" to analyze the current site.
+            </div>
+
+            <hr />
+
+            <!-- 🚨 Report Scam -->
+            <button id="reportBtn" class="secondary-btn">🚨 Report Scam</button>
+
+            <hr />
+
+            <!-- 🔎 Search Fraud by Name -->
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="fraudName"
+                    placeholder="Enter fraud name..."
+                    class="search-input"
+                />
+                <button id="searchBtn" class="search-btn">Search</button>
+            </div>
+
+            <!-- Dark Mode Toggle -->
+            <div class="theme-toggle">
+                <label for="themeSwitch" class="theme-label">Dark Mode</label>
+                <input type="checkbox" id="themeSwitch" />
+            </div>
+        </div>
+
+        <script src="popup.js"></script>
+    </body>
+</html>
