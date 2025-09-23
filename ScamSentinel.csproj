@@ -16,11 +16,6 @@
 		<TailwindInputStyleSheetPath>wwwroot/css/site.css</TailwindInputStyleSheetPath>
 		<TailwindOutputStyleSheetPath>wwwroot/css/output.css</TailwindOutputStyleSheetPath>
 	</PropertyGroup>  
-	<PropertyGroup>
-		<TailwindVersion>v4.1.12</TailwindVersion>
-		<TailwindInputStyleSheetPath>wwwroot/css/site.css</TailwindInputStyleSheetPath>
-		<TailwindOutputStyleSheetPath>wwwroot/css/output.css</TailwindOutputStyleSheetPath>
-	</PropertyGroup>  
   <ItemGroup>
     <ContainerPort Include="8081" />
   </ItemGroup>
@@ -40,5 +35,4 @@
 	<PackageReference Include="toastr" Version="2.1.1" />
   </ItemGroup>
 	<Import Project="Tailwind.targets" />
-	<Import Project="Tailwind.targets"/>
 </Project>
