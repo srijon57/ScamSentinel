@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using ScamSentinel.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,16 @@ builder.Services.AddScoped<SupabaseService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
-// Add JWT Authentication
+builder.Services.AddScoped<CloudinaryService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<NewsService>();
+builder.Services.AddScoped<NewsService>();
+builder.Services.AddHttpClient<VirusTotalService>();
+builder.Services.AddSingleton<VirusTotalService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<VirusTotalService>();
+builder.Services.AddControllers();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -56,3 +66,5 @@ app.MapControllerRoute(
 app.Run();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+builder.Logging.ClearProviders();
+builder.Logging.SetMinimumLevel(LogLevel.Debug);

@@ -1,0 +1,144 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Text.Json;
+
+namespace ScamSentinel.Controllers
+{
+    public class ChatbotController : Controller
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+
+        public ChatbotController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        {
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAnswer([FromBody] ChatbotQuestion question)
+        {
+            try
+            {
+                // You'll need to get your Gemini API key and set it in your appsettings.json
+                var apiKey = _configuration["Gemini:ApiKey"];
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    return Json(new { answer = "Gemini API key is not configured." });
+                }
+
+                // For simplicity, we're using a direct API call here
+                // You might want to create a service for this
+                var client = _httpClientFactory.CreateClient();
+
+                // Create the prompt with your FAQs (you should load these from a file or database)
+                var faqContent = "Your FAQ content here...";
+
+                var prompt = $@"
+                    question: How do I report a scam? answer: You can report a scam by clicking on the 'Post Scam' button in the navigation menu. Fill out the form with details such as the scammer's contact information, website URL, screenshots, and any communication you've received.
+question: What information should I include when reporting? answer: Include as much detail as possible: the website URL, email address, phone number, screenshots, transaction IDs, and any communication you've received. The more information you provide, the easier it is for others to recognize and avoid the scam.
+question: How do I know if something is a scam? answer: Common signs of a scam include unsolicited messages, requests for personal or financial information, offers that seem too good to be true, and poor grammar or spelling in communications. Always verify the legitimacy of the source before sharing any information.
+question: What should I do if I've fallen victim to a scam? answer: If you've fallen victim to a scam, report it immediately on our platform. Additionally, contact your bank or financial institution if money was involved, and consider reporting the incident to local law enforcement or cybercrime authorities.
+question: How can I protect myself from scams? answer: To protect yourself from scams, be cautious of unsolicited messages, verify the legitimacy of websites and emails, use strong and unique passwords, enable two-factor authentication, and keep your software up to date. Educate yourself about common scam tactics.
+question: Can I report offline scams? answer: Yes, you can report both online and offline scams on our platform. For offline scams, provide details such as the location, description of the scammer, and any evidence you have.
+question: How do I verify my account? answer: After registering, you will receive an OTP (One-Time Password) on your email. Enter this OTP on the verification page to verify your account.
+question: What happens after I report a scam? answer: After you report a scam, it will be reviewed by our community and moderators. If verified, it will be added to our database, and other users will be alerted about it. You can also track the status of your report in your account.
+question: How can I contact support? answer: You can contact our support team by using the 'Contact Us' form on our website. Provide as much detail as possible about your issue, and we will get back to you as soon as possible.
+question: Is my information secure? answer: Yes, we take your privacy and security seriously. Your personal information is encrypted and stored securely. We do not share your information with third parties without your consent.
+question: How can I help others avoid scams? answer: You can help others avoid scams by reporting suspicious activities on our platform, sharing your experiences, and educating your friends and family about common scam tactics. Stay informed and spread awareness.
+question: What types of scams can I report? answer: You can report various types of scams, including phishing, online shopping scams, investment scams, romance scams, tech support scams, and more. Both online and offline scams can be reported on our platform.
+question: How do I change my password? answer: To change your password, go to your profile page and click on the 'Change Password' link. You will need to enter your current password, new password, and confirm the new password.
+question: Can I edit my report after submitting it? answer: Currently, you cannot edit a report after submitting it. If you need to update the information, you can submit a new report with the corrected details.
+question: How do I search for scams? answer: You can search for scams by using the search bar on the 'All Scams' page. You can filter scams by type, platform, or location to find relevant reports.
+question: What should I do if I see a false report? answer: If you come across a report that you believe is false or misleading, you can downvote it and leave a comment explaining your concerns. Our moderators will review the report and take appropriate action.
+question: How do I upvote or downvote a scam report? answer: You can upvote or downvote a scam report by clicking the upvote or downvote buttons on the report page. Upvoting helps highlight legitimate scams, while downvoting can flag suspicious or false reports.
+question: Can I comment on a scam report? answer: Yes, you can leave comments on scam reports to share additional information, ask questions, or discuss the report with other users. Comments help build a community-driven database of scam information.
+question: How do I delete my account? answer: To delete your account, go to your profile settings and click on the 'Delete Account' button. You will be asked to confirm your decision. Once deleted, your account and associated data will be permanently removed from our system.
+question: Can I report a scam anonymously? answer: Currently, you need to create an account to report a scam on our platform. However, your personal information is kept private, and you can use a pseudonym if you prefer not to disclose your real name.
+question: How do I recover my password? answer: If you've forgotten your password, click on the 'Forgot Password' link on the login page. Enter your email address, and we will send you a link to reset your password.
+question: What is two-factor authentication (2FA)? answer: Two-factor authentication (2FA) is an extra layer of security that requires not only a password and username but also something that only the user has on them, such as a piece of information only they should know or have immediately to hand - like a physical token or a code sent to their phone.
+question: How do I enable two-factor authentication (2FA)? answer: To enable two-factor authentication, go to your profile settings and find the 2FA section. Follow the instructions to set it up using an authenticator app or SMS verification.
+question: Can I report a scam on behalf of someone else? answer: Yes, you can report a scam on behalf of someone else. Make sure to provide as much detail as possible about the scam and mention that you are reporting it on behalf of another person.
+question: How do I know if a report has been verified? answer: Verified reports will have a checkmark or a 'Verified' label. Additionally, reports with many upvotes and positive comments from the community are more likely to be legitimate.
+question: What should I do if I accidentally submitted incorrect information in a report? answer: If you've submitted incorrect information in a report, you can submit a new report with the correct details. You can also leave a comment on the original report explaining the mistake.
+question: How can I stay updated on new scams? answer: You can stay updated on new scams by enabling email notifications in your account settings. You will receive alerts about new scams reported in your area or related to platforms you use.
+question: Is there a mobile app for Scam-Sentinel? answer: Currently, Scam-Sentinel is only available as a web application. However, our website is mobile-friendly and can be accessed from any mobile device using a web browser.
+question: How can I contribute to Scam-Sentinel? answer: You can contribute to Scam-Sentinel by reporting scams, leaving comments on reports, upvoting or downvoting reports, and sharing information about our platform with others. If you have technical skills, you can also contribute to our open-source project on GitHub.
+                    You are a chatbot for ScamSentinel. Try to answer the user's question about scam prevention and reporting based on Scamsentinel website.
+                    If you don't know the answer, provide a general response about being cautious online based on Bangladesh. Your reply will be atmost 5 sentences not more.
+
+                    User's Question: {question.Question}
+                ";
+
+                var requestBody = new
+                {
+                    contents = new[]
+                    {
+                        new
+                        {
+                            parts = new[]
+                            {
+                                new
+                                {
+                                    text = prompt
+                                }
+                            }
+                        }
+                    }
+                };
+
+                var json = JsonSerializer.Serialize(requestBody);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(
+                    $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}",
+                    content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var responseObject = JsonSerializer.Deserialize<GeminiResponse>(responseContent);
+
+                    var answer = responseObject?.candidates?[0]?.content?.parts?[0]?.text
+                                ?? "I couldn't find an answer to your question.";
+
+                    return Json(new { answer });
+                }
+                else
+                {
+                    return Json(new { answer = "Sorry, I'm having trouble connecting to the knowledge base." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return Json(new { answer = "An error occurred while processing your request." });
+            }
+        }
+
+        public class ChatbotQuestion
+        {
+            public string Question { get; set; }
+        }
+
+        public class GeminiResponse
+        {
+            public Candidate[] candidates { get; set; }
+        }
+
+        public class Candidate
+        {
+            public Content content { get; set; }
+        }
+
+        public class Content
+        {
+            public Part[] parts { get; set; }
+        }
+
+        public class Part
+        {
+            public string text { get; set; }
+        }
+    }
+}

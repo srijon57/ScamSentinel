@@ -1,0 +1,498 @@
+﻿@{
+    ViewData["Title"] = "Legality Checker - ScamSentinel";
+}
+
+<section class="min-h-screen bg-gradient-to-br from-red-50 to-white pt-20 dark:from-gray-900 dark:to-gray-800">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <!-- Page Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-red-900 dark:text-red-300 mb-4">Legality Checker</h1>
+            <p class="text-lg text-red-700 dark:text-red-300 max-w-3xl mx-auto">
+                Verify the legal status of organizations in Bangladesh according to local laws and regulations. Answer the questions to assess compliance.
+            </p>
+        </div>
+
+        <!-- Checker Type Selection -->
+        <div class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Online Organization Check -->
+                <div class="animate-fade-in-up glass-effect rounded-2xl p-8 dark:bg-gray-700" style="animation-delay: 0.2s;">
+                    <div class="flex items-center mb-6">
+                        <div class="mr-4 p-3 bg-red-100 rounded-full dark:bg-red-900">
+                            <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-red-900 dark:text-red-300">Online Organization Check</h2>
+                    </div>
+                    <p class="text-red-700 dark:text-red-300 mb-6 text-justify">
+                        Verify the legal status of e-commerce platforms, digital services, and online businesses.
+                    </p>
+                    <button onclick="showOnlineChecker()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                        Check Online Organization
+                    </button>
+                </div>
+
+                <!-- Physical Organization Check -->
+                <div class="animate-fade-in-up glass-effect rounded-2xl p-8 dark:bg-gray-700" style="animation-delay: 0.4s;">
+                    <div class="flex items-center mb-6">
+                        <div class="mr-4 p-3 bg-red-100 rounded-full dark:bg-red-900">
+                            <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-red-900 dark:text-red-300">Physical Organization Check</h2>
+                    </div>
+                    <p class="text-red-700 dark:text-red-300 mb-6 text-justify">
+                        Verify the legal status of brick-and-mortar businesses and organizations with a physical presence.
+                    </p>
+                    <button onclick="showPhysicalChecker()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                        Check Physical Organization
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Online Organization Checker Form (Initially Hidden) -->
+        <div id="onlineChecker" class="hidden animate-fade-in-up glass-effect rounded-2xl p-8 mb-8 dark:bg-gray-700">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-red-900 dark:text-red-300">Online Organization Verification</h2>
+                <button onclick="hideOnlineChecker()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="onlineForm" class="space-y-6">
+                <div>
+                    <label for="online-q1" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Does the organization have a valid Business Identification Number (BIN) or Trade License displayed?</label>
+                    <select id="online-q1" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="unknown">Don't know</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="online-q2" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Does the website clearly state the physical address and contact information of the business?</label>
+                    <select id="online-q2" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="online-q3" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Is there a comprehensive privacy policy and clear terms of service on the website?</label>
+                    <select id="online-q3" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="online-q4" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Does the organization offer secure payment gateways and clear refund policies as per Bangladesh E-commerce Guidelines?</label>
+                    <select id="online-q4" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                    Verify Legality
+                </button>
+            </form>
+        </div>
+
+        <!-- Physical Organization Checker Form (Initially Hidden) -->
+        <div id="physicalChecker" class="hidden animate-fade-in-up glass-effect rounded-2xl p-8 mb-8 dark:bg-gray-700">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-red-900 dark:text-red-300">Physical Organization Verification</h2>
+                <button onclick="hidePhysicalChecker()" class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="physicalForm" class="space-y-6">
+                <div>
+                    <label for="physical-q1" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Is the organization registered with the Registrar of Joint Stock Companies and Firms (RJSC)?</label>
+                    <select id="physical-q1" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="unknown">Don't know</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="physical-q2" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Does the business prominently display a valid and up-to-date Trade License at its premises?</label>
+                    <select id="physical-q2" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="physical-q3" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Does the business have a clearly defined physical location and office?</label>
+                    <select id="physical-q3" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="physical-q4" class="block text-sm font-medium text-red-700 dark:text-red-300 mb-2">Is the business registered for VAT or TIN with the National Board of Revenue (NBR), as applicable?</label>
+                    <select id="physical-q4" class="w-full px-4 py-3 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 dark:bg-gray-600 dark:border-gray-500 dark:text-white" required>
+                        <option value="">Select an option</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="unknown">Don't know</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                    Verify Legality
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden animate-fade-in-up glass-effect rounded-2xl p-8 dark:bg-gray-700">
+            <h2 class="text-2xl font-bold text-red-900 dark:text-red-300 mb-6">Verification Results</h2>
+            <div id="resultContent" class="space-y-4">
+            </div>
+            <button onclick="resetChecker()" class="mt-6 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium py-3 px-6 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                Check Another Organization
+            </button>
+        </div>
+
+        <!-- Legal Information Section -->
+        <div class="animate-fade-in-up glass-effect rounded-2xl p-8 dark:bg-gray-700" style="animation-delay: 0.6s;">
+            <h2 class="text-2xl font-bold text-red-900 dark:text-red-300 mb-4">Legal Framework Reference</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Online Business Regulations</h3>
+                    <ul class="space-y-2 text-red-700 dark:text-red-300">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Digital Security Act, 2018</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>E-commerce Guidelines, 2021</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Data Protection Guidelines</span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">Physical Business Regulations</h3>
+                    <ul class="space-y-2 text-red-700 dark:text-red-300">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Companies Act, 1994</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Trade Organization Ordinance</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-red-600 mt-0.5 mr-2 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Bangladesh Investment Development Authority Rules</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dark .glass-effect {
+        background: rgba(55, 65, 81, 0.7);
+        border: 1px solid rgba(75, 85, 99, 0.2);
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    @@keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<script>
+    // Show/Hide Online Checker
+    function showOnlineChecker() {
+        document.getElementById('onlineChecker').classList.remove('hidden');
+        document.getElementById('physicalChecker').classList.add('hidden');
+        document.getElementById('results').classList.add('hidden');
+    }
+
+    function hideOnlineChecker() {
+        document.getElementById('onlineChecker').classList.add('hidden');
+    }
+
+    // Show/Hide Physical Checker
+    function showPhysicalChecker() {
+        document.getElementById('physicalChecker').classList.remove('hidden');
+        document.getElementById('onlineChecker').classList.add('hidden');
+        document.getElementById('results').classList.add('hidden');
+    }
+
+    function hidePhysicalChecker() {
+        document.getElementById('physicalChecker').classList.add('hidden');
+    }
+
+    // Form Submission Handlers
+    document.getElementById('onlineForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        evaluateOnlineLegality();
+    });
+
+    document.getElementById('physicalForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        evaluatePhysicalLegality();
+    });
+
+    // Evaluate Online Legality based on quiz answers
+    function evaluateOnlineLegality() {
+        const q1 = document.getElementById('online-q1').value;
+        const q2 = document.getElementById('online-q2').value;
+        const q3 = document.getElementById('online-q3').value;
+        const q4 = document.getElementById('online-q4').value;
+
+        let score = 0;
+        let resultMessages = [];
+
+        // Evaluate answers and assign points
+        if (q1 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Displays business registration information (BIN/Trade License).',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Lack of business registration information. This is a significant concern.',
+                status: 'fail'
+            });
+        }
+
+        if (q2 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Physical address and contact details are clearly listed.',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Physical location and contact information are not provided, which is a red flag.',
+                status: 'fail'
+            });
+        }
+
+        if (q3 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Comprehensive privacy policy and terms of service are available.',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Missing or unclear privacy policy and terms of service.',
+                status: 'fail'
+            });
+        }
+
+        if (q4 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Secure payment gateways and clear refund policies are in place.',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Unclear or non-compliant payment/refund policies.',
+                status: 'fail'
+            });
+        }
+
+        displayResults(score, resultMessages, 'online');
+    }
+
+    // Evaluate Physical Legality based on answers
+    function evaluatePhysicalLegality() {
+        const q1 = document.getElementById('physical-q1').value;
+        const q2 = document.getElementById('physical-q2').value;
+        const q3 = document.getElementById('physical-q3').value;
+        const q4 = document.getElementById('physical-q4').value;
+
+        let score = 0;
+        let resultMessages = [];
+
+        // Evaluate answers and assign points
+        if (q1 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Registered with the Registrar of Joint Stock Companies and Firms (RJSC).',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Not properly registered with RJSC. This is a critical issue.',
+                status: 'fail'
+            });
+        }
+
+        if (q2 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Valid Trade License is prominently displayed.',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'No valid Trade License or status is unclear.',
+                status: 'fail'
+            });
+        }
+
+        if (q3 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Has a clearly defined and verifiable physical location.',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'No physical office or verifiable location.',
+                status: 'fail'
+            });
+        }
+
+        if (q4 === 'yes') {
+            score += 1;
+            resultMessages.push({
+                text: 'Registered for VAT/TIN with the National Board of Revenue (NBR).',
+                status: 'pass'
+            });
+        } else {
+            resultMessages.push({
+                text: 'Not registered for VAT/TIN, which could indicate non-compliance.',
+                status: 'fail'
+            });
+        }
+
+        displayResults(score, resultMessages, 'physical');
+    }
+
+    // Display the results dynamically
+    function displayResults(score, messages, type) {
+        document.getElementById('onlineChecker').classList.add('hidden');
+        document.getElementById('physicalChecker').classList.add('hidden');
+        document.getElementById('results').classList.remove('hidden');
+
+        let resultHTML = `<div class="space-y-4">`;
+
+        messages.forEach(msg => {
+            let icon, bgColor, textColor, iconColor;
+
+            if (msg.status === 'pass') {
+                icon = `<svg class="w-6 h-6 text-green-600 dark:text-green-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                        </svg>`;
+                bgColor = 'bg-green-100 dark:bg-green-900';
+                textColor = 'text-green-800 dark:text-green-300';
+            } else {
+                icon = `<svg class="w-6 h-6 text-red-600 dark:text-red-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>`;
+                bgColor = 'bg-red-100 dark:bg-red-900';
+                textColor = 'text-red-800 dark:text-red-300';
+            }
+
+            resultHTML += `
+                <div class="flex items-center p-4 ${bgColor} rounded-lg">
+                    ${icon}
+                    <span class="font-medium ${textColor}">${msg.text}</span>
+                </div>
+            `;
+        });
+
+        // Add overall score and final verdict
+        let verdict, verdictText, verdictColor;
+        const totalQuestions = 4;
+        const percentage = (score / totalQuestions) * 100;
+
+        if (percentage >= 75) {
+            verdict = 'High Likelihood of Legality';
+            verdictText = 'Based on your answers, the organization appears to be compliant with key legal requirements. However, this is not a guarantee of legal status.';
+            verdictColor = 'text-green-800 dark:text-green-300';
+        } else if (percentage >= 50) {
+            verdict = 'Potential Compliance Issues';
+            verdictText = 'The organization may have some legal compliance gaps. Exercise caution and seek more information.';
+            verdictColor = 'text-yellow-800 dark:text-yellow-300';
+        } else {
+            verdict = 'High Risk of Illegality';
+            verdictText = 'Multiple red flags were identified. This organization may not be legally compliant. It is highly recommended to avoid any transactions with it.';
+            verdictColor = 'text-red-800 dark:text-red-300';
+        }
+
+        resultHTML += `
+            <div class="mt-6 p-6 rounded-lg ${score >= 3 ? 'bg-green-100 dark:bg-green-900' : (score >= 2 ? 'bg-yellow-100 dark:bg-yellow-900' : 'bg-red-100 dark:bg-red-900')} text-center">
+                <h3 class="text-xl font-bold ${verdictColor} mb-2">Final Verdict: ${verdict}</h3>
+                <p class="${verdictColor} text-sm">${verdictText}</p>
+            </div>
+            <div class="mt-6 p-4 bg-blue-100 rounded-lg dark:bg-blue-900">
+                <p class="text-blue-800 dark:text-blue-300 text-sm">
+                    <strong>Disclaimer:</strong> This is a preliminary assessment based on user-provided information and does not constitute legal advice. For official legal status confirmation, always consult the appropriate government authorities like the Registrar of Joint Stock Companies, City Corporations, or the National Board of Revenue in Bangladesh.
+                </p>
+            </div>
+        `;
+
+        resultHTML += `</div>`;
+        document.getElementById('resultContent').innerHTML = resultHTML;
+    }
+
+    // Reset the checker to initial state
+    function resetChecker() {
+        document.getElementById('results').classList.add('hidden');
+        document.getElementById('onlineForm').reset();
+        document.getElementById('physicalForm').reset();
+    }
+</script>

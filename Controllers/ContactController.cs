@@ -4,7 +4,9 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
+[Authorize] // This attribute requires users to be logged in
 public class ContactController : Controller
 {
     private readonly IConfiguration _configuration;
