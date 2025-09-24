@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -752,6 +752,55 @@ public class AccountController : Controller
                 }
             }
 
+            var comments = await connection.QueryAsync<dynamic>(
+           @"SELECT c.*, u.UserName 
+          FROM Comments c 
+          LEFT JOIN Users u ON c.UserID = u.UserID 
+          WHERE c.ReportID = @ReportID 
+          ORDER BY c.CreatedAt DESC",
+           new { ReportID = id }
+       );
+
+            foreach (var comment in comments)
+            {
+                viewModel.Comments.Add(new Comment
+                {
+                    CommentID = comment.commentid,
+                    ReportID = comment.reportid,
+                    UserID = comment.userid,
+                    CommentText = comment.commenttext,
+                    CreatedAt = comment.createdat,
+                    UpdatedAt = comment.updatedat,
+                    IsEdited = comment.isedited,
+                    UserName = comment.username
+                });
+            }
+
+            // Load current user's comment if authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var user = await connection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT UserID FROM Users WHERE Email = @Email",
+                    new { Email = userEmail }
+                );
+
+                if (user != null)
+                {
+                    var userComment = await connection.QueryFirstOrDefaultAsync<Comment>(
+                        "SELECT * FROM Comments WHERE ReportID = @ReportID AND UserID = @UserID",
+                        new { ReportID = id, UserID = user.UserID }
+                    );
+
+                    if (userComment != null)
+                    {
+                        viewModel.UserComment = userComment;
+                    }
+                }
+            }
+
+            viewModel.NewComment.ReportID = id;
+
             return View(viewModel);
         }
         catch (Exception ex)
@@ -1093,5 +1142,193 @@ public class AccountController : Controller
             TempData["ErrorMessage"] = "An error occurred while deleting the post.";
             return RedirectToAction("MyPosts");
         }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddComment(CommentModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = "Please enter a valid comment.";
+            return RedirectToAction("ScamDetails", new { id = model.ReportID });
+        }
+
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Check if user already has a comment on this report
+            var existingComment = await connection.QueryFirstOrDefaultAsync<Comment>(
+                "SELECT * FROM Comments WHERE ReportID = @ReportID AND UserID = @UserID",
+                new { ReportID = model.ReportID, UserID = user.UserID }
+            );
+
+            if (existingComment != null)
+            {
+                TempData["ErrorMessage"] = "You have already commented on this post. You can edit your existing comment.";
+                return RedirectToAction("ScamDetails", new { id = model.ReportID });
+            }
+
+            // Insert new comment
+            var commentId = await connection.ExecuteScalarAsync<int>(
+                @"INSERT INTO Comments (ReportID, UserID, CommentText) 
+              VALUES (@ReportID, @UserID, @CommentText)
+              RETURNING CommentID",
+                new
+                {
+                    ReportID = model.ReportID,
+                    UserID = user.UserID,
+                    CommentText = model.CommentText
+                }
+            );
+
+            TempData["SuccessMessage"] = "Comment added successfully!";
+            return RedirectToAction("ScamDetails", new { id = model.ReportID });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to add comment. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = model.ReportID });
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditComment(int commentId, string commentText)
+    {
+        if (string.IsNullOrWhiteSpace(commentText) || commentText.Length > 1000)
+        {
+            TempData["ErrorMessage"] = "Comment text must be between 1 and 1000 characters.";
+            return RedirectToAction("ScamDetails", new { id = await GetReportIdFromComment(commentId) });
+        }
+
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Verify ownership and update comment
+            var affectedRows = await connection.ExecuteAsync(
+                @"UPDATE Comments 
+              SET CommentText = @CommentText, UpdatedAt = CURRENT_TIMESTAMP, IsEdited = TRUE
+              WHERE CommentID = @CommentID AND UserID = @UserID",
+                new
+                {
+                    CommentText = commentText,
+                    CommentID = commentId,
+                    UserID = user.UserID
+                }
+            );
+
+            if (affectedRows == 0)
+            {
+                TempData["ErrorMessage"] = "Comment not found or you don't have permission to edit it.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Comment updated successfully!";
+            }
+
+            var reportId = await GetReportIdFromComment(commentId);
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to update comment. Please try again.";
+            var reportId = await GetReportIdFromComment(commentId);
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteComment(int commentId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Get report ID before deletion for redirect
+            var reportId = await GetReportIdFromComment(commentId);
+
+            // Delete comment (only if user owns it)
+            var affectedRows = await connection.ExecuteAsync(
+                "DELETE FROM Comments WHERE CommentID = @CommentID AND UserID = @UserID",
+                new { CommentID = commentId, UserID = user.UserID }
+            );
+
+            if (affectedRows == 0)
+            {
+                TempData["ErrorMessage"] = "Comment not found or you don't have permission to delete it.";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Comment deleted successfully!";
+            }
+
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to delete comment. Please try again.";
+            var reportId = await GetReportIdFromComment(commentId);
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+    }
+
+    private async Task<int> GetReportIdFromComment(int commentId)
+    {
+        using var connection = _supabaseService.CreateConnection();
+        await ((NpgsqlConnection)connection).OpenAsync();
+
+        return await connection.ExecuteScalarAsync<int>(
+            "SELECT ReportID FROM Comments WHERE CommentID = @CommentID",
+            new { CommentID = commentId }
+        );
     }
 }

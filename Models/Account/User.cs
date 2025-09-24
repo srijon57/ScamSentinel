@@ -1,4 +1,4 @@
-﻿using ScamSentinel.Models.Scam;
+using ScamSentinel.Models.Scam;
 
 namespace ScamSentinel.Models.Account
 {
