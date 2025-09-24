@@ -1,4 +1,4 @@
-﻿<header class="fixed inset-x-0 top-0 z-50 bg-red-200 dark:bg-gray-800">
+<header class="fixed inset-x-0 top-0 z-50 bg-red-200 dark:bg-gray-800">
     <nav class="flex items-center justify-between p-6 lg:px-8">
         <div class="flex lg:flex-1">
             <a href="/" class="-m-1.5 flex items-center gap-x-4 p-1.5">
@@ -55,9 +55,39 @@
                         Logout <span aria-hidden="true">&rarr;</span>
                     </button>
                 </form>
-                <a asp-controller="Account" asp-action="Profile" class="text-sm font-medium text-gray-700 hover:text-red-600 dark:text-red-300 dark:hover:bg-gray-700">
-                    👤
-                </a>
+                <div class="relative ml-3">
+                    <div>
+                        <button type="button" id="user-menu-button" class="flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-gray-800" aria-expanded="false" aria-haspopup="true">
+                            <span class="sr-only">Open user menu</span>
+                            <!-- Custom Profile Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 rounded-full text-gray-300" viewBox="0 0 48 48">
+                                <defs>
+                                    <style>
+                                        .cls-3 {
+                                            fill: #6fabe6
+                                        }
+
+                                        .cls-4 {
+                                            fill: #82bcf4
+                                        }</style>
+                                </defs>
+                                <g id="User_profile" data-name="User profile">
+                                    <path d="M47 24A23 23 0 1 1 12.81 3.91 23 23 0 0 1 47 24z" style="fill:#374f68" />
+                                    <path d="M47 24a22.91 22.91 0 0 1-8.81 18.09A22.88 22.88 0 0 1 27 45C5.28 45-4.37 17.34 12.81 3.91A23 23 0 0 1 47 24z" style="fill:#425b72" />
+                                    <path class="cls-3" d="M39.2 35.39a19 19 0 0 1-30.4 0 17 17 0 0 1 10.49-8.73 8.93 8.93 0 0 0 9.42 0 17 17 0 0 1 10.49 8.73z" />
+                                    <path class="cls-4" d="M39.2 35.39a19 19 0 0 1-4.77 4.49 19 19 0 0 1-15.13-1 7.08 7.08 0 0 1-.51-12.18c.1-.07 0-.05.5-.05a9 9 0 0 0 9.42 0 17 17 0 0 1 10.49 8.74z" />
+                                    <path class="cls-3" d="M33 19a9 9 0 1 1-12.38-8.34A9 9 0 0 1 33 19z" />
+                                    <path class="cls-4" d="M33 19a9 9 0 0 1-2.6 6.33c-9.13 3.74-16.59-7.86-9.78-14.67A9 9 0 0 1 33 19z" />
+                                </g>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Dropdown Menu -->
+                    <div id="user-menu" class="ring-opacity-5 absolute right-0 z-10 mt-2 hidden w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black focus:outline-none dark:bg-gray-800 dark:ring-gray-700">
+                        <a href="@Url.Action("Profile", "Account")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">Profile</a>
+                        <a href="@Url.Action("MyPosts", "Account")" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700">My Posts</a>
+                    </div>
+                </div>
             }
             else
             {
@@ -69,6 +99,7 @@
                 </a>
             }
         </div>
+
     </nav>
 
     <dialog id="mobile-menu" class="backdrop:bg-black/30 lg:hidden">
@@ -109,6 +140,9 @@
                             </form>
                             <a asp-controller="Account" asp-action="Profile" class="mt-2 block rounded-lg px-3 py-2.5 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">
                                 Profile
+                            </a>
+                            <a asp-controller="Account" asp-action="MyPosts" class="mt-2 block rounded-lg px-3 py-2.5 text-base font-semibold text-red-900 hover:bg-red-50 dark:text-red-300 dark:hover:bg-gray-700">
+                                My Posts
                             </a>
                         }
                         else
@@ -162,4 +196,17 @@
             }
         });
     }
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
+
+    userMenuButton.addEventListener('click', () => {
+        userMenu.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+            userMenu.classList.add('hidden');
+        }
+    });
 </script>
