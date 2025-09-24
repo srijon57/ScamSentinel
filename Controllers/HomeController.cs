@@ -36,5 +36,9 @@ namespace ScamSentinel.Controllers
         {
             return View();
         }
+        public IActionResult StartupTipsResults()
+        {
+            return View();
+        }
     }
 }

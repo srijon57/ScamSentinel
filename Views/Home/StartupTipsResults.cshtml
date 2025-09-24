@@ -1,4 +1,309 @@
-﻿@page
-@model ScamSentinel.Views.Home.StartupTipsResultsModel
-@{
-}
+﻿<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Startup Safety Report - ScamSentinel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass-effect {
+            background: rgba(55, 65, 81, 0.7);
+            border: 1px solid rgba(75, 85, 99, 0.2);
+        }
+
+        .risk-high {
+            background-color: #fef2f2;
+            border-left: 4px solid #dc2626;
+        }
+
+        .risk-medium {
+            background-color: #fffbeb;
+            border-left: 4px solid #d97706;
+        }
+
+        .risk-low {
+            background-color: #f0fdf4;
+            border-left: 4px solid #16a34a;
+        }
+
+        .dark .risk-high {
+            background-color: #7f1d1d;
+            border-left: 4px solid #dc2626;
+        }
+
+        .dark .risk-medium {
+            background-color: #78350f;
+            border-left: 4px solid #d97706;
+        }
+
+        .dark .risk-low {
+            background-color: #166534;
+            border-left: 4px solid #16a34a;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-red-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <!-- Header -->
+    <header class="bg-white shadow-sm dark:bg-gray-800">
+        <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-2xl text-red-600 dark:text-red-400 mr-3"></i>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">ScamSentinel</h1>
+                </div>
+                <button id="theme-toggle" class="rounded-full bg-gray-800 p-2 text-gray-200 hover:bg-stone-400 focus:outline-none dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-stone-700">
+                    <svg id="theme-toggle-icon" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path id="moon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        <path id="sun" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                              class="hidden" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-8 pb-16">
+        <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-100 dark:bg-yellow-900 mb-4">
+                    <i class="fas fa-lightbulb text-3xl text-yellow-600 dark:text-yellow-400"></i>
+                </div>
+                <h1 class="text-4xl font-bold text-red-900 dark:text-red-300 mb-4">Startup Safety Report</h1>
+                <p class="text-lg text-red-700 dark:text-red-300 max-w-3xl mx-auto">
+                    Personalized scam prevention tips based on common business profiles
+                </p>
+            </div>
+
+            <!-- Results Container -->
+            <div id="results-container" class="glass-effect rounded-2xl p-8 dark:bg-gray-700">
+                <!-- Results will be populated by JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-8 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
+                <button onclick="window.location.href='#'"
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                    <i class="fas fa-home mr-2"></i> Back to Home
+                </button>
+                <button onclick="retakeAssessment()"
+                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-lg hover:from-yellow-700 hover:to-yellow-800 transition-all duration-300">
+                    <i class="fas fa-redo mr-2"></i> Retake Assessment
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <p class="text-center text-gray-500 dark:text-gray-400">
+                &copy; 2023 ScamSentinel. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        // Dark mode toggle logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const moonIcon = document.getElementById('moon');
+        const sunIcon = document.getElementById('sun');
+
+        // Set initial icon
+        if (localStorage.theme === 'dark' ||
+            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            moonIcon.classList.add('hidden');
+            sunIcon.classList.remove('hidden');
+        }
+
+        // Toggle theme and icon
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                moonIcon.classList.remove('hidden');
+                sunIcon.classList.add('hidden');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                moonIcon.classList.add('hidden');
+                sunIcon.classList.remove('hidden');
+            }
+        });
+
+        // Toast config
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "2000"
+        };
+
+        // Generate hardcoded report on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultsContainer = document.getElementById('results-container');
+            const report = generateSafetyReport();
+            resultsContainer.innerHTML = report;
+        });
+
+        function generateSafetyReport() {
+            // Hardcoded report data
+            const reportData = {
+                businessType: 'Online',
+                targetAudience: 'Individual Consumers',
+                teamSize: '2-5 People',
+                overallRisk: 'Medium',
+                risks: [
+                    {
+                        category: 'Data Privacy',
+                        description: 'Handling customer data requires strict compliance with privacy laws like GDPR and CCPA.',
+                        level: 'High'
+                    },
+                    {
+                        category: 'Payment Security',
+                        description: 'Ensure PCI compliance and secure payment processing to prevent financial fraud.',
+                        level: 'Medium'
+                    },
+                    {
+                        category: 'Phishing Attacks',
+                        description: 'Startups are common targets for phishing attempts aimed at stealing credentials.',
+                        level: 'Medium'
+                    },
+                    {
+                        category: 'Supplier Verification',
+                        description: 'Always verify new suppliers to avoid business email compromise scams.',
+                        level: 'Low'
+                    }
+                ],
+                tips: [
+                    {
+                        title: 'Implement SSL Certificate',
+                        description: 'Secure your website with HTTPS to protect user data and build trust.'
+                    },
+                    {
+                        title: 'Privacy Policy Compliance',
+                        description: 'Create a comprehensive privacy policy that meets GDPR and local regulations.'
+                    },
+                    {
+                        title: 'Regular Security Audits',
+                        description: 'Conduct monthly security checks and vulnerability assessments.'
+                    },
+                    {
+                        title: 'Employee Training',
+                        description: 'Train your team on phishing awareness and security protocols.'
+                    },
+                    {
+                        title: 'Multi-Factor Authentication',
+                        description: 'Enable MFA for all administrative accounts to prevent unauthorized access.'
+                    },
+                    {
+                        title: 'Backup Strategy',
+                        description: 'Implement regular data backups and test restoration procedures.'
+                    }
+                ]
+            };
+
+            return `
+                <div class="space-y-8">
+                    <!-- Business Summary -->
+                    <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-6">
+                        <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-3 flex items-center">
+                            <i class="fas fa-chart-bar mr-2"></i> Business Profile Summary
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-700 dark:text-blue-300">
+                            <div><strong>Business Type:</strong> ${reportData.businessType}</div>
+                            <div><strong>Target Audience:</strong> ${reportData.targetAudience}</div>
+                            <div><strong>Team Size:</strong> ${reportData.teamSize}</div>
+                            <div><strong>Risk Level:</strong> <span class="font-bold ${getRiskColorClass(reportData.overallRisk)}">${reportData.overallRisk}</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-2"></i> Risk Assessment
+                        </h2>
+                        <div class="space-y-4">
+                            ${reportData.risks.map(risk => `
+                                <div class="p-4 rounded-lg ${getRiskColorClass(risk.level)}">
+                                    <h3 class="font-semibold mb-2">${risk.category}</h3>
+                                    <p>${risk.description}</p>
+                                    <div class="mt-2 text-sm opacity-75">Risk Level: ${risk.level}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Safety Tips -->
+                    <div>
+                        <h2 class="text-2xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
+                            <i class="fas fa-shield-alt mr-2"></i> Safety Recommendations
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            ${reportData.tips.map(tip => `
+                                <div class="bg-green-50 dark:bg-green-900 rounded-lg p-4">
+                                    <h3 class="font-semibold text-green-800 dark:text-green-300 mb-2 flex items-center">
+                                        <i class="fas fa-check-circle mr-2"></i> ${tip.title}
+                                    </h3>
+                                    <p class="text-green-700 dark:text-green-300 text-sm">${tip.description}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Action Plan -->
+                    <div class="bg-purple-50 dark:bg-purple-900 rounded-lg p-6">
+                        <h2 class="text-xl font-bold text-purple-800 dark:text-purple-300 mb-3 flex items-center">
+                            <i class="fas fa-tasks mr-2"></i> Immediate Action Plan
+                        </h2>
+                        <ol class="list-decimal list-inside space-y-2 text-purple-700 dark:text-purple-300">
+                            <li>Review and implement the high-priority recommendations above</li>
+                            <li>Schedule a compliance audit within the next 30 days</li>
+                            <li>Train your team on scam prevention protocols</li>
+                            <li>Set up regular security reviews every quarter</li>
+                            <li>Establish an incident response plan</li>
+                        </ol>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getRiskColorClass(riskLevel) {
+            switch (riskLevel.toLowerCase()) {
+                case 'high': return 'risk-high';
+                case 'medium': return 'risk-medium';
+                case 'low': return 'risk-low';
+                default: return 'risk-medium';
+            }
+        }
+
+        function retakeAssessment() {
+            toastr.info('Redirecting to assessment page...');
+            // In a real implementation, this would redirect to the assessment page
+            setTimeout(() => {
+                window.location.href = '#';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
