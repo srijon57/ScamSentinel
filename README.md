@@ -249,9 +249,9 @@ viii. **Future Enhancements**
 
 ## ✔️ Live Project & Mock UI
 
-**Mock UI Link**: [TBD](https://www.figma.com/design/TBD)
+**Mock UI Link**: [Figma](https://www.figma.com/design/84CfcD5h4SSnipXPLE0kRG/ScamAlert?node-id=0-1&t=iiAMeTWo0BlKJ5Qk-1)
 
-**Live Project Link**: [TBD](https://www.figma.com/design/84CfcD5h4SSnipXPLE0kRG/ScamAlert?node-id=0-1&t=iiAMeTWo0BlKJ5Qk-1)
+**Live Project Link**: [Live](http://scansentinel.runasp.net)
 
   
 
