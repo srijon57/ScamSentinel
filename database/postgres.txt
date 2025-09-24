@@ -1,0 +1,94 @@
+CREATE TABLE Users (
+    UserID SERIAL PRIMARY KEY,
+    UserName VARCHAR(50) NOT NULL UNIQUE,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash VARCHAR(255),
+    ContactNumber VARCHAR(20),
+    IsVerified BOOLEAN DEFAULT FALSE,
+    SuperUser BOOLEAN DEFAULT FALSE,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE OTP (
+    OTPID SERIAL PRIMARY KEY,
+    UserID INTEGER REFERENCES Users(UserID),
+    OTPCode VARCHAR(6) NOT NULL,
+    ExpiresAt TIMESTAMP NOT NULL,
+    IsUsed BOOLEAN DEFAULT FALSE
+);
+
+-- ScamTypes table for predefined scam categories
+CREATE TABLE ScamTypes (
+    ScamTypeID SERIAL PRIMARY KEY,
+    TypeName VARCHAR(100) NOT NULL,
+    Description TEXT
+);
+
+-- ScamReports table
+CREATE TABLE ScamReports (
+    ReportID SERIAL PRIMARY KEY,
+    UserID INT NOT NULL REFERENCES Users(UserID),
+    Title VARCHAR(200) NOT NULL,
+    ScamTypeID INT REFERENCES ScamTypes(ScamTypeID),
+    Description TEXT NOT NULL,
+    ScammerInfo JSONB, -- Stores various scammer details
+    LossAmount DECIMAL(15, 2),
+    Currency VARCHAR(10) DEFAULT 'USD',
+    Location VARCHAR(200),
+    OccurrenceDate DATE,
+    IsVerified BOOLEAN DEFAULT FALSE,
+    VerifiedBy INT REFERENCES Users(UserID),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Evidencepicturelink1 VARCHAR(400),
+    Evidencepicturelink2 VARCHAR(400),
+    Evidencepicturelink3 VARCHAR(400),
+    Evidencepicturelink4 VARCHAR(400),
+    Evidencepicturelink5 VARCHAR(400)
+);
+
+
+-- Insert some common scam types
+INSERT INTO ScamTypes (TypeName, Description) VALUES
+('Investment Scam', 'Fake investment opportunities promising high returns'),
+('Phishing', 'Attempting to acquire sensitive information by masquerading as a trustworthy entity'),
+('Tech Support Scam', 'Fake technical support claiming to fix non-existent problems'),
+('Romance Scam', 'Building romantic relationships to exploit financially'),
+('Lottery/Sweepstakes', 'Fake winnings that require payment to claim'),
+('Impersonation', 'Pretending to be someone else to gain trust'),
+('Online Shopping', 'Fake products or non-delivery of purchased items'),
+('Job Offer', 'Fake employment opportunities requiring upfront payment'),
+('Cryptocurrency', 'Scams involving digital currencies'),
+('Charity Scam', 'Fraudulent solicitations for fake charities, often after disasters or crises'),
+('Blackmail/Extortion', 'Threatening to release sensitive information unless payment is made'),
+('Debt Collection Scam', 'Fake debt collectors demanding payment for non-existent debts'),
+('Rental Scam', 'Fake property listings asking for deposits or rent upfront'),
+('Travel Scam', 'Fake vacation deals or travel bookings that never materialize'),
+('Social Media Scam', 'Scams conducted via social platforms, often impersonating friends or influencers'),
+('Fake Invoice Scam', 'Sending fraudulent invoices hoping businesses will pay without verifying'),
+('Government Impersonation', 'Claiming to be from a government agency to extract money or data'),
+('Subscription Trap', 'Offering free trials that turn into expensive subscriptions without clear consent'),
+('Mobile Banking Scam', 'Fraudsters impersonate mobile banking agents to steal OTPs and access funds'),
+('Digital Loan Scam', 'Fake loan apps ask for advance fees or steal personal data'),
+('Online Marketplace Fraud', 'Scammers pose as sellers on platforms like Bikroy or Daraz, demanding advance payments'),
+('E-Commerce Scam', 'Fake online stores offering massive discounts, then disappearing with customer money'),
+('Other', 'Other types of scams not listed');
+
+
+ALTER TABLE ScamReports 
+ADD COLUMN Upvotes INTEGER DEFAULT 0,
+ADD COLUMN Downvotes INTEGER DEFAULT 0,
+ADD COLUMN Votes JSONB DEFAULT '[]'::jsonb;
+
+
+UPDATE ScamReports SET votes = '{}' WHERE votes = '[]';
+CREATE TABLE Comments (
+    CommentID SERIAL PRIMARY KEY,
+    ReportID INTEGER NOT NULL REFERENCES ScamReports(ReportID),
+    UserID INTEGER NOT NULL REFERENCES Users(UserID),
+    CommentText TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    IsDeleted BOOLEAN DEFAULT FALSE
+);
+
