@@ -111,7 +111,7 @@ function generateScamCards() {
         {
             title: "Romance Scams",
             icon: "💕",
-            color: "from-pink-500 to-pink-600",
+            color: "from-gray-800 to-gray-900",
             risk: "High",
             description: "Con artists create fake online identities to build emotional relationships and then ask for money."
         }

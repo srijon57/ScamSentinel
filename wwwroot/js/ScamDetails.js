@@ -381,3 +381,80 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// Character counter for comment textarea
+document.addEventListener('DOMContentLoaded', function () {
+    // New comment character counter
+    const commentTextarea = document.querySelector('.comment-textarea');
+    const charCount = document.querySelector('.char-count');
+
+    if (commentTextarea && charCount) {
+        commentTextarea.addEventListener('input', function () {
+            charCount.textContent = this.value.length;
+        });
+    }
+
+    // Edit comment functionality
+    document.querySelectorAll('.comment-edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const commentId = this.getAttribute('data-comment-id');
+            const editForm = document.getElementById(`edit-form-${commentId}`);
+            const commentText = this.closest('.comment-content').querySelector('.comment-text');
+
+            // Hide comment text and show edit form
+            commentText.style.display = 'none';
+            this.style.display = 'none';
+            editForm.style.display = 'block';
+
+            // Set up character counter for edit form
+            const editTextarea = editForm.querySelector('.edit-comment-textarea');
+            const editCharCount = editForm.querySelector('.edit-char-count');
+
+            editTextarea.addEventListener('input', function () {
+                editCharCount.textContent = this.value.length;
+            });
+        });
+    });
+
+    // Cancel edit functionality
+    document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const commentId = this.getAttribute('data-comment-id');
+            const editForm = document.getElementById(`edit-form-${commentId}`);
+            const commentText = editForm.closest('.comment-content').querySelector('.comment-text');
+            const editButton = editForm.closest('.comment-content').querySelector('.comment-edit-btn');
+
+            // Show comment text and edit button, hide edit form
+            commentText.style.display = 'block';
+            editButton.style.display = 'block';
+            editForm.style.display = 'none';
+        });
+    });
+
+    // Form validation
+    document.querySelectorAll('.comment-form, .edit-comment-form').forEach(form => {
+        form.addEventListener('submit', function (e) {
+            const textarea = this.querySelector('textarea[name="CommentText"], textarea[name="commentText"]');
+            if (textarea && textarea.value.trim().length === 0) {
+                e.preventDefault();
+                alert('Please enter a comment before submitting.');
+                textarea.focus();
+            }
+        });
+    });
+});
+document.querySelectorAll('.comment-edit-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id');
+        const editForm = document.getElementById(`edit-form-${commentId}`);
+        editForm.classList.remove('hidden');
+    });
+});
+
+// Cancel edit
+document.querySelectorAll('.cancel-edit-btn').forEach(button => {
+    button.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id');
+        const editForm = document.getElementById(`edit-form-${commentId}`);
+        editForm.classList.add('hidden');
+    });
+});
