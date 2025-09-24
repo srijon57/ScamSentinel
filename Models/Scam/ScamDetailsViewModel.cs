@@ -18,5 +18,13 @@
         public string UserVote { get; set; }
         public List<string> EvidenceLinks { get; set; } = new List<string>();
         public string ReporterName { get; set; }
+
+        public List<Comment> Comments { get; set; } = new List<Comment>();
+
+        // Add current user's comment (if any)
+        public Comment UserComment { get; set; }
+
+        // Add comment model for form
+        public CommentModel NewComment { get; set; } = new CommentModel();
     }
 }

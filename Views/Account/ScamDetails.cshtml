@@ -5,9 +5,9 @@
 
 <link rel="stylesheet" href="/css/ScamDetails.css" asp-append-version="true" />
 
-<div class="min-h-screen bg-gradient-bg">
+<div class="bg-gradient-bg min-h-screen">
     <!-- Header Section -->
-    <div class="scam-header">
+    <div class="scam-header pt-8">
         <div class="header-overlay"></div>
         <div class="header-content">
             <div class="header-inner">
@@ -39,7 +39,7 @@
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon bg-green">
-                            <i class="fas fa-thumbs-up"></i>
+                            <i class="fas fa-arrow-up"></i>
                         </div>
                         <div class="stat-info">
                             <p class="stat-number">@Model.Upvotes</p>
@@ -51,7 +51,7 @@
                 <div class="stat-card">
                     <div class="stat-content">
                         <div class="stat-icon bg-red">
-                            <i class="fas fa-thumbs-down"></i>
+                            <i class="fas fa-arrow-down"></i>
                         </div>
                         <div class="stat-info">
                             <p class="stat-number">@Model.Downvotes</p>
@@ -82,7 +82,7 @@
                         </div>
                         <div class="stat-info">
                             <p class="stat-text">@(Model.IsVerified ? "Verified" : "Pending")</p>
-                            <p class="stat-label">Status</p>
+                            <p class="stat-label">Verification</p>
                         </div>
                     </div>
                 </div>
@@ -296,14 +296,14 @@
                             <div class="vote-section">
                                 <form asp-action="Upvote" asp-route-reportId="@Model.ReportID" method="post" class="vote-form">
                                     <button type="submit" class="vote-btn @(Model.UserVote == "up" ? "vote-btn-active" : "vote-btn-inactive")">
-                                        <i class="fas fa-thumbs-up mr-2"></i>
+                                        <i class="fas fa-arrow-up mr-2"></i>
                                         Helpful (@Model.Upvotes)
                                     </button>
                                 </form>
 
                                 <form asp-action="Downvote" asp-route-reportId="@Model.ReportID" method="post" class="vote-form">
                                     <button type="submit" class="vote-btn @(Model.UserVote == "down" ? "vote-btn-active vote-btn-down" : "vote-btn-inactive")">
-                                        <i class="fas fa-thumbs-down mr-2"></i>
+                                        <i class="fas fa-arrow-down mr-2"></i>
                                         Not Helpful (@Model.Downvotes)
                                     </button>
                                 </form>
@@ -314,14 +314,14 @@
                             <div class="vote-section">
                                 <div class="vote-disabled">
                                     <span class="vote-disabled-text">
-                                        <i class="fas fa-thumbs-up mr-2"></i>
+                                        <i class="fas fa-arrow-up mr-2"></i>
                                         Helpful
                                     </span>
                                     <span class="vote-count">@Model.Upvotes</span>
                                 </div>
                                 <div class="vote-disabled">
                                     <span class="vote-disabled-text">
-                                        <i class="fas fa-thumbs-down mr-2"></i>
+                                        <i class="fas fa-arrow-down mr-2"></i>
                                         Not Helpful
                                     </span>
                                     <span class="vote-count">@Model.Downvotes</span>
@@ -354,6 +354,135 @@
             </div>
         </div>
     </div>
+
+    <div class="animate-fade-in-up mx-auto w-full max-w-4xl pb-8">
+            <div class="rounded-xl border border-gray-200 bg-white p-8 shadow-2xl dark:border-gray-700 dark:bg-gray-800">
+                <div class="mb-6 flex items-center space-x-3">
+                    <div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-600 text-white dark:bg-green-500">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+                        Community Comments
+                        @if (Model.Comments.Any())
+                        {
+                            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(@Model.Comments.Count)</span>
+                        }
+                    </h2>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Comment Form (only for authenticated users without existing comment) -->
+                    @if (User.Identity.IsAuthenticated && Model.UserComment == null)
+                    {
+                        <div class="animate-fade-in-up rounded-xl bg-gray-50 p-6 dark:bg-gray-700" style="animation-delay: 0.1s;">
+                            <form asp-action="AddComment" method="post" class="space-y-4">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="ReportID" value="@Model.ReportID" />
+
+                                <div>
+                                    <label for="CommentText" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Add your comment</label>
+                                    <textarea name="CommentText" class="mt-1 block w-full resize-y rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" rows="4" placeholder="Share your thoughts or additional information about this scam..." maxlength="1000" required></textarea>
+                                    <div class="mt-1 text-right text-sm text-gray-500 dark:text-gray-400">
+                                        <span class="char-count">0</span>/1000 characters
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                                    <i class="fas fa-paper-plane mr-2"></i>
+                                    Post Comment
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    else if (!User.Identity.IsAuthenticated)
+                    {
+                        <div class="animate-fade-in-up rounded-xl bg-gray-50 p-6 text-center dark:bg-gray-700" style="animation-delay: 0.1s;">
+                            <p class="text-gray-600 dark:text-gray-300">
+                                <a asp-controller="Account" asp-action="Login" class="text-red-600 hover:text-red-700 hover:underline dark:text-red-400 dark:hover:text-red-300">Sign in</a> to leave a comment
+                            </p>
+                        </div>
+                    }
+
+                    <!-- Comments List -->
+                <div class="items-center justify-center space-y-6">
+                        @if (Model.Comments.Any())
+                        {
+                            foreach (var comment in Model.Comments)
+                            {
+                                <div class="animate-fade-in-up border-b border-gray-200 pb-6 dark:border-gray-700" data-comment-id="@comment.CommentID" style="animation-delay: 0.2s;">
+                                    <div class="mb-2 flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-user-circle text-2xl text-gray-400 dark:text-gray-500"></i>
+                                            <div>
+                                                <span class="font-medium text-gray-800 dark:text-gray-100">@comment.UserName</span>
+                                                @if (comment.IsEdited)
+                                                {
+                                                    <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">(edited)</span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                                            @comment.CreatedAt.ToString("MMM dd, yyyy 'at' hh:mm tt")
+                                        </div>
+                                    </div>
+
+                                    <div class="ml-10">
+                                        <p class="text-gray-700 dark:text-gray-300">@comment.CommentText</p>
+
+                                        <!-- Edit/Delete buttons (only for comment owner) -->
+                                        @if (User.Identity.IsAuthenticated && Model.UserComment?.CommentID == comment.CommentID)
+                                        {
+                                            <div class="mt-3 flex space-x-2">
+                                                <button class="comment-edit-btn flex items-center text-sm font-semibold text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300" data-comment-id="@comment.CommentID">
+                                                    <i class="fas fa-edit mr-1"></i>Edit
+                                                </button>
+                                                <form asp-action="DeleteComment" method="post" class="inline-flex">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="commentId" value="@comment.CommentID" />
+                                                    <button type="submit" class="flex items-center text-sm font-semibold text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300" onclick="return confirm('Are you sure you want to delete your comment?')">
+                                                        <i class="fas fa-trash mr-1"></i>Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+
+                                            <!-- Edit Form (hidden by default) -->
+                                            <div class="comment-edit-form mt-4 hidden" id="edit-form-@comment.CommentID">
+                                                <form asp-action="EditComment" method="post" class="space-y-4">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="commentId" value="@comment.CommentID" />
+
+                                                    <textarea name="commentText" class="mt-1 block w-full resize-y rounded-lg border border-gray-300 px-4 py-3 text-sm text-gray-900 transition-all duration-300 outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:focus:border-red-400 dark:focus:ring-red-900" rows="4" maxlength="1000" required>@comment.CommentText</textarea>
+                                                    <div class="text-right text-sm text-gray-500 dark:text-gray-400">
+                                                        <span class="edit-char-count">@comment.CommentText.Length</span>/1000 characters
+                                                    </div>
+
+                                                    <div class="flex space-x-2">
+                                                        <button type="submit" class="inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-red-700 focus:ring-4 focus:ring-red-200 focus:outline-none dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800">
+                                                            <i class="fas fa-save mr-2"></i>Save
+                                                        </button>
+                                                        <button type="button" class="cancel-edit-btn inline-flex items-center justify-center rounded-full bg-gray-200 px-6 py-2 text-sm font-semibold text-gray-700 transition-all duration-300 hover:bg-gray-300 focus:ring-4 focus:ring-gray-200 focus:outline-none dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500 dark:focus:ring-gray-700" data-comment-id="@comment.CommentID">
+                                                            <i class="fas fa-times mr-2"></i>Cancel
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="py-8 text-center">
+                                <i class="fas fa-comments mb-2 text-3xl text-gray-400 dark:text-gray-500"></i>
+                                <p class="text-gray-600 dark:text-gray-300">No comments yet. Be the first to comment!</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 </div>
 
 <!-- Image Modal -->
@@ -368,6 +497,8 @@
         </div>
     </div>
 </div>
+
+
 
 @section Scripts {
     <script src="/js/ScamDetails.js" asp-append-version="true"></script>
