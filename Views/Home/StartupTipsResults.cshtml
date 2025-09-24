@@ -1,0 +1,336 @@
+﻿@{
+    ViewData["Title"] = "Startup Safety Report - ScamSentinel";
+}
+
+<section class="min-h-screen bg-gradient-to-br from-red-50 to-white pt-20 dark:from-gray-900 dark:to-gray-800">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-100 dark:bg-yellow-900 mb-4">
+                <i class="fas fa-lightbulb text-3xl text-yellow-600 dark:text-yellow-400"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-red-900 dark:text-red-300 mb-4">Startup Safety Report</h1>
+            <p class="text-lg text-red-700 dark:text-red-300 max-w-3xl mx-auto">
+                Personalized scam prevention tips based on your business profile
+            </p>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="glass-effect rounded-2xl p-8 dark:bg-gray-700">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-8 space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
+            <button onclick="window.location.href='@Url.Action("Index", "Home")'"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300">
+                <i class="fas fa-home mr-2"></i> Back to Home
+            </button>
+            <button onclick="retakeAssessment()"
+                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-medium rounded-lg hover:from-yellow-700 hover:to-yellow-800 transition-all duration-300">
+                <i class="fas fa-redo mr-2"></i> Retake Assessment
+            </button>
+        </div>
+    </div>
+</section>
+
+<style>
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dark .glass-effect {
+        background: rgba(55, 65, 81, 0.7);
+        border: 1px solid rgba(75, 85, 99, 0.2);
+    }
+
+    .risk-high {
+        background-color: #fef2f2;
+        border-left: 4px solid #dc2626;
+    }
+
+    .risk-medium {
+        background-color: #fffbeb;
+        border-left: 4px solid #d97706;
+    }
+
+    .risk-low {
+        background-color: #f0fdf4;
+        border-left: 4px solid #16a34a;
+    }
+
+    .dark .risk-high {
+        background-color: #7f1d1d;
+        border-left: 4px solid #dc2626;
+    }
+
+    .dark .risk-medium {
+        background-color: #78350f;
+        border-left: 4px solid #d97706;
+    }
+
+    .dark .risk-low {
+        background-color: #166534;
+        border-left: 4px solid #16a34a;
+    }
+</style>
+
+<script>
+    // Function to get URL parameters
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        const data = {};
+        for (let [key, value] of params.entries()) {
+            data[key] = value;
+        }
+        return data;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const assessmentData = getUrlParams();
+        const resultsContainer = document.getElementById('results-container');
+
+        if (!assessmentData.businessType) {
+            resultsContainer.innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-4"></i>
+                    <h2 class="text-2xl font-bold text-red-900 dark:text-red-300 mb-2">No Assessment Data Found</h2>
+                    <p class="text-red-700 dark:text-red-300">Please complete the startup assessment first.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Generate personalized report based on assessment data
+        const report = generateSafetyReport(assessmentData);
+        resultsContainer.innerHTML = report;
+    });
+
+    function generateSafetyReport(data) {
+        const businessType = data.businessType;
+        const isOnline = businessType === 'online';
+
+        // Risk assessment logic
+        const risks = assessRisks(data, isOnline);
+        const tips = generateTips(data, isOnline);
+
+        return `
+            <div class="space-y-8">
+                <!-- Business Summary -->
+                <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-6">
+                    <h2 class="text-xl font-bold text-blue-800 dark:text-blue-300 mb-3 flex items-center">
+                        <i class="fas fa-chart-bar mr-2"></i> Business Profile Summary
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-700 dark:text-blue-300">
+                        <div><strong>Business Type:</strong> ${isOnline ? 'Online' : 'Physical'} ${data[isOnline ? 'onlineBusinessType' : 'offlineBusinessType']}</div>
+                        <div><strong>Target Audience:</strong> ${data.targetAudience || data.customerInteraction}</div>
+                        <div><strong>Team Size:</strong> ${data.teamSize || data.employeeCount}</div>
+                        <div><strong>Risk Level:</strong> <span class="font-bold ${getRiskColorClass(risks.overallRisk)}">${risks.overallRisk}</span></div>
+                    </div>
+                </div>
+
+                <!-- Risk Assessment -->
+                <div>
+                    <h2 class="text-2xl font-bold text-red-900 dark:text-red-300 mb-4 flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Risk Assessment
+                    </h2>
+                    <div class="space-y-4">
+                        ${risks.specificRisks.map(risk => `
+                            <div class="p-4 rounded-lg ${getRiskColorClass(risk.level)}">
+                                <h3 class="font-semibold mb-2">${risk.category}</h3>
+                                <p>${risk.description}</p>
+                                <div class="mt-2 text-sm opacity-75">Risk Level: ${risk.level}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Safety Tips -->
+                <div>
+                    <h2 class="text-2xl font-bold text-green-900 dark:text-green-300 mb-4 flex items-center">
+                        <i class="fas fa-shield-alt mr-2"></i> Safety Recommendations
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${tips.map(tip => `
+                            <div class="bg-green-50 dark:bg-green-900 rounded-lg p-4">
+                                <h3 class="font-semibold text-green-800 dark:text-green-300 mb-2 flex items-center">
+                                    <i class="fas fa-check-circle mr-2"></i> ${tip.title}
+                                </h3>
+                                <p class="text-green-700 dark:text-green-300 text-sm">${tip.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Action Plan -->
+                <div class="bg-purple-50 dark:bg-purple-900 rounded-lg p-6">
+                    <h2 class="text-xl font-bold text-purple-800 dark:text-purple-300 mb-3 flex items-center">
+                        <i class="fas fa-tasks mr-2"></i> Immediate Action Plan
+                    </h2>
+                    <ol class="list-decimal list-inside space-y-2 text-purple-700 dark:text-purple-300">
+                        <li>Review and implement the high-priority recommendations above</li>
+                        <li>Schedule a compliance audit within the next 30 days</li>
+                        <li>Train your team on scam prevention protocols</li>
+                        <li>Set up regular security reviews every quarter</li>
+                        <li>Establish an incident response plan</li>
+                    </ol>
+                </div>
+            </div>
+        `;
+    }
+
+    function assessRisks(formData, isOnline) {
+        // Simplified risk assessment logic
+        let riskScore = 0;
+        const specificRisks = [];
+
+        if (isOnline) {
+            if (formData.dataCollection === 'sensitive') riskScore += 3;
+            if (formData.paymentProcessing === 'crypto') riskScore += 2;
+            if (formData.complianceAwareness === 'unfamiliar') riskScore += 3;
+
+            specificRisks.push(
+                {
+                    category: 'Data Privacy',
+                    description: 'Handling sensitive customer data requires strict compliance with privacy laws.',
+                    level: formData.dataCollection === 'sensitive' ? 'High' : 'Medium'
+                },
+                {
+                    category: 'Payment Security',
+                    description: 'Ensure PCI compliance and secure payment processing.',
+                    level: 'Medium'
+                },
+                {
+                    category: 'Compliance Knowledge',
+                    description: formData.complianceAwareness === 'unfamiliar' 
+                        ? 'Consider consulting with legal experts for compliance requirements.'
+                        : 'Continue staying updated with regulatory changes.',
+                    level: formData.complianceAwareness === 'unfamiliar' ? 'High' : 'Low'
+                }
+            );
+        } else {
+            if (formData.paymentMethods === 'cashonly') riskScore += 2;
+            if (formData.security === 'basic') riskScore += 2;
+            if (formData.insurance === 'none') riskScore += 3;
+
+            specificRisks.push(
+                {
+                    category: 'Physical Security',
+                    description: 'Implement proper security measures for your premises.',
+                    level: formData.security === 'basic' ? 'High' : 'Medium'
+                },
+                {
+                    category: 'Financial Security',
+                    description: 'Secure payment processing and cash handling procedures.',
+                    level: formData.paymentMethods === 'cashonly' ? 'High' : 'Medium'
+                },
+                {
+                    category: 'Insurance Coverage',
+                    description: formData.insurance === 'none' 
+                        ? 'Consider obtaining business insurance for liability protection.'
+                        : 'Maintain adequate insurance coverage.',
+                    level: formData.insurance === 'none' ? 'High' : 'Low'
+                }
+            );
+        }
+
+        const overallRisk = riskScore >= 6 ? 'High' : riskScore >= 3 ? 'Medium' : 'Low';
+
+        return { overallRisk, specificRisks };
+    }
+
+    function generateTips(formData, isOnline) {
+        const tips = [];
+
+        if (isOnline) {
+            tips.push(
+                {
+                    title: 'Implement SSL Certificate',
+                    description: 'Secure your website with HTTPS to protect user data and build trust.'
+                },
+                {
+                    title: 'Privacy Policy Compliance',
+                    description: 'Create a comprehensive privacy policy that meets GDPR and local regulations.'
+                }
+            );
+
+            if (formData.dataCollection === 'sensitive' || formData.dataCollection === 'personal') {
+                tips.push({
+                    title: 'Data Encryption',
+                    description: 'Encrypt sensitive customer data both in transit and at rest.'
+                });
+            }
+
+            if (formData.paymentProcessing === 'crypto') {
+                tips.push({
+                    title: 'Payment Security',
+                    description: 'Implement additional fraud detection measures for cryptocurrency transactions.'
+                });
+            }
+
+            tips.push(
+                {
+                    title: 'Regular Security Audits',
+                    description: 'Conduct monthly security checks and vulnerability assessments.'
+                },
+                {
+                    title: 'Employee Training',
+                    description: 'Train your team on phishing awareness and security protocols.'
+                }
+            );
+        } else {
+            tips.push(
+                {
+                    title: 'Surveillance System',
+                    description: 'Install CCTV cameras and alarm systems for physical security.'
+                },
+                {
+                    title: 'Cash Handling Procedures',
+                    description: 'Implement strict cash management and daily reconciliation.'
+                }
+            );
+
+            if (formData.security === 'basic') {
+                tips.push({
+                    title: 'Enhanced Security',
+                    description: 'Consider upgrading to a comprehensive security system with monitoring.'
+                });
+            }
+
+            if (formData.insurance === 'none') {
+                tips.push({
+                    title: 'Insurance Recommendation',
+                    description: 'Obtain comprehensive business insurance for liability protection.'
+                });
+            }
+
+            tips.push(
+                {
+                    title: 'Supplier Verification',
+                    description: 'Thoroughly vet all suppliers and maintain proper documentation.'
+                },
+                {
+                    title: 'Employee Background Checks',
+                    description: 'Conduct proper screening for all employees handling money or sensitive information.'
+                }
+            );
+        }
+
+        return tips;
+    }
+
+    function getRiskColorClass(riskLevel) {
+        switch (riskLevel.toLowerCase()) {
+            case 'high': return 'risk-high';
+            case 'medium': return 'risk-medium';
+            case 'low': return 'risk-low';
+            default: return 'risk-medium';
+        }
+    }
+
+    function retakeAssessment() {
+        window.location.href = '@Url.Action("Index", "Home")';
+    }
+</script>
