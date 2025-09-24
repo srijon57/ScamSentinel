@@ -936,5 +936,162 @@ public class AccountController : Controller
             return RedirectToAction("ScamDetails", new { id = reportId });
         }
     }
+    // Add these methods to AccountController.cs
 
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> MyPosts(int page = 1)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            var viewModel = new UserPostsViewModel
+            {
+                CurrentPage = page,
+                PageSize = 10
+            };
+
+            // Get total count of user's posts
+            var totalCount = await connection.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM ScamReports WHERE UserID = @UserID",
+                new { UserID = user.UserID }
+            );
+
+            viewModel.TotalPages = (int)Math.Ceiling(totalCount / (double)viewModel.PageSize);
+
+            // Get user's scam reports with pagination
+            var userReports = await connection.QueryAsync<dynamic>(
+                @"SELECT sr.ReportID, sr.Title, sr.Description, sr.CreatedAt, 
+                     sr.Upvotes, sr.Downvotes, sr.IsVerified,
+                     st.TypeName as ScamTypeName
+              FROM ScamReports sr
+              LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
+              WHERE sr.UserID = @UserID
+              ORDER BY sr.CreatedAt DESC
+              LIMIT @PageSize OFFSET @Offset",
+                new
+                {
+                    UserID = user.UserID,
+                    PageSize = viewModel.PageSize,
+                    Offset = (page - 1) * viewModel.PageSize
+                }
+            );
+
+            foreach (var report in userReports)
+            {
+                var userReport = new UserScamReport
+                {
+                    ReportID = report.reportid,
+                    Title = report.title,
+                    Description = report.description,
+                    ScamTypeName = report.typename,
+                    CreatedAt = report.createdat,
+                    Upvotes = report.upvotes,
+                    Downvotes = report.downvotes,
+                    IsVerified = report.isverified
+                };
+                viewModel.ScamReports.Add(userReport);
+            }
+
+            return View(viewModel);
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "An error occurred while loading your posts.";
+            return View(new UserPostsViewModel());
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeletePost(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Get user ID
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "User not found. Please log in again.";
+                return RedirectToAction("Login");
+            }
+
+            // Verify that the post belongs to the user
+            var report = await connection.QueryFirstOrDefaultAsync<dynamic>(
+                "SELECT UserID FROM ScamReports WHERE ReportID = @ReportID",
+                new { ReportID = reportId }
+            );
+
+            if (report == null)
+            {
+                TempData["ErrorMessage"] = "Post not found.";
+                return RedirectToAction("MyPosts");
+            }
+
+            if (report.userid != user.UserID)
+            {
+                TempData["ErrorMessage"] = "You can only delete your own posts.";
+                return RedirectToAction("MyPosts");
+            }
+
+            // Begin transaction to ensure data consistency
+            using var transaction = ((NpgsqlConnection)connection).BeginTransaction();
+
+            try
+            {
+                // First, delete associated votes
+                await connection.ExecuteAsync(
+                    "DELETE FROM UserVotes WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+
+                // Then delete the report
+                await connection.ExecuteAsync(
+                    "DELETE FROM ScamReports WHERE ReportID = @ReportID",
+                    new { ReportID = reportId },
+                    transaction
+                );
+
+                transaction.Commit();
+                TempData["SuccessMessage"] = "Post deleted successfully!";
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                throw; // Re-throw to be caught by outer catch block
+            }
+
+            return RedirectToAction("MyPosts");
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "An error occurred while deleting the post.";
+            return RedirectToAction("MyPosts");
+        }
+    }
 }

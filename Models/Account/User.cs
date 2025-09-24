@@ -1,4 +1,6 @@
-﻿namespace ScamSentinel.Models.Account
+﻿using ScamSentinel.Models.Scam;
+
+namespace ScamSentinel.Models.Account
 {
     public class User
     {
@@ -11,5 +13,8 @@
         public bool SuperUser { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation property for user's scam reports
+        public List<ScamReport> ScamReports { get; set; } = new List<ScamReport>();
     }
 }
