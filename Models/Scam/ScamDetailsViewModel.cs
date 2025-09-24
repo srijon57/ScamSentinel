@@ -1,4 +1,4 @@
-﻿namespace ScamSentinel.Models.Scam
+namespace ScamSentinel.Models.Scam
 {
     public class ScamDetailsViewModel
     {
