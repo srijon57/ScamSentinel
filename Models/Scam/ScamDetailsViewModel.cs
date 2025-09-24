@@ -20,11 +20,13 @@ namespace ScamSentinel.Models.Scam
         public string ReporterName { get; set; }
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
-
-        // Add current user's comment (if any)
         public Comment UserComment { get; set; }
-
-        // Add comment model for form
         public CommentModel NewComment { get; set; } = new CommentModel();
+
+        // Add these properties for verification
+        public bool CanVerify { get; set; }
+        public string VerifiedBy { get; set; }
+        public DateTime? VerifiedAt { get; set; }
+        public string VerifiedByName { get; set; } // Name of the user who verified
     }
 }

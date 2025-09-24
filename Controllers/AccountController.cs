@@ -680,10 +680,12 @@ public class AccountController : Controller
             await ((NpgsqlConnection)connection).OpenAsync();
 
             var report = await connection.QueryFirstOrDefaultAsync<dynamic>(
-                @"SELECT sr.*, st.TypeName as ScamTypeName, u.UserName as ReporterName
+                @"SELECT sr.*, st.TypeName as ScamTypeName, u.UserName as ReporterName,
+                     verifier.UserName as VerifiedByName
               FROM ScamReports sr
               LEFT JOIN ScamTypes st ON sr.ScamTypeID = st.ScamTypeID
               LEFT JOIN Users u ON sr.UserID = u.UserID
+              LEFT JOIN Users verifier ON sr.VerifiedBy = verifier.UserID
               WHERE sr.ReportID = @ReportID",
                 new { ReportID = id }
             );
@@ -731,7 +733,10 @@ public class AccountController : Controller
                 Upvotes = report.upvotes,
                 Downvotes = report.downvotes,
                 EvidenceLinks = evidenceLinks,
-                ReporterName = report.reportername
+                ReporterName = report.reportername,
+                VerifiedBy = report.verifiedby?.ToString(),
+                VerifiedAt = report.verifiedat,
+                VerifiedByName = report.verifiedbyname
             };
 
             // Check if the user is authenticated and has voted
@@ -751,7 +756,15 @@ public class AccountController : Controller
                     viewModel.UserVote = userVote?.VoteType;
                 }
             }
-
+            if (User.Identity.IsAuthenticated)
+            {
+                var userEmail = User.FindFirstValue(ClaimTypes.Email);
+                var user = await connection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT SuperUser FROM Users WHERE Email = @Email",
+                    new { Email = userEmail }
+                );
+                viewModel.CanVerify = user?.SuperUser == true;
+            }
             var comments = await connection.QueryAsync<dynamic>(
            @"SELECT c.*, u.UserName 
           FROM Comments c 
@@ -1330,5 +1343,90 @@ public class AccountController : Controller
             "SELECT ReportID FROM Comments WHERE CommentID = @CommentID",
             new { CommentID = commentId }
         );
+    }
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> VerifyReport(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Check if user is superuser
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID, SuperUser FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null || !user.SuperUser)
+            {
+                TempData["ErrorMessage"] = "You do not have permission to verify reports.";
+                return RedirectToAction("ScamDetails", new { id = reportId });
+            }
+
+            // Update report verification status
+            await connection.ExecuteAsync(
+                @"UPDATE ScamReports 
+              SET IsVerified = TRUE, 
+                  VerifiedBy = @VerifiedBy,
+                  UpdatedAt = CURRENT_TIMESTAMP
+              WHERE ReportID = @ReportID",
+                new { ReportID = reportId, VerifiedBy = user.UserID }
+            );
+
+            TempData["SuccessMessage"] = "Report verified successfully!";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to verify report. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UnverifyReport(int reportId)
+    {
+        try
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            using var connection = _supabaseService.CreateConnection();
+            await ((NpgsqlConnection)connection).OpenAsync();
+
+            // Check if user is superuser
+            var user = await connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT UserID, SuperUser FROM Users WHERE Email = @Email",
+                new { Email = userEmail }
+            );
+
+            if (user == null || !user.SuperUser)
+            {
+                TempData["ErrorMessage"] = "You do not have permission to unverify reports.";
+                return RedirectToAction("ScamDetails", new { id = reportId });
+            }
+
+            // Update report verification status
+            await connection.ExecuteAsync(
+                @"UPDATE ScamReports 
+              SET IsVerified = FALSE, 
+                  VerifiedBy = NULL,
+                  UpdatedAt = CURRENT_TIMESTAMP
+              WHERE ReportID = @ReportID",
+                new { ReportID = reportId }
+            );
+
+            TempData["SuccessMessage"] = "Report unverified successfully!";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = "Failed to unverify report. Please try again.";
+            return RedirectToAction("ScamDetails", new { id = reportId });
+        }
     }
 }

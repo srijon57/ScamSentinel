@@ -1,4 +1,4 @@
-@model ScamSentinel.Models.Scam.ScamDetailsViewModel
+﻿@model ScamSentinel.Models.Scam.ScamDetailsViewModel
 @{
     ViewData["Title"] = "Scam Details";
 }
@@ -332,7 +332,80 @@
                             </div>
                         }
                     </div>
+                    <!-- Verification Section (for superusers) -->
+                    @if (Model.CanVerify)
+                    {
+                        <div class="verification-section mb-6">
+                            <div class="rounded-lg bg-white p-4 shadow-md dark:bg-gray-800">
+                                <h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-gray-100">
+                                    <i class="fas fa-shield-check mr-2 text-blue-500"></i>
+                                    Superuser Verification
+                                </h3>
 
+                                @if (Model.IsVerified)
+                                {
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+                                                <i class="fas fa-check-circle mr-1"></i>
+                                                Verified Report
+                                            </span>
+                                            @if (!string.IsNullOrEmpty(Model.VerifiedByName))
+                                            {
+                                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                    Verified by: @Model.VerifiedByName
+                                                    @if (Model.VerifiedAt.HasValue)
+                                                    {
+                                                        <span>on @Model.VerifiedAt.Value.ToString("MMM dd, yyyy")</span>
+                                                    }
+                                                </p>
+                                            }
+                                        </div>
+                                        <form asp-action="UnverifyReport" asp-route-reportId="@Model.ReportID" method="post" class="inline-flex">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:outline-none">
+                                                <i class="fas fa-times mr-2"></i>
+                                                Unverify
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="flex items-center justify-between">
+                                        <span class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            Pending Verification
+                                        </span>
+                                        <form asp-action="VerifyReport" asp-route-reportId="@Model.ReportID" method="post" class="inline-flex">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none">
+                                                <i class="fas fa-check-circle mr-2"></i>
+                                                Verify Report
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else if (Model.IsVerified)
+                    {
+                        <div class="verification-badge mb-6">
+                            <div class="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-700 dark:bg-green-900">
+                                <div class="flex items-center">
+                                    <i class="fas fa-shield-check mr-2 text-green-500"></i>
+                                    <span class="font-medium text-green-800 dark:text-green-200">Verified Report</span>
+                                    @if (!string.IsNullOrEmpty(Model.VerifiedByName))
+                                    {
+                                        <span class="ml-2 text-sm text-green-600 dark:text-green-300">
+                                            (by @Model.VerifiedByName)
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <!-- Action Buttons -->
                     <div class="action-buttons">
                         <a href="@Url.Action("ScamList", "Account")" class="action-btn action-btn-primary">
