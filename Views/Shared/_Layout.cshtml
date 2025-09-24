@@ -452,24 +452,25 @@
             onlineForm.classList.add('hidden');
         });
 
-        // Form submission
+                // Form submission
         startupTipsForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
             // Collect form data
             const formData = new FormData(startupTipsForm);
             const businessType = onlineForm.classList.contains('hidden') ? 'offline' : 'online';
-            const formValues = Object.fromEntries(formData);
 
-            // Store data in localStorage
-            localStorage.setItem('startupAssessment', JSON.stringify({
-                businessType: businessType,
-                formData: formValues,
-                timestamp: new Date().toISOString()
-            }));
+            // Build URL parameters
+            const params = new URLSearchParams();
+            params.append('businessType', businessType);
 
-            // Redirect to results page
-            window.location.href = '@Url.Action("StartupTipsResults", "Home")';
+            // Add all form data to parameters
+            for (let [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+
+            // Redirect to results page with parameters
+            window.location.href = '@Url.Action("StartupTipsResults", "Home")?' + params.toString();
         });
     </script>
     <partial name="_Chatbot" />

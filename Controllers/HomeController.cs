@@ -38,6 +38,9 @@ namespace ScamSentinel.Controllers
         }
         public IActionResult StartupTipsResults()
         {
+            // Pass query parameters to view
+            ViewBag.BusinessType = HttpContext.Request.Query["businessType"];
+            ViewBag.FormData = HttpContext.Request.Query;
             return View();
         }
     }
