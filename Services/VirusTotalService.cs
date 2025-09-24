@@ -14,19 +14,18 @@ namespace ScamSentinel.Services
 
         public VirusTotalService(IConfiguration config, HttpClient httpClient)
         {
-            _apiKey = config["VirusTotal:ApiKey"] ?? throw new ArgumentNullException("VirusTotal:ApiKey missing");
+            _apiKey = config["VirusTotal:ApiKey"]
+                      ?? throw new ArgumentNullException("VirusTotal:ApiKey missing");
             _httpClient = httpClient;
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Add("x-apikey", _apiKey);
         }
 
         // Base64 URL-safe encoding without padding (for GET /api/v3/urls/{id})
         private string UrlToVirusTotalId(string url)
         {
             var bytes = Encoding.UTF8.GetBytes(url);
-            var b64 = Convert.ToBase64String(bytes) // standard base64
-                        .TrimEnd('=')               // remove padding
-                        .Replace('+', '-')         // URL-safe
+            var b64 = Convert.ToBase64String(bytes)
+                        .TrimEnd('=')
+                        .Replace('+', '-')
                         .Replace('/', '_');
             return b64;
         }
@@ -34,16 +33,22 @@ namespace ScamSentinel.Services
         // Submit the URL for scanning (optional step, helps get fresh analysis)
         private async Task SubmitUrlAsync(string url)
         {
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://www.virustotal.com/api/v3/urls");
+            request.Headers.Add("x-apikey", _apiKey);
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            request.Content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("url", url)
+            });
+
             try
             {
-                var content = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("url", url) });
-                // POST to /api/v3/urls triggers analysis (non-blocking)
-                var resp = await _httpClient.PostAsync("https://www.virustotal.com/api/v3/urls", content);
-                // We don't require the response body here; it's okay if submission fails.
+                await _httpClient.SendAsync(request);
             }
             catch
             {
-                // swallow - we will still try to fetch existing analysis
+                // ignore errors – analysis might still be available
             }
         }
 
@@ -56,42 +61,38 @@ namespace ScamSentinel.Services
             if (!url.StartsWith("http://") && !url.StartsWith("https://"))
                 url = "http://" + url;
 
-            // 1) Ask VirusTotal to analyze (optional)
+            // Step 1: ask VirusTotal to analyze (non-blocking)
             await SubmitUrlAsync(url);
 
-            // 2) Build id and GET analysis summary
+            // Step 2: GET analysis summary
             var id = UrlToVirusTotalId(url);
             var getUrl = $"https://www.virustotal.com/api/v3/urls/{id}";
 
-            // Try a few times to account for short delay after submission
             JsonDocument? json = null;
+
+            // retry a few times, since analysis can take a second
             for (int attempt = 0; attempt < 4; attempt++)
             {
-                try
-                {
-                    var resp = await _httpClient.GetAsync(getUrl);
-                    var body = await resp.Content.ReadAsStringAsync();
+                var request = new HttpRequestMessage(HttpMethod.Get, getUrl);
+                request.Headers.Add("x-apikey", _apiKey);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    if (!string.IsNullOrWhiteSpace(body))
+                var resp = await _httpClient.SendAsync(request);
+                var body = await resp.Content.ReadAsStringAsync();
+
+                if (!string.IsNullOrWhiteSpace(body))
+                {
+                    json = JsonDocument.Parse(body);
+
+                    if (json.RootElement.TryGetProperty("data", out var data) &&
+                        data.TryGetProperty("attributes", out var attributes) &&
+                        attributes.TryGetProperty("last_analysis_stats", out var stats))
                     {
-                        json = JsonDocument.Parse(body);
-                        // If it contains data.attributes.last_analysis_stats then break
-                        if (json.RootElement.TryGetProperty("data", out var data)
-                            && data.TryGetProperty("attributes", out var attributes)
-                            && attributes.TryGetProperty("last_analysis_stats", out var stats))
-                        {
-                            // we have stats — break
-                            break;
-                        }
+                        break; // got valid stats
                     }
                 }
-                catch
-                {
-                    // ignore and retry
-                }
 
-                // small delay between retries
-                await Task.Delay(1000);
+                await Task.Delay(1000); // wait before retry
             }
 
             if (json == null)
@@ -99,12 +100,12 @@ namespace ScamSentinel.Services
                 return new ScamCheckResponse
                 {
                     IsFraud = false,
-                    Message = "Could not retrieve VirusTotal report.",
+                    Message = "❌ Could not retrieve VirusTotal report.",
                     Raw = null
                 };
             }
 
-            // Parse stats
+            // Step 3: parse stats
             try
             {
                 var data = json.RootElement.GetProperty("data");
@@ -119,23 +120,14 @@ namespace ScamSentinel.Services
                 bool isFraud = (malicious + suspicious) > 0;
 
                 var message = isFraud
-                    ? $"⚠️ VirusTotal detected {malicious} malicious / {suspicious} suspicious engines."
-                    : "✅ No engines flagged this URL (VirusTotal).";
-
-                // optional: include a small summary of analysis stats
-                var rawSummary = new
-                {
-                    malicious,
-                    suspicious,
-                    undetected,
-                    harmless
-                };
+                    ? $"⚠️ ScamSentinel flagged this site ({malicious} malicious, {suspicious} suspicious)."
+                    : "✅ Safe: no engines flagged this URL.";
 
                 return new ScamCheckResponse
                 {
                     IsFraud = isFraud,
                     Message = message,
-                    Raw = rawSummary
+                    Raw = new { malicious, suspicious, undetected, harmless }
                 };
             }
             catch
@@ -143,7 +135,7 @@ namespace ScamSentinel.Services
                 return new ScamCheckResponse
                 {
                     IsFraud = false,
-                    Message = "Failed to parse VirusTotal response.",
+                    Message = "❌ Failed to parse VirusTotal response.",
                     Raw = json.RootElement.ToString()
                 };
             }

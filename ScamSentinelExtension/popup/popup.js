@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const reportBtn = document.getElementById("reportBtn");
     const searchBtn = document.getElementById("searchBtn");
     const resultDiv = document.getElementById("result");
-    const themeSwitch = document.getElementById("themeSwitch");
 
     // 🔍 Website check (via ScamSentinel backend proxy)
     checkBtn.addEventListener("click", () => {
@@ -28,26 +27,24 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await response.json();
             console.log("VirusTotal Result:", data);
 
-            // Extract malicious result
-            const malicious = data?.data?.attributes?.stats?.malicious ?? 0;
-
-            if (malicious > 0) {
-                resultDiv.innerText = "⚠️ Warning: This site is flagged as malicious!";
-                resultDiv.style.color = "#b91c1c";
-                resultDiv.style.background = "#fef2f2";
-                resultDiv.style.borderColor = "#dc2626";
+            // ✅ Use backend's simplified response
+            if (data.isFraud) {
+                resultDiv.innerText = data.message || "⚠️ Warning: This site is flagged as malicious!";
+                resultDiv.style.color = "red";
+                resultDiv.style.background = "#fdecea";
+                resultDiv.style.borderColor = "#e74c3c";
             } else {
-                resultDiv.innerText = "✅ Safe: This site looks safe.";
-                resultDiv.style.color = "#16a34a";
-                resultDiv.style.background = "#f0fdf4";
-                resultDiv.style.borderColor = "#22c55e";
+                resultDiv.innerText = data.message || "✅ Safe: This site looks safe.";
+                resultDiv.style.color = "green";
+                resultDiv.style.background = "#e9f7ef";
+                resultDiv.style.borderColor = "#27ae60";
             }
         } catch (error) {
             console.error(error);
             resultDiv.innerText = "❌ Error checking site.";
-            resultDiv.style.color = "#ea580c";
-            resultDiv.style.background = "#fff7ed";
-            resultDiv.style.borderColor = "#f97316";
+            resultDiv.style.color = "orange";
+            resultDiv.style.background = "#fff3e0";
+            resultDiv.style.borderColor = "#f39c12";
         }
     }
 
@@ -67,8 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Please enter a fraud name to search.");
         }
     });
-
-    // Dark Mode Toggle
     themeSwitch.addEventListener("change", () => {
         document.body.classList.toggle("dark-mode");
         localStorage.setItem("theme", themeSwitch.checked ? "dark" : "light");
