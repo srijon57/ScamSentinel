@@ -1,4 +1,5 @@
 
+
 # Scam-Sentinel Project
 
   
@@ -149,34 +150,34 @@ viii. **Future Enhancements**
 
 ### Milestone 1: Initial Setup and Basic Features
 
-- [ ] Set up backend and frontend.
+- [x] Set up backend and frontend.
 
-- [ ] Implement user authentication (registration and login).
+- [x] Implement user authentication (registration and login).
 
-- [ ]  Create API endpoints for scam alerts and evidence.
+- [x]  Create API endpoints for scam alerts and evidence.
 
-- [ ] Basic UI for login, registration, and homepage.
+- [x] Basic UI for login, registration, and homepage.
 
   
 
 ### Milestone 2: Advanced Features and Interactions
 
-- [ ]  Implement scam alert submission and validation system.
+- [x]  Implement scam alert submission and validation system.
 
-- [ ]  Add search and filter functionality.
+- [x]  Add search and filter functionality.
 
-- [ ]  UI for scam reporting, search functionality, and viewing scam details.
+- [x]  UI for scam reporting, search functionality, and viewing scam details.
 
-- [ ]  Implement evidence upload feature.
+- [x]  Implement evidence upload feature.
 
   
 
 ### Milestone 3: Final Touches and Deployment
 
-- [ ] Complete testing and bug fixes.
+- [x] Complete testing and bug fixes.
 
 
-- [ ] Deployment to web.
+- [x] Deployment to web.
 
   
 
@@ -184,7 +185,7 @@ viii. **Future Enhancements**
 
 - **Backend**: ASP.NET Core MVC
 
-- **Frontend**: React
+- **Frontend**: cshtml blazor with tailwindcss
 
 - **Database**: PostgresSQL
 
@@ -199,7 +200,7 @@ viii. **Future Enhancements**
 ## 🚧 Installation
 ### Prerequisites
 - .NET SDK (ASP.NET Core MVC) >= 6.0
-- MySQL
+- MySQL/PostgreSQL
 - Visual Studio or VS Code with C# extension
 
 ### Steps
@@ -216,7 +217,7 @@ viii. **Future Enhancements**
    ```bash
    dotnet restore
    ```
-4. Update the `appsettings.json` with your MySQL connection string:
+4. Update the `appsettings.json` with your MySQL/PostgreSQL connection string:
    ```json
    {
      "ConnectionStrings": {
@@ -228,7 +229,17 @@ viii. **Future Enhancements**
    ```bash
    dotnet ef database update
    ```
-6. Run the application:
+   
+6. Add TailwindCSS:
+   ```bash
+   npm install
+   ```
+   
+7. Run Tailwindcss:
+   ```bash
+   npm run build:css
+   ```
+8. Run the application:
    ```bash
    dotnet run
    ```
